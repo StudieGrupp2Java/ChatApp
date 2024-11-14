@@ -4,7 +4,7 @@ import org.example.commands.CommandManager;
 import org.example.users.UserManager;
 
 public class ChatServer {
-    private ServerManager serverManager;
+    private ClientManager clientManager;
     private UserManager userManager;
     private CommandManager commandManager;
 
@@ -12,12 +12,12 @@ public class ChatServer {
         System.out.println("Starting ChatServer...");
         init();
 
-//        serverManager.listen();
+//        clientManager.listen();
     }
 
     private void init() {
         this.commandManager = new CommandManager(this);
-        this.serverManager = new ServerManager(this);
+        this.clientManager = new ClientManager(this);
         this.userManager = new UserManager(this);
     }
 }
