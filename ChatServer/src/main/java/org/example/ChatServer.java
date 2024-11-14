@@ -16,8 +16,8 @@ public class ChatServer {
     }
 
     private void init() {
-        this.commandManager = new CommandManager();
-        this.serverManager = new ServerManager();
-        this.userManager = new UserManager();
+        this.commandManager = new CommandManager(this);
+        this.serverManager = new ServerManager(this);
+        this.userManager = new UserManager(this);
     }
 }
