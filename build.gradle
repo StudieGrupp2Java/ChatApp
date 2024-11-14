@@ -1,6 +1,6 @@
 // ChatApp/build.gradle
 allprojects {
-    group = 'com.yourdomain.chatapp'
+    group = 'org.example' //TODO: find good name
     version = '1.0'
 }
 
