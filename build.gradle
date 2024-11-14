@@ -1,0 +1,10 @@
+// ChatApp/build.gradle
+allprojects {
+    group = 'com.yourdomain.chatapp'
+    version = '1.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+    // Add any common configurations for subprojects here
+}
