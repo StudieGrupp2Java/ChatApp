@@ -34,7 +34,7 @@ public class ConnectionHandler extends Thread {
                 String incomingMessage = in.readLine();
                 System.out.println(incomingMessage);
                 main.getUserManager().getUsers().forEach(user -> {
-                    String fullMessage = String.format("[%s] %s", user.getName(), incomingMessage);
+                    String fullMessage = String.format("[%s] %s", user.getName(), main.getChatFilter().filterMessage(incomingMessage));
                     user.getHandler().sendMessage(fullMessage);
                 });
 
