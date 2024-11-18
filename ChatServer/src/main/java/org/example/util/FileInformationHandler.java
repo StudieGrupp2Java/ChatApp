@@ -1,20 +1,31 @@
 package org.example.util;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileInformationHandler {
     private final List<String> bannedWords = new ArrayList<>();
-    private final File config = new File("ForbiddenWords.txt");
+    private final File folder = new File("config");
+    private final File config = new File(folder + "/ForbiddenWords.txt");
 
     public FileInformationHandler(){
-        loadWords();
+        try {
+            loadWords();
+        } catch (IOException e) {
+            System.err.println("Couldn't load words");
+        }
     }
 
-    public void loadWords(){
+    public void loadWords() throws IOException {
+        if (!folder.exists()) {
+            Files.createDirectories(folder.toPath());
+        }
+
         if (!config.exists()){
             System.out.println("Can't find config!");
+            Files.createFile(config.toPath());
             return;
         }
 
