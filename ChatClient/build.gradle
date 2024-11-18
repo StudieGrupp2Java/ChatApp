@@ -18,6 +18,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
+tasks.named('run') {
+    standardInput = System.in
+}
+
 test {
     useJUnitPlatform()
 }
