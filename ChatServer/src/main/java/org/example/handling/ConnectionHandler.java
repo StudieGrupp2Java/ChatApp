@@ -4,6 +4,7 @@ import org.example.ChatServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Objects;
 
 public class ConnectionHandler extends Thread {
     private ChatServer main;
@@ -41,6 +42,13 @@ public class ConnectionHandler extends Thread {
         } catch (IOException e) {
             System.err.println("Error in reading/writing to connection");
             e.printStackTrace();
+        } finally {
+            try {
+                main.getUserManager().removeUser(this);
+            } catch (IOException e) {
+                System.err.println("Error removing user");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -48,7 +56,32 @@ public class ConnectionHandler extends Thread {
         this.out.println(incomingMessage);
     }
 
+    public void close() {
+        this.running = false;
+        try {
+            this.getSocket().close();
+            this.in.close();
+            this.out.close();
+        } catch (IOException e) {
+            System.err.println("Error closing connection");
+            e.printStackTrace();
+        }
+    }
+
     public Socket getSocket() {
         return socket;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConnectionHandler that = (ConnectionHandler) o;
+        return running == that.running && Objects.equals(socket, that.socket);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(socket, running);
     }
 }

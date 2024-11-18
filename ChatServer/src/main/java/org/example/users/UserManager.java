@@ -3,22 +3,29 @@ package org.example.users;
 import org.example.ChatServer;
 import org.example.handling.ConnectionHandler;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class UserManager {
-    private final Set<User> users =  new HashSet<>();
+    private final HashMap<ConnectionHandler, User> users =  new HashMap<>();
     private int index = 0;
 
     public UserManager(ChatServer chatServer) {
     }
 
     public void addUser(ConnectionHandler connection) {
-        users.add(new User(++index, "Default", connection));
+        users.put(connection, new User(++index, "Default", connection));
         System.out.println(connection.getSocket() + " connected!");
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Collection<User> getUsers() {
+        return users.values();
+    }
+
+    public void removeUser(ConnectionHandler connection) throws IOException {
+        connection.close();
+        users.remove(connection);
+        System.out.println(connection.getSocket() + " disconnected!");
     }
 }

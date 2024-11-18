@@ -7,7 +7,6 @@ public class User {
     private String name;
     private ConnectionHandler handler;
 
-
     public User(int id, String name, ConnectionHandler handler) {
         this.id = id;
         this.name = name;
