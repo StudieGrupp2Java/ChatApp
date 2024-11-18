@@ -1,6 +1,6 @@
 package org.example.users;
 
-import org.example.ConnectionHandler;
+import org.example.handling.ConnectionHandler;
 
 public class User {
     private int id;

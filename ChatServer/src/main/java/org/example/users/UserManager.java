@@ -1,7 +1,7 @@
 package org.example.users;
 
 import org.example.ChatServer;
-import org.example.ConnectionHandler;
+import org.example.handling.ConnectionHandler;
 
 import java.util.HashSet;
 import java.util.Set;

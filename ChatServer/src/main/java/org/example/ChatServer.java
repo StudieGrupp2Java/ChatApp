@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.commands.CommandManager;
+import org.example.handling.ClientManager;
 import org.example.users.UserManager;
 
 public class ChatServer {

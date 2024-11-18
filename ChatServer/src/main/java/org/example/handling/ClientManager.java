@@ -1,4 +1,6 @@
-package org.example;
+package org.example.handling;
+
+import org.example.ChatServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
