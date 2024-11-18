@@ -23,6 +23,7 @@ public class ClientManager {
                 try {
                     ConnectionHandler handler = new ConnectionHandler(main, socket.accept());
                     main.getUserManager().addUser(handler);
+                    handler.start();
                 } catch (IOException e) {
                     System.err.println("Error handling new connection");
                     e.printStackTrace();

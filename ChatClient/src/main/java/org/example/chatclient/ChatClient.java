@@ -26,11 +26,10 @@ public class ChatClient {
             String message;
             while ((message = termnialIn.readLine()) != null){
                 out.println(message);
+                System.out.println("Sending message " + message);
             }
         } catch (IOException e){
             System.out.println("opsi");
-        } finally {
-            closeConnections();
         }
     }
 
@@ -54,6 +53,7 @@ public class ChatClient {
                 }
             } catch (IOException e) {
                 System.out.println("Error");
+                e.printStackTrace();
             }
         }
     }

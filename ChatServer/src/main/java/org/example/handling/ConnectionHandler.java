@@ -2,9 +2,7 @@ package org.example.handling;
 
 import org.example.ChatServer;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class ConnectionHandler extends Thread {
@@ -12,16 +10,16 @@ public class ConnectionHandler extends Thread {
     private final Socket socket;
     private boolean running = true;
 
-    private DataInputStream in;
-    private DataOutputStream out;
+    private BufferedReader in;
+    private PrintWriter out;
 
     public ConnectionHandler(ChatServer main, Socket socket) {
         this.main = main;
         this.socket = socket;
 
         try {
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
+            in =  new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
             throw new RuntimeException("Error initializing new connection");
         }
@@ -32,7 +30,8 @@ public class ConnectionHandler extends Thread {
 
         try {
             while (this.running) {
-                String incomingMessage = in.readUTF();
+                String incomingMessage = in.readLine();
+                System.out.println(incomingMessage);
                 main.getUserManager().getUsers().forEach(user -> {
                     String fullMessage = String.format("[%s] %s", user.getName(), incomingMessage);
                     user.getHandler().sendMessage(fullMessage);
@@ -46,14 +45,7 @@ public class ConnectionHandler extends Thread {
     }
 
     private void sendMessage(String incomingMessage) {
-        try {
-            this.out.writeUTF(incomingMessage);
-            this.out.flush();
-        } catch (IOException e) {
-            System.err.println("Error in writing");
-            e.printStackTrace();
-        }
-
+        this.out.println(incomingMessage);
     }
 
     public Socket getSocket() {
