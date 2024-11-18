@@ -5,8 +5,10 @@ import org.example.ChatServer;
 import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
+import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
+    private int identifier;
     private ChatServer main;
     private final Socket socket;
     private boolean running = true;
@@ -15,6 +17,7 @@ public class ConnectionHandler extends Thread {
     private PrintWriter out;
 
     public ConnectionHandler(ChatServer main, Socket socket) {
+        this.identifier = UUID.randomUUID().hashCode();
         this.main = main;
         this.socket = socket;
 
@@ -77,11 +80,11 @@ public class ConnectionHandler extends Thread {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConnectionHandler that = (ConnectionHandler) o;
-        return running == that.running && Objects.equals(socket, that.socket);
+        return identifier == that.identifier;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(socket, running);
+        return Objects.hashCode(identifier);
     }
 }
