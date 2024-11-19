@@ -19,6 +19,7 @@ public class ChatServer {
         System.out.println("Starting ChatServer...");
         init();
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> fileManager.saveAll()));
         clientManager.listen();
     }
 

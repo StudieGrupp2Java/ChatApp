@@ -2,10 +2,8 @@ package org.example.filemanager;
 
 import org.example.ChatServer;
 import org.example.users.User;
-import org.example.util.ChatLogs;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -13,8 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 public class FileManager {
     private final ChatServer server;
-    private final File folder = new File("config");
-    private final File config = new File("ForbiddenWords.txt");
+    private static final String FOLDER = "config";
+    private static final String WORDS = "ForbiddenWords.txt";
+    private static final String CHATLOGS = "chatLogs.txt";
+    private static final String USERS = "Users.txt";
 
     public FileManager(ChatServer server){
         this.server = server;
@@ -22,7 +22,7 @@ public class FileManager {
             load();
             loadWords();
             startSaveTask();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error while loading banned words!");
         }
     }
@@ -59,17 +59,19 @@ public class FileManager {
         }
     }
 
+    public void saveAll() {
+        System.out.println("Executing save task...");
+        saveBannedWords();
+        save(server.getFileInfo().getChatLogs(), FOLDER + "/" + CHATLOGS);
+        save(Arrays.asList(server.getUserManager().getUsers().toArray()), FOLDER + "/" + USERS);
+
+    }
+
     private void startSaveTask() {
         System.out.println("Initializing scheduler...");
         var scheduler = Executors.newScheduledThreadPool(1);
 
-
-        scheduler.scheduleAtFixedRate(() -> {
-            System.out.println("Executing save task...");
-            saveBannedWords();
-            save(server.getFileInfo().getChatLogs(), "config/chatLogs.txt");
-            save(Arrays.asList(server.getUserManager().getUsers().toArray()), "config/Users.txt");
-        }, 0, 3, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(this::saveAll, 0, 3, TimeUnit.MINUTES);
 
         System.out.println("Scheduler started with a 3-minute interval.");
     }
@@ -80,7 +82,7 @@ public class FileManager {
         FileInputStream chatLogIn = null;
         ObjectInputStream chatLogStream = null;
         try{
-            usersIn = new FileInputStream(folder + "/Users.txt");
+            usersIn = new FileInputStream(FOLDER + "/" + USERS);
             usersStream = new ObjectInputStream(usersIn);
             int size = usersStream.read();
             if (!server.getUserManager().getUsers().isEmpty()){
@@ -90,7 +92,7 @@ public class FileManager {
                 User user = (User) usersStream.readObject();
                 server.getUserManager().addUser(user.getIdentifier(), user);
             }
-            chatLogIn = new FileInputStream(folder + "/chatLogs.txt");
+            chatLogIn = new FileInputStream(FOLDER + "/" + CHATLOGS);
             chatLogStream = new ObjectInputStream(chatLogIn);
             size = chatLogStream.read();
             if (!server.getFileInfo().getChatLogs().isEmpty()){
@@ -116,19 +118,21 @@ public class FileManager {
     }
 
     private void loadWords() throws IOException {
+        File folder = new File(FOLDER);
         if (!folder.exists()) {
             folder.mkdirs();
         }
 
-        if (!config.exists()){
+        File words = new File(FOLDER + "/" + WORDS);
+        if (!words.exists()){
             System.out.println("Can't find config!");
-            config.createNewFile();
+            words.createNewFile();
             return;
         }
 
         BufferedReader reader = null;
         try{
-            reader = new BufferedReader(new FileReader(config));
+            reader = new BufferedReader(new FileReader(words));
             String line;
             while ((line = reader.readLine()) != null){
                 server.getFileInfo().getBannedWords().add(line);
@@ -146,15 +150,14 @@ public class FileManager {
     }
 
     private void saveBannedWords(){
-
-
-        if (!config.exists()){
+        File words = new File(FOLDER + "/" + WORDS);
+        if (!words.exists()){
             System.out.println("Cannot find config path!");
             return;
         }
         BufferedWriter writer = null;
         try{
-            writer = new BufferedWriter(new FileWriter(config));
+            writer = new BufferedWriter(new FileWriter(words));
             for (String word : server.getFileInfo().getBannedWords()){
                 writer.write(word + "\n");
                 writer.flush();
