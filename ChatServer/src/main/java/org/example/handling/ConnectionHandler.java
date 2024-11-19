@@ -6,7 +6,6 @@ import org.example.users.User;
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
@@ -42,7 +41,14 @@ public class ConnectionHandler extends Thread {
                     continue;
                 }
 
-                main.getFileInfo().addMessage(this.getName(), incomingMessage);
+                final User sender = main.getUserManager().getUser(this.getIdentifier());
+                if (sender == null) {
+                    // has not authenticated, tell to authenticate
+                    this.sendMessage("You're not authenticated. Register with /register or login with /login");
+                    continue;
+                }
+
+                main.getFileInfo().addMessage(sender.getName(), incomingMessage);
                 main.getClientManager().getConnections().forEach(connection -> {
                     String name = sender.getName();
                     String fullMessage = String.format("[%s] %s: %s", LocalDateTime.now(), name, main.getChatFilter().filterMessage(incomingMessage));

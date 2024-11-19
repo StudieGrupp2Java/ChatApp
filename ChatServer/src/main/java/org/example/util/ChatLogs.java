@@ -1,16 +1,13 @@
 package org.example.util;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatLogs {
+public class ChatLogs implements Serializable {
     private final List<String> bannedWords = new ArrayList<>();
     private final List<String> chatLog = new ArrayList<>();
-
-    public ChatLogs(){
-
-    }
 
 
     public synchronized void addMessage(String username, String message) {

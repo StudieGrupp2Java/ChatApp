@@ -49,6 +49,7 @@ public class FileManager {
                 }
             }catch (Exception e){
                 System.err.println("Error while closing saveFunction!");
+                e.printStackTrace();
             }
         }
     }
