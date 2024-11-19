@@ -11,7 +11,7 @@ public class ServerManager {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private BufferedReader termnialIn;
+    private BufferedReader terminalIn;
     protected boolean running = true;
 
     public void connect(String ip, int port) {
@@ -20,26 +20,34 @@ public class ServerManager {
             socket = new Socket(ip, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            termnialIn = new BufferedReader(new InputStreamReader(System.in));
+            terminalIn = new BufferedReader(new InputStreamReader(System.in));
 
             System.out.println("Successfully connected to the server!");
 
             new Thread(new ServerListener()).start();
 
             while (this.running) {
-                final String message = termnialIn.readLine();
-                out.println(message);
-                System.out.println("Sending message " + message);
+                try {
+                    String message = terminalIn.readLine();
+                    if (message == null || socket.isClosed() || !running) {
+                        System.out.println("Connection lost or client stopped. Exiting.");
+                        break;
+                    }
+                    out.println(message);
+                    System.out.println("Sending message: " + message);
+                } catch (IOException e) {
+                    System.out.println("Error reading input: " + e.getMessage());
+                    break;
+                }
             }
 
         } catch (IOException e) {
-            System.out.println("Error in connection");
+            System.out.println("Error in connection: " + e.getMessage());
             e.printStackTrace();
         } finally {
             closeConnections();
             System.out.println("Disconnected.");
         }
-
     }
 
     private void closeConnections() {
@@ -48,7 +56,7 @@ public class ServerManager {
             if (socket != null) socket.close();
             if (out != null) out.close();
             if (in != null) in.close();
-            if (termnialIn != null) termnialIn.close();
+            if (terminalIn != null) terminalIn.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,12 +65,18 @@ public class ServerManager {
     private class ServerListener implements Runnable {
         public void run() {
             try {
-                while (running) {
-                    System.out.println(in.readLine());
+                String serverMessage;
+                while ((serverMessage = in.readLine()) != null) {
+                    System.out.println(serverMessage);
                 }
+                System.out.println("Server has closed the connection.");
             } catch (IOException e) {
-                closeConnections();
+                System.out.println("Error reading from server: " + e.getMessage());
+            } finally {
                 System.out.println("Disconnected.");
+                System.exit(0); //TODO: disconnect normally and let user connect to new server
+                running = false; // Ensure the main loop knows the connection is lost
+                closeConnections();
             }
         }
     }
