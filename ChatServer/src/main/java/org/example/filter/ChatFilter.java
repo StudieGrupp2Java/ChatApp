@@ -1,6 +1,6 @@
 package org.example.filter;
 
-import org.example.util.FileInformationHandler;
+import org.example.util.ChatLogs;
 
 import java.util.function.Predicate;
 
@@ -10,8 +10,8 @@ public class ChatFilter {
 
     private Predicate<String> filter;
 
-    private final FileInformationHandler fileInfo;
-    public ChatFilter(FileInformationHandler fileInfo){
+    private final ChatLogs fileInfo;
+    public ChatFilter(ChatLogs fileInfo){
         this.fileInfo = fileInfo;
     }
 
