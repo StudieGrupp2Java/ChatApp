@@ -28,25 +28,33 @@ public class ServerManager {
 
             while (this.running) {
                 try {
-                    String message = terminalIn.readLine();
-                    if (message == null || socket.isClosed() || !running) {
-                        System.out.println("Connection lost or client stopped. Exiting.");
-                        break;
+                    // Check if input is available
+                    if (System.in.available() > 0) {
+                        String message = terminalIn.readLine();
+                        if (message == null || socket.isClosed() || !running) {
+                            System.out.println("Connection lost or client stopped. Exiting.");
+                            break;
+                        }
+                        out.println(message);
+                    } else {
+                        // Sleep briefly to avoid busy-waiting
+                        Thread.sleep(100);
                     }
-                    out.println(message);
-                    System.out.println("Sending message: " + message);
                 } catch (IOException e) {
                     System.out.println("Error reading input: " + e.getMessage());
+                    break;
+                } catch (InterruptedException e) {
+                    System.out.println("Thread interrupted: " + e.getMessage());
                     break;
                 }
             }
 
+            System.out.println("Server has closed the connection.");
         } catch (IOException e) {
             System.out.println("Error in connection: " + e.getMessage());
             e.printStackTrace();
         } finally {
             closeConnections();
-            System.out.println("Disconnected.");
         }
     }
 
@@ -65,16 +73,13 @@ public class ServerManager {
     private class ServerListener implements Runnable {
         public void run() {
             try {
-                String serverMessage;
-                while ((serverMessage = in.readLine()) != null) {
+
+                while (socket.isConnected()) {
+                    String serverMessage = in.readLine();
                     System.out.println(serverMessage);
                 }
-                System.out.println("Server has closed the connection.");
+
             } catch (IOException e) {
-                System.out.println("Error reading from server: " + e.getMessage());
-            } finally {
-                System.out.println("Disconnected.");
-                System.exit(0); //TODO: disconnect normally and let user connect to new server
                 running = false; // Ensure the main loop knows the connection is lost
                 closeConnections();
             }
