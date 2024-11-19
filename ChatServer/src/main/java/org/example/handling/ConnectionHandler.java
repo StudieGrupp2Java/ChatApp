@@ -36,7 +36,7 @@ public class ConnectionHandler extends Thread {
             while (this.running) {
                 String incomingMessage = in.readLine();
                 if (isCommand(incomingMessage)) {
-                    main.getCommandManager().handleIncomingCommand(incomingMessage);
+                    main.getCommandManager().handleIncomingCommand(incomingMessage, this);
                     continue;
                 }
 
@@ -67,7 +67,7 @@ public class ConnectionHandler extends Thread {
         return message.startsWith("/") || message.startsWith("@");
     }
 
-    private void sendMessage(String incomingMessage) {
+    public void sendMessage(String incomingMessage) {
         this.out.println(incomingMessage);
     }
 

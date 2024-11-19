@@ -1,11 +1,12 @@
 package org.example.commands;
 
 import org.example.ChatServer;
+import org.example.handling.ConnectionHandler;
 
 public class DMCommand extends Command {
 
-    public DMCommand(ChatServer main) {
-        super(main);
+    public DMCommand(ChatServer main, ConnectionHandler sender) {
+        super(main, sender);
     }
 
     @Override

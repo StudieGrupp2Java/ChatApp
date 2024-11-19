@@ -12,8 +12,8 @@ public class UserManager {
     }
 
     // Add user here when they authenticate via login/register command or prompt on login
-    public void addUser(int identifier, String name) {
-        users.put(identifier, new User(identifier, name));
+    public void addUser(int identifier, String name, String password) {
+        users.put(identifier, new User(identifier, name, password));
         System.out.println(name + " connected!");
     }
 
@@ -31,5 +31,9 @@ public class UserManager {
 
     public Collection<User> getUsers() {
         return users.values();
+    }
+
+    public boolean userExists(String username) {
+        return users.values().stream().anyMatch(user -> user.getName().toLowerCase().equals(username));
     }
 }

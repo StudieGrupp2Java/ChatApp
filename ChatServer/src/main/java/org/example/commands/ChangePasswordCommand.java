@@ -1,11 +1,12 @@
 package org.example.commands;
 
 import org.example.ChatServer;
+import org.example.handling.ConnectionHandler;
 
 public class ChangePasswordCommand extends Command {
 
-    public ChangePasswordCommand(ChatServer main) {
-        super(main);
+    public ChangePasswordCommand(ChatServer main, ConnectionHandler sender) {
+        super(main, sender);
     }
 
     @Override

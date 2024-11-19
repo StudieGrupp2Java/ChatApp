@@ -1,6 +1,7 @@
 package org.example.commands;
 
 import org.example.ChatServer;
+import org.example.handling.ConnectionHandler;
 
 public class CommandManager {
     private final ChatServer main;
@@ -9,8 +10,8 @@ public class CommandManager {
         this.main = chatServer;
     }
 
-    public void handleIncomingCommand(String input) {
-        final CommandFactory factory = new CommandFactory(main);
+    public void handleIncomingCommand(String input, ConnectionHandler sender) {
+        final CommandFactory factory = new CommandFactory(main, sender);
         if (input.startsWith("/")) {
             // Detta är ett kommando, t.ex. /register "message"
             String[] parts = input.split(" ", 2);
