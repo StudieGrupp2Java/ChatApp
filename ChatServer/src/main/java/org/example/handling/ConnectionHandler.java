@@ -36,7 +36,7 @@ public class ConnectionHandler extends Thread {
                 String incomingMessage = in.readLine();
                 System.out.println(incomingMessage);
                 main.getClientManager().getConnections().forEach(connection -> {
-                    String name = main.getUserManager().getUser(connection.getIdentifier()).getName();
+                    String name = main.getUserManager().getUser(this.getIdentifier()).getName();
                     String fullMessage = String.format("[%s] %s", name, main.getChatFilter().filterMessage(incomingMessage));
                     connection.sendMessage(fullMessage);
                 });
