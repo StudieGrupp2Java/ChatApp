@@ -1,6 +1,13 @@
 package org.example.commands;
 
+import org.example.ChatServer;
+import org.example.handling.ConnectionHandler;
+
 public class LoginCommand extends Command {
+
+    public LoginCommand(ChatServer main, ConnectionHandler sender) {
+        super(main, sender);
+    }
 
     @Override
     protected void execute(String[] args) {
