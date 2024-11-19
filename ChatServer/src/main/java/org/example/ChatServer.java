@@ -15,7 +15,6 @@ public class ChatServer {
     private UserManager userManager;
     private CommandManager commandManager;
 
-
     public ChatServer() {
         System.out.println("Starting ChatServer...");
         init();
@@ -43,7 +42,8 @@ public class ChatServer {
     public CommandManager getCommandManager() {
         return commandManager;
     }
-    public ChatFilter getChatFilter(){
+
+    public ChatFilter getChatFilter() {
         return filter;
     }
     public ChatLogs getFileInfo(){

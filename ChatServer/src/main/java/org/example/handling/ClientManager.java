@@ -4,10 +4,14 @@ import org.example.ChatServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class ClientManager {
-    private static int SERVER_PORT = 2147; //TODO: changeable
+    private static final int SERVER_PORT = 2147; //TODO: changeable
     private final ChatServer main;
+
+    private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
 
     public ClientManager(ChatServer chatServer) {
         this.main = chatServer;
@@ -22,7 +26,7 @@ public class ClientManager {
             while (true) {
                 try {
                     ConnectionHandler handler = new ConnectionHandler(main, socket.accept());
-                    main.getUserManager().addUser(handler);
+                    this.addConnection(handler);
                     handler.start();
                 } catch (IOException e) {
                     System.err.println("Error handling new connection");
@@ -34,6 +38,21 @@ public class ClientManager {
             System.err.println("Error starting ChatServer");
             e.printStackTrace();
         }
+    }
 
+    public void addConnection(ConnectionHandler connection) {
+        connections.put(connection.getIdentifier(), connection);
+        System.out.println(connection.getSocket() + " connected!");
+    }
+
+    public void removeConnection(ConnectionHandler connection) {
+        connection.close();
+        connections.remove(connection.getIdentifier());
+        main.getUserManager().removeUser(connection.getIdentifier());
+        System.out.println(connection.getSocket() + " disconnected!");
+    }
+
+    public Collection<ConnectionHandler> getConnections() {
+        return connections.values();
     }
 }

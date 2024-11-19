@@ -1,27 +1,21 @@
 package org.example.users;
 
-import org.example.handling.ConnectionHandler;
-
 public class User {
-    private int id;
+    private int identifier;
     private String name;
-    private ConnectionHandler handler;
+    private String password; //TODO: store encrypted or other more secure way
 
-    public User(int id, String name, ConnectionHandler handler) {
-        this.id = id;
+    public User(int identifier, String name, String password) {
+        this.identifier = identifier;
         this.name = name;
-        this.handler = handler;
+        this.password = password;
     }
 
-    public int getId() {
-        return id;
+    public int getIdentifier() {
+        return identifier;
     }
 
     public String getName() {
         return name;
-    }
-
-    public ConnectionHandler getHandler() {
-        return handler;
     }
 }
