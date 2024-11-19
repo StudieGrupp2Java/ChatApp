@@ -4,17 +4,16 @@ import org.example.ChatServer;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Objects;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
-    private int identifier;
-    private ChatServer main;
+    private final int identifier;
+    private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
 
-    private BufferedReader in;
-    private PrintWriter out;
+    private final BufferedReader in;
+    private final PrintWriter out;
 
     public ConnectionHandler(ChatServer main, Socket socket) {
         this.identifier = UUID.randomUUID().hashCode();
@@ -22,7 +21,7 @@ public class ConnectionHandler extends Thread {
         this.socket = socket;
 
         try {
-            in =  new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
             throw new RuntimeException("Error initializing new connection");
@@ -36,9 +35,10 @@ public class ConnectionHandler extends Thread {
             while (this.running) {
                 String incomingMessage = in.readLine();
                 System.out.println(incomingMessage);
-                main.getUserManager().getUsers().forEach(user -> {
-                    String fullMessage = String.format("[%s] %s", user.getName(), main.getChatFilter().filterMessage(incomingMessage));
-                    user.getHandler().sendMessage(fullMessage);
+                main.getClientManager().getConnections().forEach(connection -> {
+                    String name = main.getUserManager().getUser(connection.getIdentifier()).getName();
+                    String fullMessage = String.format("[%s] %s", name, main.getChatFilter().filterMessage(incomingMessage));
+                    connection.sendMessage(fullMessage);
                 });
 
             }
@@ -46,12 +46,7 @@ public class ConnectionHandler extends Thread {
             System.err.println("Error in reading/writing to connection");
             e.printStackTrace();
         } finally {
-            try {
-                main.getUserManager().removeUser(this);
-            } catch (IOException e) {
-                System.err.println("Error removing user");
-                e.printStackTrace();
-            }
+            main.getClientManager().removeConnection(this);
         }
     }
 
@@ -75,16 +70,7 @@ public class ConnectionHandler extends Thread {
         return socket;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ConnectionHandler that = (ConnectionHandler) o;
-        return identifier == that.identifier;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(identifier);
+    public int getIdentifier() {
+        return identifier;
     }
 }

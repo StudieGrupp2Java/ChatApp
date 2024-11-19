@@ -1,27 +1,19 @@
 package org.example.users;
 
-import org.example.handling.ConnectionHandler;
-
 public class User {
-    private int id;
+    private int identifier;
     private String name;
-    private ConnectionHandler handler;
 
-    public User(int id, String name, ConnectionHandler handler) {
-        this.id = id;
+    public User(int identifier, String name) {
+        this.identifier = identifier;
         this.name = name;
-        this.handler = handler;
     }
 
-    public int getId() {
-        return id;
+    public int getIdentifier() {
+        return identifier;
     }
 
     public String getName() {
         return name;
-    }
-
-    public ConnectionHandler getHandler() {
-        return handler;
     }
 }
