@@ -1,6 +1,8 @@
 package org.example.users;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private int identifier;
     private String name;
     private String password; //TODO: store encrypted or other more secure way
