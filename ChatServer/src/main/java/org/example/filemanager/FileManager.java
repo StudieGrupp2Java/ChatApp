@@ -1,6 +1,6 @@
 package org.example.filemanager;
 
-import org.example.util.FileInformationHandler;
+import org.example.util.ChatLogs;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -9,11 +9,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class FileManager {
-    private final FileInformationHandler fileInfo;
+    private final ChatLogs fileInfo;
     private final File folder = new File("config");
     private final File config = new File(folder + "ForbiddenWords.txt");
 
-    public FileManager(FileInformationHandler fileInfo){
+    public FileManager(ChatLogs fileInfo){
         this.fileInfo = fileInfo;
         try{
             loadWords();

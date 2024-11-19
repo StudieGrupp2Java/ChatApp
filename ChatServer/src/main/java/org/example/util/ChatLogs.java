@@ -1,18 +1,14 @@
 package org.example.util;
 
-import java.io.*;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class FileInformationHandler {
+public class ChatLogs {
     private final List<String> bannedWords = new ArrayList<>();
     private final List<String> chatLog = new ArrayList<>();
 
-    public FileInformationHandler(){
+    public ChatLogs(){
 
     }
 
