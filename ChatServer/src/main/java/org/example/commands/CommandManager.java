@@ -40,7 +40,7 @@ public class CommandManager {
             } else {
                 System.out.println("Okänt DM-kommando");
             }
-        }else {
+        } else {
             System.out.println("Ogiltigt kommandoformat");
         }
     }

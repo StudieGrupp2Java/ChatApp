@@ -34,6 +34,11 @@ public class ConnectionHandler extends Thread {
         try {
             while (this.running) {
                 String incomingMessage = in.readLine();
+                if (isCommand(incomingMessage)) {
+                    main.getCommandManager().handleIncomingCommand(incomingMessage);
+                    continue;
+                }
+
                 System.out.println(incomingMessage);
                 main.getClientManager().getConnections().forEach(connection -> {
                     String name = main.getUserManager().getUser(this.getIdentifier()).getName();
@@ -48,6 +53,10 @@ public class ConnectionHandler extends Thread {
         } finally {
             main.getClientManager().removeConnection(this);
         }
+    }
+
+    private boolean isCommand(String message) {
+        return message.startsWith("/") || message.startsWith("@");
     }
 
     private void sendMessage(String incomingMessage) {

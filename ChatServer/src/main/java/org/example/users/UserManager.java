@@ -20,7 +20,9 @@ public class UserManager {
     public void removeUser(int identifier) {
         final User user = this.getUser(identifier);
         users.remove(identifier);
-        System.out.println(user.getName() + " disconnected!");
+        if (user != null) {
+            System.out.println(user.getName() + " disconnected!");
+        }
     }
 
     public User getUser(int identifier) {
