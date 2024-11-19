@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class FileManager {
     private final ChatLogs fileInfo;
     private final File folder = new File("config");
-    private final File config = new File(folder + "ForbiddenWords.txt");
+    private final File config = new File("ForbiddenWords.txt");
 
     public FileManager(ChatLogs fileInfo){
         this.fileInfo = fileInfo;
@@ -39,16 +39,17 @@ public class FileManager {
             System.out.println("Something went wrong while saving to file!");
         } finally {
             try{
-                if (fileOut != null){
-                    fileOut.flush();
-                    fileOut.close();
-                }
                 if (out != null){
                     out.flush();
                     out.close();
                 }
+                if (fileOut != null){
+                    fileOut.flush();
+                    fileOut.close();
+                }
             }catch (Exception e){
                 System.err.println("Error while closing saveFunction!");
+                e.printStackTrace();
             }
         }
     }
@@ -69,18 +70,18 @@ public class FileManager {
 
     private void loadWords() throws IOException {
         if (!folder.exists()) {
-            Files.createDirectories(folder.toPath());
+            folder.mkdirs();
         }
 
         if (!config.exists()){
             System.out.println("Can't find config!");
-            Files.createFile(config.toPath());
+            config.createNewFile();
             return;
         }
 
         BufferedReader reader = null;
         try{
-            reader = new BufferedReader(new FileReader(config));
+            reader = new BufferedReader(new FileReader(folder + "/" + config));
             String line;
             while ((line = reader.readLine()) != null){
                 fileInfo.getBannedWords().add(line);
