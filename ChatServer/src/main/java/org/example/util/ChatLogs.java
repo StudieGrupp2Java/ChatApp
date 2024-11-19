@@ -17,6 +17,8 @@ public class ChatLogs implements Serializable {
         chatLog.add(logEntry);
     }
 
+
+
     public List<String> getBannedWords(){
         return bannedWords;
     }

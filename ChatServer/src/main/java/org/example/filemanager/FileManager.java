@@ -1,6 +1,7 @@
 package org.example.filemanager;
 
 import org.example.ChatServer;
+import org.example.users.User;
 import org.example.util.ChatLogs;
 
 import java.io.*;
@@ -18,6 +19,7 @@ public class FileManager {
     public FileManager(ChatServer server){
         this.server = server;
         try{
+            load();
             loadWords();
             startSaveTask();
         } catch (IOException e){
@@ -65,11 +67,52 @@ public class FileManager {
         scheduler.scheduleAtFixedRate(() -> {
             System.out.println("Executing save task...");
             saveBannedWords();
-            save(server.getFileInfo().getChatLogs(), "config/ForbiddenWords.txt");
+            save(server.getFileInfo().getChatLogs(), "config/chatLogs.txt");
             save(Arrays.asList(server.getUserManager().getUsers().toArray()), "config/Users.txt");
-        }, 0, 3, TimeUnit.MINUTES);
+        }, 0, 10, TimeUnit.SECONDS);
 
         System.out.println("Scheduler started with a 3-minute interval.");
+    }
+
+    private void load(){
+        FileInputStream usersIn = null;
+        ObjectInputStream usersStream = null;
+        FileInputStream chatLogIn = null;
+        ObjectInputStream chatLogStream = null;
+        try{
+            usersIn = new FileInputStream(folder + "/Users.txt");
+            usersStream = new ObjectInputStream(usersIn);
+            int size = usersStream.readInt();
+            if (!server.getUserManager().getUsers().isEmpty()){
+                server.getUserManager().getUsers().clear();
+            }
+            for (int i = 0; i < size; i++){
+                User user = (User) usersStream.readObject();
+                server.getUserManager().addUser(user.getIdentifier(), user);
+            }
+            chatLogIn = new FileInputStream(folder + "/chatLogs.txt");
+            chatLogStream = new ObjectInputStream(chatLogIn);
+            size = chatLogStream.readInt();
+            if (!server.getFileInfo().getChatLogs().isEmpty()){
+                server.getFileInfo().getChatLogs().clear();
+            }
+            for (int i = 0; i < size; i++){
+                String log = (String) chatLogStream.readObject();
+                server.getFileInfo().getChatLogs().add(log);
+            }
+        }catch (Exception e){
+            System.out.println("Something went wrong loading the files!");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (usersStream != null) usersStream.close();
+                if (usersIn != null) usersIn.close();
+                if (chatLogStream != null) chatLogStream.close();
+                if (chatLogIn != null) chatLogIn.close();
+            } catch (IOException e){
+                System.out.println("Something went wrong closing streams while loading.");
+            }
+        }
     }
 
     private void loadWords() throws IOException {

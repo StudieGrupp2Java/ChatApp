@@ -2,6 +2,7 @@ package org.example.commands;
 
 import org.example.ChatServer;
 import org.example.handling.ConnectionHandler;
+import org.example.users.User;
 
 public class RegisterCommand extends Command {
 
@@ -22,7 +23,7 @@ public class RegisterCommand extends Command {
             return;
         }
 
-        main.getUserManager().addUser(sender.getIdentifier(), username, password);
+        main.getUserManager().addUser(sender.getIdentifier(), new User(sender.getIdentifier(), username, password));
         sender.sendMessage("Successfully registered.");
     }
 

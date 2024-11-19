@@ -13,9 +13,9 @@ public class UserManager implements Serializable {
     }
 
     // Add user here when they authenticate via login/register command or prompt on login
-    public void addUser(int identifier, String name, String password) {
-        users.put(identifier, new User(identifier, name, password));
-        System.out.println(name + " connected!");
+    public void addUser(int identifier, User user) {
+        users.put(identifier, user);
+        System.out.println(user.getName() + " connected!");
     }
 
     public void removeUser(int identifier) {
