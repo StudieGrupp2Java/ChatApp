@@ -23,12 +23,13 @@ public class ChatServer {
     }
 
     private void init() {
+        this.userManager = new UserManager(this);
         this.fileInfo = new ChatLogs();
         this.fileManager = new FileManager(this);
         this.filter = new ChatFilter(fileInfo);
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
-        this.userManager = new UserManager(this);
+
     }
 
     public ClientManager getClientManager() {

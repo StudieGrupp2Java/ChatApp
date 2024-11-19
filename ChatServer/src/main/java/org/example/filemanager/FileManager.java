@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class FileManager {
     private final ChatServer server;
     private final File folder = new File("config");
-    private final File config = new File(folder + "/" + "ForbiddenWords.txt");
+    private final File config = new File("ForbiddenWords.txt");
 
     public FileManager(ChatServer server){
         this.server = server;
@@ -69,7 +69,7 @@ public class FileManager {
             saveBannedWords();
             save(server.getFileInfo().getChatLogs(), "config/chatLogs.txt");
             save(Arrays.asList(server.getUserManager().getUsers().toArray()), "config/Users.txt");
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 0, 3, TimeUnit.MINUTES);
 
         System.out.println("Scheduler started with a 3-minute interval.");
     }
@@ -82,7 +82,7 @@ public class FileManager {
         try{
             usersIn = new FileInputStream(folder + "/Users.txt");
             usersStream = new ObjectInputStream(usersIn);
-            int size = usersStream.readInt();
+            int size = usersStream.read();
             if (!server.getUserManager().getUsers().isEmpty()){
                 server.getUserManager().getUsers().clear();
             }
@@ -92,7 +92,7 @@ public class FileManager {
             }
             chatLogIn = new FileInputStream(folder + "/chatLogs.txt");
             chatLogStream = new ObjectInputStream(chatLogIn);
-            size = chatLogStream.readInt();
+            size = chatLogStream.read();
             if (!server.getFileInfo().getChatLogs().isEmpty()){
                 server.getFileInfo().getChatLogs().clear();
             }
