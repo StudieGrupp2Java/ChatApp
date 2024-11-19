@@ -5,7 +5,9 @@ import org.example.users.User;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
@@ -47,11 +49,11 @@ public class ConnectionHandler extends Thread {
                     this.sendMessage("You're not authenticated. Register with /register or login with /login");
                     continue;
                 }
-
+                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
                 main.getFileInfo().addMessage(sender.getName(), incomingMessage);
                 main.getClientManager().getConnections().forEach(connection -> {
                     String name = sender.getName();
-                    String fullMessage = String.format("[%s] %s: %s", LocalDateTime.now(), name, main.getChatFilter().filterMessage(incomingMessage));
+                    String fullMessage = String.format("[%s] %s: %s", format.format(System.currentTimeMillis()), name, main.getChatFilter().filterMessage(incomingMessage));
                     connection.sendMessage(fullMessage);
                 });
 

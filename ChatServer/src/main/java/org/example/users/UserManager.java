@@ -2,10 +2,11 @@ package org.example.users;
 
 import org.example.ChatServer;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class UserManager {
+public class UserManager implements Serializable {
     private final HashMap<Integer, User> users =  new HashMap<>();
 
     public UserManager(ChatServer chatServer) {

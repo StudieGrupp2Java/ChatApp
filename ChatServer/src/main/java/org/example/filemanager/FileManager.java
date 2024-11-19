@@ -1,20 +1,22 @@
 package org.example.filemanager;
 
+import org.example.ChatServer;
 import org.example.util.ChatLogs;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class FileManager {
-    private final ChatLogs fileInfo;
+    private final ChatServer server;
     private final File folder = new File("config");
-    private final File config = new File("ForbiddenWords.txt");
+    private final File config = new File(folder + "/" + "ForbiddenWords.txt");
 
-    public FileManager(ChatLogs fileInfo){
-        this.fileInfo = fileInfo;
+    public FileManager(ChatServer server){
+        this.server = server;
         try{
             loadWords();
             startSaveTask();
@@ -36,6 +38,7 @@ public class FileManager {
                 out.writeObject(item);
             }
         }catch (Exception e){
+            e.printStackTrace();
             System.out.println("Something went wrong while saving to file!");
         } finally {
             try{
@@ -62,7 +65,8 @@ public class FileManager {
         scheduler.scheduleAtFixedRate(() -> {
             System.out.println("Executing save task...");
             saveBannedWords();
-            save(fileInfo.getChatLogs(), folder + "/"+ config);
+            save(server.getFileInfo().getChatLogs(), "config/ForbiddenWords.txt");
+            save(Arrays.asList(server.getUserManager().getUsers().toArray()), "config/Users.txt");
         }, 0, 3, TimeUnit.MINUTES);
 
         System.out.println("Scheduler started with a 3-minute interval.");
@@ -81,12 +85,13 @@ public class FileManager {
 
         BufferedReader reader = null;
         try{
-            reader = new BufferedReader(new FileReader(folder + "/" + config));
+            reader = new BufferedReader(new FileReader(config));
             String line;
             while ((line = reader.readLine()) != null){
-                fileInfo.getBannedWords().add(line);
+                server.getFileInfo().getBannedWords().add(line);
             }
         }catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Something went wrong loading from file!");
         } finally {
             try{
@@ -98,6 +103,8 @@ public class FileManager {
     }
 
     private void saveBannedWords(){
+
+
         if (!config.exists()){
             System.out.println("Cannot find config path!");
             return;
@@ -105,11 +112,12 @@ public class FileManager {
         BufferedWriter writer = null;
         try{
             writer = new BufferedWriter(new FileWriter(config));
-            for (String word : fileInfo.getBannedWords()){
+            for (String word : server.getFileInfo().getBannedWords()){
                 writer.write(word + "\n");
                 writer.flush();
             }
         }catch (Exception e){
+            e.printStackTrace();
             System.out.println("Something went wrong saving to config!");
         } finally {
             try{

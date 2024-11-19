@@ -24,7 +24,7 @@ public class ChatServer {
 
     private void init() {
         this.fileInfo = new ChatLogs();
-        this.fileManager = new FileManager(fileInfo);
+        this.fileManager = new FileManager(this);
         this.filter = new ChatFilter(fileInfo);
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
