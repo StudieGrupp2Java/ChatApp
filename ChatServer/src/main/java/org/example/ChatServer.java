@@ -1,12 +1,14 @@
 package org.example;
 
 import org.example.commands.CommandManager;
+import org.example.filemanager.FileManager;
 import org.example.filter.ChatFilter;
 import org.example.handling.ClientManager;
 import org.example.users.UserManager;
 import org.example.util.FileInformationHandler;
 
 public class ChatServer {
+    private FileManager fileManager;
     private FileInformationHandler fileInfo;
     private ChatFilter filter;
     private ClientManager clientManager;
@@ -23,6 +25,7 @@ public class ChatServer {
 
     private void init() {
         this.fileInfo = new FileInformationHandler();
+        this.fileManager = new FileManager(fileInfo);
         this.filter = new ChatFilter(fileInfo);
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
@@ -42,5 +45,8 @@ public class ChatServer {
     }
     public ChatFilter getChatFilter(){
         return filter;
+    }
+    public FileInformationHandler getFileInfo(){
+        return fileInfo;
     }
 }

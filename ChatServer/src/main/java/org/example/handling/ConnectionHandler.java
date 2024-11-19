@@ -4,6 +4,7 @@ import org.example.ChatServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,8 +37,10 @@ public class ConnectionHandler extends Thread {
             while (this.running) {
                 String incomingMessage = in.readLine();
                 System.out.println(incomingMessage);
+                main.getFileInfo().addMessage(this.getName(), incomingMessage);
                 main.getUserManager().getUsers().forEach(user -> {
-                    String fullMessage = String.format("[%s] %s", user.getName(), main.getChatFilter().filterMessage(incomingMessage));
+                    //String fullMessage = String.format("[%s] %s", user.getName(), main.getChatFilter().filterMessage(incomingMessage));
+                    String fullMessage = String.format("[%s] %s: %s", LocalDateTime.now(), user.getName(), main.getChatFilter().filterMessage(incomingMessage));
                     user.getHandler().sendMessage(fullMessage);
                 });
 
