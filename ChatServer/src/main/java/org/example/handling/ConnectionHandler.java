@@ -1,6 +1,7 @@
 package org.example.handling;
 
 import org.example.ChatServer;
+import org.example.users.User;
 
 import java.io.*;
 import java.net.Socket;
@@ -39,9 +40,16 @@ public class ConnectionHandler extends Thread {
                     continue;
                 }
 
-                System.out.println(incomingMessage);
+                final User sender = main.getUserManager().getUser(this.getIdentifier());
+                if (sender == null) {
+                    // has not authenticated, tell to authenticate
+                    this.sendMessage("You're not authenticated. Register with /register or login with /login");
+                    continue;
+                }
+
+
                 main.getClientManager().getConnections().forEach(connection -> {
-                    String name = main.getUserManager().getUser(this.getIdentifier()).getName();
+                    String name = sender.getName();
                     String fullMessage = String.format("[%s] %s", name, main.getChatFilter().filterMessage(incomingMessage));
                     connection.sendMessage(fullMessage);
                 });

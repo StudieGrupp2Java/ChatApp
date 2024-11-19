@@ -1,6 +1,12 @@
 package org.example.commands;
 
+import org.example.ChatServer;
+
 public class ChangePasswordCommand extends Command {
+
+    public ChangePasswordCommand(ChatServer main) {
+        super(main);
+    }
 
     @Override
     public void execute(String[] args) {

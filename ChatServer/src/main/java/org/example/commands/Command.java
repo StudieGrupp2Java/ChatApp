@@ -1,6 +1,13 @@
 package org.example.commands;
 
+import org.example.ChatServer;
+
 public abstract class Command {
+    protected final ChatServer main;
+
+    public Command(ChatServer main) {
+        this.main = main;
+    }
     // Template method to handle common functionality
     public final void executeWithValidation(String[] args) {
         validateArgs(args, getExpectedArgsCount());

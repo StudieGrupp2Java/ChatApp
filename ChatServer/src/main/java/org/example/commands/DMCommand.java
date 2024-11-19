@@ -1,6 +1,12 @@
 package org.example.commands;
 
+import org.example.ChatServer;
+
 public class DMCommand extends Command {
+
+    public DMCommand(ChatServer main) {
+        super(main);
+    }
 
     @Override
     public void execute(String[] args) {
