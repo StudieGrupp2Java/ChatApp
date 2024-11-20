@@ -8,12 +8,9 @@ import java.util.Optional;
 
 public class LoginCommand extends Command {
 
-    public LoginCommand(ChatServer main, ConnectionHandler sender) {
-        super(main, sender);
-    }
 
     @Override
-    protected void execute(String[] args) {
+    protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         if (main.getUserManager().getUser(sender.getIdentifier()) != null) {
             sender.sendMessage("You are already logged in.");
             return;

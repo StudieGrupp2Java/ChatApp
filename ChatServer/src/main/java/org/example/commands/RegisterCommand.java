@@ -6,12 +6,7 @@ import org.example.users.User;
 
 public class RegisterCommand extends Command {
 
-    public RegisterCommand(ChatServer main, ConnectionHandler sender) {
-        super(main, sender);
-    }
-
-    @Override
-    public void execute(String[] args) {
+    protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         if (main.getUserManager().getUser(sender.getIdentifier()) != null) {
             sender.sendMessage("You can't register while logged in. Do /logout");
             return;

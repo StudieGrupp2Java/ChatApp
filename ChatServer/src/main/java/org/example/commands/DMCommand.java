@@ -5,12 +5,8 @@ import org.example.handling.ConnectionHandler;
 
 public class DMCommand extends Command {
 
-    public DMCommand(ChatServer main, ConnectionHandler sender) {
-        super(main, sender);
-    }
-
     @Override
-    public void execute(String[] args) {
+    protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
 
         String recipient = args[0];
         String message = args[1];

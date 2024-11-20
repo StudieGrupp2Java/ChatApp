@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.commands.CommandFactory;
 import org.example.commands.CommandManager;
 import org.example.filemanager.FileManager;
 import org.example.filter.ChatFilter;
@@ -30,6 +31,9 @@ public class ChatServer {
         this.filter = new ChatFilter(chatInfo);
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
+
+        // 'null' används för sender just nu eftersom det behövs dynamiskt under exekvering
+        //CommandFactory.initialize(this,null);
 
     }
 

@@ -5,12 +5,8 @@ import org.example.handling.ConnectionHandler;
 
 public class ChangePasswordCommand extends Command {
 
-    public ChangePasswordCommand(ChatServer main, ConnectionHandler sender) {
-        super(main, sender);
-    }
-
     @Override
-    public void execute(String[] args) {
+    protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
 
         String oldPassword = args[0];
         String newPassword = args[1];

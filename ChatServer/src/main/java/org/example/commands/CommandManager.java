@@ -11,17 +11,17 @@ public class CommandManager {
     }
 
     public void handleIncomingCommand(String input, ConnectionHandler sender) {
-        final CommandFactory factory = new CommandFactory(main, sender);
+        // final CommandFactory factory = new CommandFactory(main, sender);
         if (input.startsWith("/")) {
             // Detta är ett kommando, t.ex. /register "message"
             String[] parts = input.split(" ", 2);
             String commandName = parts[0].substring(1).toLowerCase(); // Tar bort "/" och konverterar till små bokstäver
             String[] args = parseArgs(parts.length > 1 ? parts[1] : "");
 
-            Command command = factory.getCommand(commandName);
+            Command command = CommandFactory.getCommand(commandName);
             if (command != null) {
                 try {
-                    command.execute(args);
+                    command.executeWithValidation(args, main, sender);
                 } catch (IllegalArgumentException e){
                     System.out.println("Felaktiga argument: " + e.getMessage());
                 }
@@ -35,10 +35,10 @@ public class CommandManager {
             String message = parts.length > 1 ? parts[1] : "";
 
             // Hämta DMCommand från CommandFactory och exekvera med rätt argument
-            Command dmCommand = factory.getCommand("dm");
+            Command dmCommand = CommandFactory.getCommand("dm");
             if (dmCommand != null) {
                 try {
-                    dmCommand.execute(new String[]{username, message});
+                    dmCommand.execute(new String[]{username, message}, main, sender);
                 } catch (IllegalArgumentException e) {
                     System.out.println("Felaktiga argument: " + e.getMessage());
                 }
