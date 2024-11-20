@@ -12,6 +12,11 @@ public class RegisterCommand extends Command {
 
     @Override
     public void execute(String[] args) {
+        if (main.getUserManager().getUser(sender.getIdentifier()) != null) {
+            sender.sendMessage("You can't register while logged in. Do /logout");
+            return;
+        }
+
         String username = args[0];
         String password = args[1];
 

@@ -65,4 +65,8 @@ public class ClientManager {
                 .filter(connection -> !onlyLoggedIn || main.getUserManager().containsIdentifier(connection.getIdentifier()))
                 .forEach(connection -> connection.sendMessage(message));
     }
+
+    public boolean isConnected(int identifier) {
+        return connections.get(identifier) != null;
+    }
 }

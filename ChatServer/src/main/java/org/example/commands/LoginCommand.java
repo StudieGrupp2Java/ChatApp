@@ -14,6 +14,11 @@ public class LoginCommand extends Command {
 
     @Override
     protected void execute(String[] args) {
+        if (main.getUserManager().getUser(sender.getIdentifier()) != null) {
+            sender.sendMessage("You are already logged in.");
+            return;
+        }
+
         String username = args[0];
         String password = args[1];
 
@@ -28,6 +33,11 @@ public class LoginCommand extends Command {
 
         // Successfully authenticated
         User user = userOptional.get();
+
+        if (main.getClientManager().isConnected(user.getIdentifier())) {
+            sender.sendMessage("This user is already logged in.");
+            return;
+        }
 
         main.getUserManager().updateIdentity(user, sender.getIdentifier());
 
