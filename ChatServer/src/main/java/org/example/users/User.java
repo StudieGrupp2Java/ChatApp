@@ -6,6 +6,7 @@ public class User implements Serializable {
     private int identifier;
     private final String name;
     private String password; //TODO: store encrypted or other more secure way
+    private ChatRole role;
 
     public User(int identifier, String name, String password) {
         this.identifier = identifier;
