@@ -12,6 +12,11 @@ public class RegisterCommand extends Command {
 
     @Override
     public void execute(String[] args) {
+        if (main.getUserManager().getUser(sender.getIdentifier()) != null) {
+            sender.sendMessage("You can't register while logged in. Do /logout");
+            return;
+        }
+
         String username = args[0];
         String password = args[1];
 
@@ -28,8 +33,12 @@ public class RegisterCommand extends Command {
             return;
         }
 
-        main.getUserManager().addUser(sender.getIdentifier(), new User(sender.getIdentifier(), username, password));
+        final User user = new User(sender.getIdentifier(), username, password);
+        main.getUserManager().addUser(sender.getIdentifier(), user);
         sender.sendMessage("Successfully registered.");
+
+        sender.sendMessage("Welcome " + user.getName() + "!");
+        main.getClientManager().broadcastMessage(user.getName() + " logged in for the first time! Say hi!", true);
     }
 
     @Override

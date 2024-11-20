@@ -52,11 +52,25 @@ public class ClientManager {
     public void removeConnection(ConnectionHandler connection) {
         connection.close();
         connections.remove(connection.getIdentifier());
-        main.getUserManager().removeUser(connection.getIdentifier());
         System.out.println(connection.getSocket() + " disconnected!");
     }
 
     public Collection<ConnectionHandler> getConnections() {
         return connections.values();
+    }
+
+    /**
+     * Broadcasts message to all connected users
+     * @param message to be broadcasted
+     * @param onlyLoggedIn whether to only send to logged-in users
+     */
+    public void broadcastMessage(String message, boolean onlyLoggedIn) {
+        connections.values().stream()
+                .filter(connection -> !onlyLoggedIn || main.getUserManager().containsIdentifier(connection.getIdentifier()))
+                .forEach(connection -> connection.sendMessage(message));
+    }
+
+    public boolean isConnected(int identifier) {
+        return connections.get(identifier) != null;
     }
 }

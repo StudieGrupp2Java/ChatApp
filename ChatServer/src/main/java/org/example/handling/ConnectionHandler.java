@@ -58,10 +58,10 @@ public class ConnectionHandler extends Thread {
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
 
-                main.getClientManager().getConnections().forEach(connection -> {
-                    connection.sendMessage(fullMessage);
-                });
+                // Send to every connected client
+                main.getClientManager().broadcastMessage(fullMessage, true);
 
+                // Save to chat history
                 main.getChatInfo().addMessage(fullMessage);
             }
         } catch (IOException e) {

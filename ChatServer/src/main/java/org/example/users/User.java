@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private int identifier;
-    private String name;
+    private final String name;
     private String password; //TODO: store encrypted or other more secure way
 
     public User(int identifier, String name, String password) {
@@ -19,5 +19,13 @@ public class User implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setIdentifier(int identifier) {
+        this.identifier = identifier;
     }
 }

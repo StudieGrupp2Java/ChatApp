@@ -15,6 +15,7 @@ public class CommandFactory {
         commandMap.put("register", () -> new RegisterCommand(main, sender));
         commandMap.put("dm", () -> new DMCommand(main, sender));
         commandMap.put("changepassword", () -> new ChangePasswordCommand(main, sender));
+        commandMap.put("logout", () -> new LogoutCommand(main, sender));
     }
 
     public Command getCommand(String commandName) {
