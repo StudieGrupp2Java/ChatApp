@@ -50,4 +50,8 @@ public class UserManager implements Serializable {
         user.setIdentifier(identifier);
         users.put(identifier, user);
     }
+
+    public boolean containsIdentifier(int identifier) {
+        return users.containsKey(identifier);
+    }
 }

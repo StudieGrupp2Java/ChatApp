@@ -55,9 +55,14 @@ public class ClientManager {
         return connections.values();
     }
 
-    public void broadcastMessage(String message) {
-        for (ConnectionHandler connection : connections.values()) {
-            connection.sendMessage(message);
-        }
+    /**
+     * Broadcasts message to all connected users
+     * @param message to be broadcasted
+     * @param onlyLoggedIn whether to only send to logged-in users
+     */
+    public void broadcastMessage(String message, boolean onlyLoggedIn) {
+        connections.values().stream()
+                .filter(connection -> !onlyLoggedIn || main.getUserManager().containsIdentifier(connection.getIdentifier()))
+                .forEach(connection -> connection.sendMessage(message));
     }
 }

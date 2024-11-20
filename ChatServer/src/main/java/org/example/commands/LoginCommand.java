@@ -32,7 +32,7 @@ public class LoginCommand extends Command {
         main.getUserManager().updateIdentity(user, sender.getIdentifier());
 
         sender.sendMessage("Welcome " + user.getName() + "!");
-        main.getClientManager().broadcastMessage(user.getName() + " logged in!");
+        main.getClientManager().broadcastMessage(user.getName() + " logged in!", true);
     }
 
     @Override

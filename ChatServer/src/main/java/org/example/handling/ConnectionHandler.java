@@ -59,7 +59,7 @@ public class ConnectionHandler extends Thread {
                 );
 
                 // Send to every connected client
-                main.getClientManager().broadcastMessage(fullMessage);
+                main.getClientManager().broadcastMessage(fullMessage, true);
 
                 // Save to chat history
                 main.getChatInfo().addMessage(fullMessage);
