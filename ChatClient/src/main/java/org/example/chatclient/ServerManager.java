@@ -1,5 +1,8 @@
 package org.example.chatclient;
 
+import org.example.filemanager.FileManager;
+import org.example.logininfo.LoginInfo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,6 +16,11 @@ public class ServerManager {
     private BufferedReader in;
     private BufferedReader terminalIn;
     protected boolean running = true;
+    private final LoginInfo login;
+
+    public ServerManager(LoginInfo login){
+        this.login = login;
+    }
 
     public void connect(String ip, int port) {
         try {
@@ -23,7 +31,7 @@ public class ServerManager {
             terminalIn = new BufferedReader(new InputStreamReader(System.in));
 
             System.out.println("Successfully connected to the server!");
-
+            automaticLogin();
             new Thread(new ServerListener()).start();
 
             while (this.running) {
@@ -35,6 +43,7 @@ public class ServerManager {
                             System.out.println("Connection lost or client stopped. Exiting.");
                             break;
                         }
+                        checkLogin(message);
                         out.println(message);
                     } else {
                         // Sleep briefly to avoid busy-waiting
@@ -55,6 +64,41 @@ public class ServerManager {
             e.printStackTrace();
         } finally {
             closeConnections();
+        }
+    }
+
+    private void checkLogin(String message){
+        if (message.startsWith("/login")){
+            if (!login.getLoginInfo().isEmpty()){
+                return;
+            }
+            String[] information = message.split(" ");
+            if (information.length == 3){
+                login.addLoginInfo(information[1], information[2]);
+                System.out.println("Added login information!");
+                FileManager.save();
+            }
+        } else if (message.startsWith("/logout")){
+            login.removeInfo();
+        }
+    }
+
+    private void automaticLogin() throws IOException {
+        if (!login.getLoginInfo().isEmpty()){
+            while(true){
+                System.out.println("Do you want to use saved login info? (yes/no)");
+                String answer = terminalIn.readLine();
+                if (answer.equalsIgnoreCase("yes")){
+                    String[] info = login.checkLogin().split("=");
+                    out.println("/login " + info[0] + " " + info[1]);
+                    break;
+                } else if (answer.equalsIgnoreCase("no")){
+                    break;
+                } else {
+                    System.out.println("Invalid input!");
+                }
+            }
+
         }
     }
 

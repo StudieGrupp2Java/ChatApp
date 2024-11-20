@@ -18,6 +18,11 @@ public class RegisterCommand extends Command {
         System.out.println("Registering user: " + username);
 
         boolean exists = main.getUserManager().userExists(username);
+
+        if (username.isEmpty()){
+            sender.sendMessage("Username cannot be empty!");
+            return;
+        }
         if (exists) {
             sender.sendMessage("User " + username + " already exists. Choose another username.");
             return;

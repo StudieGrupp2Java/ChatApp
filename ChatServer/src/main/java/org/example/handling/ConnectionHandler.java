@@ -72,6 +72,10 @@ public class ConnectionHandler extends Thread {
         }
     }
 
+    public PrintWriter getWriter(){
+        return out;
+    }
+
     private boolean isCommand(String message) {
         return message.startsWith("/") || message.startsWith("@");
     }
