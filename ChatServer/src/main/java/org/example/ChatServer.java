@@ -31,10 +31,6 @@ public class ChatServer {
         this.filter = new ChatFilter(chatInfo);
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
-
-        // 'null' används för sender just nu eftersom det behövs dynamiskt under exekvering
-        //CommandFactory.initialize(this,null);
-
     }
 
     public ClientManager getClientManager() {

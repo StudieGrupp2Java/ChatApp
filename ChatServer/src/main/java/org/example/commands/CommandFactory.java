@@ -12,6 +12,7 @@ public class CommandFactory {
         commandMap.put("register", RegisterCommand::new);
         commandMap.put("dm", DMCommand::new);
         commandMap.put("changepassword", ChangePasswordCommand::new);
+        commandMap.put("logout", LogoutCommand::new);
     }
 
     public static Command getCommand(String commandName) {

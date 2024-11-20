@@ -6,12 +6,8 @@ import org.example.users.User;
 
 public class LogoutCommand extends Command {
 
-    public LogoutCommand(ChatServer main, ConnectionHandler connection) {
-        super(main, connection);
-    }
-
     @Override
-    protected void execute(String[] args) {
+    protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         User user = main.getUserManager().getUser(sender.getIdentifier());
 
         if (user == null) {
