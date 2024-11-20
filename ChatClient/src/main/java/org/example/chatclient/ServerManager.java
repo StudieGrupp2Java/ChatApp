@@ -44,6 +44,9 @@ public class ServerManager {
                             break;
                         }
                         checkLogin(message);
+
+                        if (validateMessage(message)) continue;;
+                        
                         out.println(message);
                     } else {
                         // Sleep briefly to avoid busy-waiting
@@ -65,6 +68,18 @@ public class ServerManager {
         } finally {
             closeConnections();
         }
+    }
+
+    private boolean validateMessage(String message){
+        if (message.length() > 100){
+            System.out.println("Message cannot be that big!");
+            return true;
+        }
+        if (message.isEmpty()){
+            System.out.println("Cannot send empty message!");
+            return true;
+        }
+        return false;
     }
 
     private void checkLogin(String message) throws IOException {
