@@ -135,10 +135,12 @@ public class ServerManager {
 
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
+                    if (serverMessage == null) break;
                     System.out.println(serverMessage);
                 }
 
             } catch (IOException e) {
+            } finally {
                 running = false; // Ensure the main loop knows the connection is lost
                 closeConnections();
             }
