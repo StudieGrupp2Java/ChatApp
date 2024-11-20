@@ -46,7 +46,7 @@ public class ServerManager {
                         checkLogin(message);
 
                         if (validateMessage(message)) continue;;
-                        
+
                         out.println(message);
                     } else {
                         // Sleep briefly to avoid busy-waiting
