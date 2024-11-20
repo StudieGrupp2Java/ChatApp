@@ -11,19 +11,49 @@ import java.util.concurrent.TimeUnit;
 
 public class FileManager {
     private final ChatServer server;
-    private static final String FOLDER = "config";
-    private static final String WORDS = "ForbiddenWords.txt";
-    private static final String CHATLOGS = "chatLogs.txt";
-    private static final String USERS = "Users.txt";
+    private final String FOLDER = "config";
+    private String WORDS;
+    private String CHATLOGS;
+    private String USERS;
+    private final String FILEPATHS = "configPaths.txt";
 
     public FileManager(ChatServer server){
         this.server = server;
         try{
+            loadPaths();
             load();
             loadWords();
             startSaveTask();
         } catch (IOException e) {
             System.out.println("Error while loading banned words!");
+        }
+    }
+
+    private void loadPaths(){
+        File paths = new File(FOLDER + "/" + FILEPATHS);
+        if (!paths.exists()) return;
+        BufferedReader pathReader = null;
+        try {
+            pathReader = new BufferedReader(new FileReader(paths));
+            String path;
+            while((path = pathReader.readLine()) != null){
+                String[] splitPath = path.split("=");
+                if (splitPath[0].equalsIgnoreCase("ChatLogs")){
+                    CHATLOGS = splitPath[1];
+                } else if (splitPath[0].equalsIgnoreCase("BannedWords")){
+                    WORDS = splitPath[1];
+                } else if (splitPath[0].equalsIgnoreCase("Users")) {
+                    USERS = splitPath[1];
+                }
+            }
+        } catch (IOException e){
+            System.out.println("Something went wrong loading file paths");
+        } finally {
+            try {
+                if (pathReader != null) pathReader.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
