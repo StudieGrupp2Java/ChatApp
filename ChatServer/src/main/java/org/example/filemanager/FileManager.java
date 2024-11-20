@@ -63,6 +63,7 @@ public class FileManager {
     }
 
     public synchronized <T> void save(List<T> object, String filePath){
+        if (object.isEmpty()) return;
         File file = new File(filePath);
         FileOutputStream fileOut = null;
         ObjectOutputStream out = null;
@@ -139,7 +140,6 @@ public class FileManager {
             }
         }catch (Exception e){
             System.out.println("Something went wrong loading the files!");
-            e.printStackTrace();
         } finally {
             try {
                 if (usersStream != null) usersStream.close();
