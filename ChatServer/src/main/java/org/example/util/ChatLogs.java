@@ -9,15 +9,10 @@ import java.util.List;
 public class ChatLogs implements Serializable {
     private final List<String> bannedWords = new ArrayList<>();
     private final List<String> chatLog = new ArrayList<>();
-    private final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 
-
-    public synchronized void addMessage(String username, String message) {
-        String logEntry = String.format("[%s] %s: %s", format.format(System.currentTimeMillis()), username, message);
+    public synchronized void addMessage(String logEntry) {
         chatLog.add(logEntry);
     }
-
-
 
     public List<String> getBannedWords(){
         return bannedWords;

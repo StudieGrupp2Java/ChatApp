@@ -10,9 +10,9 @@ public class ChatFilter {
 
     private Predicate<String> filter;
 
-    private final ChatLogs fileInfo;
-    public ChatFilter(ChatLogs fileInfo){
-        this.fileInfo = fileInfo;
+    private final ChatLogs chatInfo;
+    public ChatFilter(ChatLogs chatInfo){
+        this.chatInfo = chatInfo;
     }
 
     /**
@@ -22,7 +22,7 @@ public class ChatFilter {
      */
     public String filterMessage(String message) {
         filter = message::contains;
-        for (String word : fileInfo.getBannedWords()){
+        for (String word : chatInfo.getBannedWords()){
             if (filter.test(word)){
                 return message.replace(word, "*****");
             }

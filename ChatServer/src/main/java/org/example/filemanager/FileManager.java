@@ -62,7 +62,7 @@ public class FileManager {
     public void saveAll() {
         System.out.println("Executing save task...");
         saveBannedWords();
-        save(server.getFileInfo().getChatLogs(), FOLDER + "/" + CHATLOGS);
+        save(server.getChatInfo().getChatLogs(), FOLDER + "/" + CHATLOGS);
         save(Arrays.asList(server.getUserManager().getUsers().toArray()), FOLDER + "/" + USERS);
 
     }
@@ -95,12 +95,12 @@ public class FileManager {
             chatLogIn = new FileInputStream(FOLDER + "/" + CHATLOGS);
             chatLogStream = new ObjectInputStream(chatLogIn);
             size = chatLogStream.read();
-            if (!server.getFileInfo().getChatLogs().isEmpty()){
-                server.getFileInfo().getChatLogs().clear();
+            if (!server.getChatInfo().getChatLogs().isEmpty()){
+                server.getChatInfo().getChatLogs().clear();
             }
             for (int i = 0; i < size; i++){
                 String log = (String) chatLogStream.readObject();
-                server.getFileInfo().getChatLogs().add(log);
+                server.getChatInfo().getChatLogs().add(log);
             }
         }catch (Exception e){
             System.out.println("Something went wrong loading the files!");
@@ -135,7 +135,7 @@ public class FileManager {
             reader = new BufferedReader(new FileReader(words));
             String line;
             while ((line = reader.readLine()) != null){
-                server.getFileInfo().getBannedWords().add(line);
+                server.getChatInfo().getBannedWords().add(line);
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -158,7 +158,7 @@ public class FileManager {
         BufferedWriter writer = null;
         try{
             writer = new BufferedWriter(new FileWriter(words));
-            for (String word : server.getFileInfo().getBannedWords()){
+            for (String word : server.getChatInfo().getBannedWords()){
                 writer.write(word + "\n");
                 writer.flush();
             }

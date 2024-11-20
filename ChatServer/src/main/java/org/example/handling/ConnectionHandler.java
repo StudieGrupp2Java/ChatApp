@@ -6,8 +6,6 @@ import org.example.users.User;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
@@ -15,6 +13,8 @@ public class ConnectionHandler extends Thread {
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 
     private final BufferedReader in;
     private final PrintWriter out;
@@ -49,14 +49,20 @@ public class ConnectionHandler extends Thread {
                     this.sendMessage("You're not authenticated. Register with /register or login with /login");
                     continue;
                 }
-                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-                main.getFileInfo().addMessage(sender.getName(), incomingMessage);
+
+                final String name = sender.getName();
+                final String fullMessage = String.format(
+                        "[%s] %s: %s",
+                        DATE_FORMAT.format(System.currentTimeMillis()),
+                        name,
+                        main.getChatFilter().filterMessage(incomingMessage)
+                );
+
                 main.getClientManager().getConnections().forEach(connection -> {
-                    String name = sender.getName();
-                    String fullMessage = String.format("[%s] %s: %s", format.format(System.currentTimeMillis()), name, main.getChatFilter().filterMessage(incomingMessage));
                     connection.sendMessage(fullMessage);
                 });
 
+                main.getChatInfo().addMessage(fullMessage);
             }
         } catch (IOException e) {
             System.err.println("Error in reading/writing to connection");

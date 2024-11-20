@@ -9,7 +9,7 @@ import org.example.util.ChatLogs;
 
 public class ChatServer {
     private FileManager fileManager;
-    private ChatLogs fileInfo;
+    private ChatLogs chatInfo;
     private ChatFilter filter;
     private ClientManager clientManager;
     private UserManager userManager;
@@ -25,9 +25,9 @@ public class ChatServer {
 
     private void init() {
         this.userManager = new UserManager(this);
-        this.fileInfo = new ChatLogs();
+        this.chatInfo = new ChatLogs();
         this.fileManager = new FileManager(this);
-        this.filter = new ChatFilter(fileInfo);
+        this.filter = new ChatFilter(chatInfo);
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
 
@@ -48,7 +48,7 @@ public class ChatServer {
     public ChatFilter getChatFilter() {
         return filter;
     }
-    public ChatLogs getFileInfo(){
-        return fileInfo;
+    public ChatLogs getChatInfo(){
+        return chatInfo;
     }
 }
