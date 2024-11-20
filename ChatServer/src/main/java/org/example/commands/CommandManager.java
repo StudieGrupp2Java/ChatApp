@@ -21,7 +21,7 @@ public class CommandManager {
             Command command = CommandFactory.getCommand(commandName);
             if (command != null) {
                 try {
-                    command.execute(args, main, sender);
+                    command.executeWithValidation(args, main, sender);
                 } catch (IllegalArgumentException e){
                     System.out.println("Felaktiga argument: " + e.getMessage());
                 }
