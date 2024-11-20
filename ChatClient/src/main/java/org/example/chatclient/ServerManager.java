@@ -112,7 +112,8 @@ public class ServerManager {
                     System.out.println("Invalid input!");
                 }
             }
-
+        } else {
+            out.println("false");
         }
     }
 

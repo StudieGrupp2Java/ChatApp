@@ -14,7 +14,7 @@ public class ConnectionHandler extends Thread {
     private final Socket socket;
     private boolean running = true;
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     private final BufferedReader in;
     private final PrintWriter out;
@@ -79,7 +79,7 @@ public class ConnectionHandler extends Thread {
         return message.startsWith("/") || message.startsWith("@");
     }
 
-    public void sendMessage(String incomingMessage) {
+    public synchronized void sendMessage(String incomingMessage) {
         this.out.println(incomingMessage);
     }
 
