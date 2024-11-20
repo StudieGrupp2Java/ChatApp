@@ -55,4 +55,10 @@ public class ClientManager {
     public Collection<ConnectionHandler> getConnections() {
         return connections.values();
     }
+
+    public void broadcastMessage(String message) {
+        for (ConnectionHandler connection : connections.values()) {
+            connection.sendMessage(message);
+        }
+    }
 }

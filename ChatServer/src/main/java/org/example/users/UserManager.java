@@ -5,6 +5,7 @@ import org.example.ChatServer;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class UserManager implements Serializable {
     private final HashMap<Integer, User> users =  new HashMap<>();
@@ -30,11 +31,17 @@ public class UserManager implements Serializable {
         return users.get(identifier);
     }
 
+    public Optional<User> getUser(String username) {
+        return users.values().stream()
+                .filter(user -> user.getName().equalsIgnoreCase(username))
+                .findAny();
+    }
+
     public Collection<User> getUsers() {
         return users.values();
     }
 
     public boolean userExists(String username) {
-        return users.values().stream().anyMatch(user -> user.getName().toLowerCase().equals(username));
+        return users.values().stream().anyMatch(user -> user.getName().equalsIgnoreCase(username));
     }
 }
