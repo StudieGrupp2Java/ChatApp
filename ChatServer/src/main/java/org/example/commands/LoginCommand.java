@@ -29,7 +29,8 @@ public class LoginCommand extends Command {
         // Successfully authenticated
         User user = userOptional.get();
 
-        user.setIdentifier(sender.getIdentifier());
+        main.getUserManager().updateIdentity(user, sender.getIdentifier());
+
         sender.sendMessage("Welcome " + user.getName() + "!");
         main.getClientManager().broadcastMessage(user.getName() + " logged in!");
     }

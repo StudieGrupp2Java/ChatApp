@@ -44,4 +44,10 @@ public class UserManager implements Serializable {
     public boolean userExists(String username) {
         return users.values().stream().anyMatch(user -> user.getName().equalsIgnoreCase(username));
     }
+
+    public void updateIdentity(User user, int identifier) {
+        users.remove(user.getIdentifier());
+        user.setIdentifier(identifier);
+        users.put(identifier, user);
+    }
 }
