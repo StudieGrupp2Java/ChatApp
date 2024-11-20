@@ -48,7 +48,6 @@ public class ClientManager {
     public void removeConnection(ConnectionHandler connection) {
         connection.close();
         connections.remove(connection.getIdentifier());
-        main.getUserManager().removeUser(connection.getIdentifier());
         System.out.println(connection.getSocket() + " disconnected!");
     }
 
