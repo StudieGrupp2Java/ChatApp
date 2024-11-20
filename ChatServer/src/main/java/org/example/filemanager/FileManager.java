@@ -31,7 +31,12 @@ public class FileManager {
 
     private void loadPaths(){
         File paths = new File(FOLDER + "/" + FILEPATHS);
-        if (!paths.exists()) return;
+        if (!paths.exists()){
+            CHATLOGS = "chatLogs.txt";
+            WORDS = "ForbiddenWords.txt";
+            USERS = "Users.txt";
+            return;
+        }
         BufferedReader pathReader = null;
         try {
             pathReader = new BufferedReader(new FileReader(paths));
