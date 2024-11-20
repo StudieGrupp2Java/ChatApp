@@ -5,12 +5,9 @@ import org.example.handling.ConnectionHandler;
 
 public class LoginCommand extends Command {
 
-    public LoginCommand(ChatServer main, ConnectionHandler sender) {
-        super(main, sender);
-    }
 
     @Override
-    protected void execute(String[] args) {
+    protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         String username = args[0];
         String password = args[1];
 

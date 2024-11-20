@@ -8,10 +8,6 @@ public class CommandManager {
 
     public CommandManager(ChatServer chatServer) {
         this.main = chatServer;
-
-        // Nu när CommandFactory är statisk så initialiseras CommandFactory istället en gång
-        // när CommandManager skapas. Observera: Sender är null vid initialization
-        CommandFactory.initialize(chatServer, null);
     }
 
     public void handleIncomingCommand(String input, ConnectionHandler sender) {
@@ -25,7 +21,7 @@ public class CommandManager {
             Command command = CommandFactory.getCommand(commandName);
             if (command != null) {
                 try {
-                    command.execute(args);
+                    command.execute(args, main, sender);
                 } catch (IllegalArgumentException e){
                     System.out.println("Felaktiga argument: " + e.getMessage());
                 }
@@ -42,7 +38,7 @@ public class CommandManager {
             Command dmCommand = CommandFactory.getCommand("dm");
             if (dmCommand != null) {
                 try {
-                    dmCommand.execute(new String[]{username, message});
+                    dmCommand.execute(new String[]{username, message}, main, sender);
                 } catch (IllegalArgumentException e) {
                     System.out.println("Felaktiga argument: " + e.getMessage());
                 }
