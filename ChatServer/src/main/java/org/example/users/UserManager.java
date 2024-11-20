@@ -8,15 +8,21 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class UserManager implements Serializable {
+    private final ChatServer main;
     private final HashMap<Integer, User> users = new HashMap<>();
 
     public UserManager(ChatServer chatServer) {
+        this.main = chatServer;
+    }
+
+    public void loadUser(int identifier, User user) {
+        users.put(identifier, user);
     }
 
     // Add user here when they authenticate via login/register command or prompt on login
     public void addUser(int identifier, User user) {
         users.put(identifier, user);
-        System.out.println(user.getName() + " connected!");
+        main.getFileManager().saveAll();
     }
 
     public void removeUser(int identifier) {

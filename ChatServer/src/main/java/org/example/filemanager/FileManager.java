@@ -125,7 +125,7 @@ public class FileManager {
             }
             for (int i = 0; i < size; i++){
                 User user = (User) usersStream.readObject();
-                server.getUserManager().addUser(user.getIdentifier(), user);
+                server.getUserManager().loadUser(user.getIdentifier(), user);
             }
             chatLogIn = new FileInputStream(FOLDER + "/" + CHATLOGS);
             chatLogStream = new ObjectInputStream(chatLogIn);

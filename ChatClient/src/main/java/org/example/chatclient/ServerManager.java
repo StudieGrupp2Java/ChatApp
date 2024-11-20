@@ -67,17 +67,29 @@ public class ServerManager {
         }
     }
 
-    private void checkLogin(String message){
+    private void checkLogin(String message) throws IOException {
         if (message.startsWith("/login")){
             if (!login.getLoginInfo().isEmpty()){
                 return;
             }
             String[] information = message.split(" ");
-            if (information.length == 3){
-                login.addLoginInfo(information[1], information[2]);
-                System.out.println("Added login information!");
-                FileManager.save();
+            while(true) {
+                System.out.println("Do you want to save the login information for automatic loggin later? (yes/no)");
+                String choice = terminalIn.readLine();
+                if (choice.equalsIgnoreCase("yes")){
+                    if (information.length == 3){
+                        login.addLoginInfo(information[1], information[2]);
+                        System.out.println("Added login information!");
+                        FileManager.save();
+                        break;
+                    }  else {
+                        System.out.println("Invalid login input!");
+                    }
+                }else if (choice.equalsIgnoreCase("no")){
+                    break;
+                }
             }
+
         } else if (message.startsWith("/logout")){
             login.removeInfo();
         }

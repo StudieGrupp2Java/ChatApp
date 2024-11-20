@@ -48,7 +48,12 @@ public class ChatServer {
     public ChatFilter getChatFilter() {
         return filter;
     }
+
     public ChatLogs getChatInfo(){
         return chatInfo;
+    }
+
+    public FileManager getFileManager() {
+        return fileManager;
     }
 }
