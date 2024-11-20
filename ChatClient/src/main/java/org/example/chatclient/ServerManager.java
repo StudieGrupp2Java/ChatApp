@@ -78,7 +78,7 @@ public class ServerManager {
                 System.out.println("Added login information!");
                 FileManager.save();
             }
-        } else if (message.startsWith("/logut")){
+        } else if (message.startsWith("/logout")){
             login.removeInfo();
         }
     }
