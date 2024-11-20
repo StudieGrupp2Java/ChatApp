@@ -102,18 +102,19 @@ public class ServerManager {
                 String answer = terminalIn.readLine();
                 if (answer.equalsIgnoreCase("yes")){
                     String[] info = login.checkLogin().split("=");
+                    // tell server we're using auto-login
                     out.println("true");
                     out.println("/login " + info[0] + " " + info[1]);
-                    break;
+                    return;
                 } else if (answer.equalsIgnoreCase("no")){
-                    out.println("false");
                     break;
                 } else {
                     System.out.println("Invalid input!");
                 }
             }
-
         }
+        // tell server we're NOT using auto-login
+        out.println("false");
     }
 
     private void closeConnections() {
