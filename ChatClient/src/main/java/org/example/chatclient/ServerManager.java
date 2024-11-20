@@ -102,9 +102,11 @@ public class ServerManager {
                 String answer = terminalIn.readLine();
                 if (answer.equalsIgnoreCase("yes")){
                     String[] info = login.checkLogin().split("=");
+                    out.println("true");
                     out.println("/login " + info[0] + " " + info[1]);
                     break;
                 } else if (answer.equalsIgnoreCase("no")){
+                    out.println("false");
                     break;
                 } else {
                     System.out.println("Invalid input!");

@@ -34,8 +34,11 @@ public class ConnectionHandler extends Thread {
 
     @Override
     public void run() {
-
         try {
+            // No auto login.
+            if (in.readLine().equals("false")) {
+                this.sendMessage("Please register with /register <username> <password> or login with /login <username> <password>");
+            }
             while (this.running) {
                 String incomingMessage = in.readLine();
                 if (isCommand(incomingMessage)) {
@@ -70,10 +73,6 @@ public class ConnectionHandler extends Thread {
         } finally {
             main.getClientManager().removeConnection(this);
         }
-    }
-
-    public PrintWriter getWriter(){
-        return out;
     }
 
     private boolean isCommand(String message) {

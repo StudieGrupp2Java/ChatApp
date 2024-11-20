@@ -29,9 +29,6 @@ public class ClientManager {
                     ConnectionHandler handler = new ConnectionHandler(main, socket.accept());
                     this.addConnection(handler);
                     handler.start();
-                    User user = main.getUserManager().getUser(handler.getIdentifier());
-                    if (user == null)
-                        handler.getWriter().println("Please register with /register <username> <password> or login with /login <username> <password>");
                 } catch (IOException e) {
                     System.err.println("Error handling new connection");
                     e.printStackTrace();
