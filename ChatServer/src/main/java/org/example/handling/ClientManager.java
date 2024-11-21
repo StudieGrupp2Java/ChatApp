@@ -50,6 +50,11 @@ public class ClientManager {
         connection.close();
         connections.remove(connection.getIdentifier());
         System.out.println(connection.getSocket() + " disconnected!");
+
+        final User user = main.getUserManager().getUser(connection.getIdentifier());
+        if (user != null) {
+            this.broadcastMessage(user.getName() + " disconnected!", true);
+        }
     }
 
     public Collection<ConnectionHandler> getConnections() {

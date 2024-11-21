@@ -41,6 +41,11 @@ public class ConnectionHandler extends Thread {
             }
             while (this.running) {
                 String incomingMessage = in.readLine();
+                if (incomingMessage == null) {
+                    // user disconnected
+                    break;
+                }
+
                 if (isCommand(incomingMessage)) {
                     main.getCommandManager().handleIncomingCommand(incomingMessage, this);
                     continue;
