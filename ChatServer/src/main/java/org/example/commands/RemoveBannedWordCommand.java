@@ -8,7 +8,7 @@ public class RemoveBannedWordCommand extends Command{
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         String word = args[0];
         main.getChatInfo().removeBannedWord(word);
-        sender.sendMessage("Added " + word + " to banned word list.");
+        sender.sendMessage("Removed " + word + " to banned word list.");
     }
 
     @Override

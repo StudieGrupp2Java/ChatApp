@@ -15,6 +15,7 @@ public class CommandFactory {
         commandMap.put("logout", LogoutCommand::new);
         commandMap.put("removeword", RemoveBannedWordCommand::new);
         commandMap.put("addword", AddBannedWordsCommand::new);
+        commandMap.put("help", HelpCommand::new);
     }
 
     public static Command getCommand(String commandName) {
@@ -23,5 +24,9 @@ public class CommandFactory {
             return commandSupplier.get();
         }
         throw new IllegalArgumentException("Unknown command: " + commandName);
+    }
+
+    public static Map<String, Supplier<Command>> getCommandMap(){
+        return commandMap;
     }
 }

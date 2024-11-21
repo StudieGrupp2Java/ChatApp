@@ -3,17 +3,17 @@ package org.example.commands;
 import org.example.ChatServer;
 import org.example.handling.ConnectionHandler;
 
-public class AddBannedWordsCommand extends Command {
-
+public class HelpCommand extends Command{
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
-        String word = args[0];
-        main.getChatInfo().addBannedWord(word);
-        sender.sendMessage("Added " + word + " to banned word list.");
+        sender.sendMessage("--Server-side commands--");
+        for (String command : CommandFactory.getCommandMap().keySet()){
+            sender.sendMessage("/" + command);
+        }
     }
 
     @Override
     protected int getExpectedArgsCount() {
-        return 1;
+        return 0;
     }
 }

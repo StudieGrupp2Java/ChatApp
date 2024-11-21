@@ -21,7 +21,7 @@ public class InputListener {
         while (scan.hasNext()) {
             String message = scan.nextLine();
 
-            if (main.getCommandManager().executeCommand(message)) {
+            if (main.getCommandManager().executeCommand(message) && !message.equalsIgnoreCase("/help")) {
                 continue;
             }
 

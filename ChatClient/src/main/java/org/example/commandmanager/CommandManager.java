@@ -9,8 +9,9 @@ public class CommandManager {
     private final List<Command> commands = new ArrayList<>();
 
     public CommandManager(ChatClient main){
-        this.addCommand(new LeaveCommand(main));
+        addCommand(new LeaveCommand(main));
         addCommand(new ConnectCommand(main));
+        addCommand(new HelpCommand(main));
     }
 
     public void addCommand(Command command) {
@@ -39,5 +40,9 @@ public class CommandManager {
             }
         }
         return false;
+    }
+
+    public List<Command> getCommands() {
+        return commands;
     }
 }
