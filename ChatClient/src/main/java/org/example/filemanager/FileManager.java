@@ -11,7 +11,7 @@ public class FileManager {
     public FileManager(LoginInfo login){
         FileManager.login = login;
     }
-    public static void load(){
+    public void load(){
         BufferedReader in = null;
         try {
             if (!file.exists()){

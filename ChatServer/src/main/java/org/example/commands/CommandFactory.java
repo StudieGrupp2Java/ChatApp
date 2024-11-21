@@ -13,6 +13,8 @@ public class CommandFactory {
         commandMap.put("dm", DMCommand::new);
         commandMap.put("changepassword", ChangePasswordCommand::new);
         commandMap.put("logout", LogoutCommand::new);
+        commandMap.put("removeword", RemoveBannedWordCommand::new);
+        commandMap.put("addword", AddBannedWordsCommand::new);
     }
 
     public static Command getCommand(String commandName) {
