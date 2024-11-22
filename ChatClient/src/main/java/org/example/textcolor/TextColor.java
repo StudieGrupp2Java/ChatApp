@@ -109,6 +109,54 @@ public class TextColor {
             case "white":
                 currentTextColor = WHITE;
                 break;
+            case "bright-black":
+                currentTextColor = BLACK_BRIGHT;
+                break;
+            case "bright-red":
+                currentTextColor = RED_BRIGHT;
+                break;
+            case "bright-green":
+                currentTextColor = GREEN_BRIGHT;
+                break;
+            case "bright-yellow":
+                currentTextColor = YELLOW_BRIGHT;
+                break;
+            case "bright-blue":
+                currentTextColor = BLUE_BRIGHT;
+                break;
+            case "bright-purple":
+                currentTextColor = PURPLE_BRIGHT;
+                break;
+            case "bright-cyan":
+                currentTextColor = CYAN_BRIGHT;
+                break;
+            case "bright-white":
+                currentTextColor = WHITE_BRIGHT;
+                break;
+            case "bold-black":
+                currentTextColor = BLACK_BOLD;
+                break;
+            case "bold-red":
+                currentTextColor = RED_BOLD;
+                break;
+            case "bold-green":
+                currentTextColor = GREEN_BOLD;
+                break;
+            case "bold-yellow":
+                currentTextColor = YELLOW_BOLD;
+                break;
+            case "bold-blue":
+                currentTextColor = BLUE_BOLD;
+                break;
+            case "bold-purple":
+                currentTextColor = PURPLE_BOLD;
+                break;
+            case "bold-cyan":
+                currentTextColor = CYAN_BOLD;
+                break;
+            case "bold-white":
+                currentTextColor = WHITE_BOLD;
+                break;
             case "reset":
                 currentTextColor = RESET;
                 break;
@@ -144,6 +192,30 @@ public class TextColor {
             case "white":
                 currentBackgroundColor = WHITE_BACKGROUND;
                 break;
+            case "bright-black":
+                currentBackgroundColor = BLACK_BACKGROUND_BRIGHT;
+                break;
+            case "bright-red":
+                currentBackgroundColor = RED_BACKGROUND_BRIGHT;
+                break;
+            case "bright-green":
+                currentBackgroundColor = GREEN_BACKGROUND_BRIGHT;
+                break;
+            case "bright-yellow":
+                currentBackgroundColor = YELLOW_BACKGROUND_BRIGHT;
+                break;
+            case "bright-blue":
+                currentBackgroundColor = BLUE_BACKGROUND_BRIGHT;
+                break;
+            case "bright-purple":
+                currentBackgroundColor = PURPLE_BACKGROUND_BRIGHT;
+                break;
+            case "bright-cyan":
+                currentBackgroundColor = CYAN_BACKGROUND_BRIGHT;
+                break;
+            case "bright-white":
+                currentBackgroundColor = WHITE_BACKGROUND_BRIGHT;
+                break;
             case "reset":
                 currentBackgroundColor = RESET;
                 break;
@@ -154,9 +226,8 @@ public class TextColor {
     }
 
     private void resetTextColor() {
-        String tempBackground = currentBackgroundColor;
         currentTextColor = RESET;
-        currentBackgroundColor = tempBackground;
+        currentTextColor += currentBackgroundColor;
         serverManager.setColor(currentTextColor, currentBackgroundColor);
     }
 
