@@ -1,6 +1,7 @@
 package org.example.chatclient;
 
 import org.example.emoji.Emoji;
+import org.example.textcolor.TextColor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +10,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ServerManager {
-
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     protected boolean running = true;
     private final ChatClient main;
+    public String RESET = "\u001B[0m";;
+    public String TEXTCOLOR = RESET;
+    public String BGCOLOR = RESET;
+
+
 
     public ServerManager(ChatClient main){
         this.main = main;
@@ -49,6 +54,11 @@ public class ServerManager {
         out.println(message);
     }
 
+    public void setColor(String textColor, String bgColor){
+        TEXTCOLOR = textColor;
+        BGCOLOR = bgColor;
+    }
+
     public void closeConnections() {
         try {
             running = false;
@@ -71,7 +81,7 @@ public class ServerManager {
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
-                    System.out.println(serverMessage);
+                    System.out.println(BGCOLOR + TEXTCOLOR + serverMessage + RESET);
                 }
 
             } catch (IOException e) {

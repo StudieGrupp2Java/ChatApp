@@ -32,6 +32,7 @@ public class InputListener {
                 continue;
             }
 
+            if (main.getTextColor().handleInput(message)) continue;
             for (String key : emoji.getEmojiMap().keySet()){
                 if (message.contains(key)){
                     message = emoji.getEmoji(message);
