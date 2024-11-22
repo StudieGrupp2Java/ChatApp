@@ -51,21 +51,7 @@ public class UserManager implements Serializable {
         return users.values().stream().anyMatch(user -> user.getName().equalsIgnoreCase(username));
     }
 
-    public void updateIdentity(User user, int identifier) {
-        users.remove(user.getIdentifier());
-        user.setIdentifier(identifier);
-        users.put(identifier, user);
-    }
-
     public boolean containsIdentifier(int identifier) {
         return users.containsKey(identifier);
-    }
-
-    //TODO: this is pretty bad, make better
-    public void logout(int identifier) {
-        final User user = users.get(identifier);
-        users.remove(identifier);
-        user.setIdentifier(identifier + 1);
-        users.put(identifier + 1, user);
     }
 }

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
-    private final int identifier;
+    private int identifier;
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
@@ -20,7 +20,7 @@ public class ConnectionHandler extends Thread {
     private final PrintWriter out;
 
     public ConnectionHandler(ChatServer main, Socket socket) {
-        this.identifier = UUID.randomUUID().hashCode();
+        this.identifier = -Math.abs(UUID.randomUUID().hashCode()); // ensure negative identifier on initialization (logged out)
         this.main = main;
         this.socket = socket;
 
@@ -104,7 +104,27 @@ public class ConnectionHandler extends Thread {
         return socket;
     }
 
+    private void setIdentifier(int identifier) {
+        this.identifier = identifier;
+    }
+
     public int getIdentifier() {
         return identifier;
     }
+
+    public void logout() {
+        this.setIdentifier(-Math.abs(this.getIdentifier()));
+    }
+
+    public void login(User user) {
+        this.setIdentifier(user.getIdentifier());
+    }
+
+    /**
+     * Logged in connections have positive identifiers
+     */
+    public boolean isLoggedIn() {
+        return identifier >= 0;
+    }
+
 }
