@@ -24,7 +24,7 @@ public class ChatFilter {
         filter = message::contains;
         for (String word : chatInfo.getBannedWords()){
             if (filter.test(word)){
-                return message.replace(word, "*****");
+                message = message.replaceAll(word, "*".repeat(word.length()));
             }
         }
         return message;
