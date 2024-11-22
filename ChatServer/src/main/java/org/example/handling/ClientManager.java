@@ -5,7 +5,6 @@ import org.example.users.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collection;
 import java.util.HashMap;
 
 public class ClientManager {
@@ -57,8 +56,8 @@ public class ClientManager {
         }
     }
 
-    public Collection<ConnectionHandler> getConnections() {
-        return connections.values();
+    public boolean isConnected(int identifier) {
+        return connections.get(identifier) != null;
     }
 
     /**
@@ -68,11 +67,13 @@ public class ClientManager {
      */
     public void broadcastMessage(String message, boolean onlyLoggedIn) {
         connections.values().stream()
-                .filter(connection -> !onlyLoggedIn || main.getUserManager().containsIdentifier(connection.getIdentifier()))
+                .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
                 .forEach(connection -> connection.sendMessage(message));
     }
 
-    public boolean isConnected(int identifier) {
-        return connections.get(identifier) != null;
+    public void login(ConnectionHandler sender, User user) {
+        connections.remove(sender.getIdentifier());
+        sender.login(user);
+        connections.put(sender.getIdentifier(), sender);
     }
 }
