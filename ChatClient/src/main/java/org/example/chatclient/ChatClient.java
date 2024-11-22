@@ -3,6 +3,7 @@ package org.example.chatclient;
 
 import org.example.InputListener;
 import org.example.commandmanager.CommandManager;
+import org.example.emoji.Emoji;
 import org.example.filemanager.FileManager;
 import org.example.logininfo.LoginInfo;
 
