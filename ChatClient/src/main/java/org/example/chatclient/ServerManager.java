@@ -15,9 +15,10 @@ public class ServerManager {
     private BufferedReader in;
     protected boolean running = true;
     private final ChatClient main;
-    public String RESET = "\u001B[0m";;
-    public String TEXTCOLOR = RESET;
-    public String BGCOLOR = RESET;
+    public final String RESET = "\u001B[0m";
+    public final String DEFAULT = "\u001B[39m";
+    public String TEXTCOLOR = DEFAULT;
+    public String BGCOLOR = DEFAULT;
 
 
 
@@ -54,9 +55,9 @@ public class ServerManager {
         out.println(message);
     }
 
-    public void setColor(String textColor, String bgColor){
+    public void setColor(String textColor, String backgroundColor){
         TEXTCOLOR = textColor;
-        BGCOLOR = bgColor;
+        BGCOLOR = backgroundColor;
     }
 
     public void closeConnections() {
@@ -81,13 +82,22 @@ public class ServerManager {
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
-                    System.out.println(BGCOLOR + TEXTCOLOR + serverMessage + RESET);
+                    printWithColor(serverMessage);
                 }
 
             } catch (IOException e) {
             } finally {
                 closeConnections();
             }
+        }
+
+        private void printWithColor(String message){
+            if (BGCOLOR == RESET || BGCOLOR == DEFAULT)
+                System.out.println(TEXTCOLOR + message + RESET);
+            else if (TEXTCOLOR == RESET || TEXTCOLOR == DEFAULT)
+                System.out.println(BGCOLOR + message + RESET);
+            else
+                System.out.println(BGCOLOR + TEXTCOLOR + message + RESET);
         }
     }
 }
