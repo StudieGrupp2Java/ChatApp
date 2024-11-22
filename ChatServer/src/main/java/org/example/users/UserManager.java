@@ -51,7 +51,4 @@ public class UserManager implements Serializable {
         return users.values().stream().anyMatch(user -> user.getName().equalsIgnoreCase(username));
     }
 
-    public boolean containsIdentifier(int identifier) {
-        return users.containsKey(identifier);
-    }
 }
