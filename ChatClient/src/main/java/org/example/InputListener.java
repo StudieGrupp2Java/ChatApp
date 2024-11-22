@@ -13,6 +13,7 @@ public class InputListener {
     private final LoginInfo login;
     private final Scanner scan = new Scanner(System.in);
     private String username = "";
+    public boolean loggedIn = false;
 
     public InputListener(ChatClient main, LoginInfo login) {
         this.main = main;
@@ -48,8 +49,10 @@ public class InputListener {
     }
 
     private void checkUsername(String message){
-        if (message.contains("/login") || message.contains("/register")){
-            username = message.split(" ")[1];
+        if (!loggedIn){
+            if (message.contains("/login") || message.contains("/register")){
+                username = message.split(" ")[1];
+            }
         }
     }
 

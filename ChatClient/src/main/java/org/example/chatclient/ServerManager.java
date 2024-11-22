@@ -114,6 +114,9 @@ public class ServerManager {
         }
 
         private void printWithColor(String message){
+            if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")){
+                main.getInputListener().loggedIn = true;
+            }
             if (checkIfMyUsername(message)){
                 TEXT = TEXTCOLOROUT;
                 BACKGROUND = BGCOLOROUT;
