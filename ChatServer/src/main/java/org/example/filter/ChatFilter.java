@@ -21,10 +21,10 @@ public class ChatFilter {
      * @return the filtered message
      */
     public String filterMessage(String message) {
-        filter = message::contains;
+        filter = message.toLowerCase()::contains;
         for (String word : chatInfo.getBannedWords()){
-            if (filter.test(word)){
-                message = message.replaceAll(word, "*".repeat(word.length()));
+            if (filter.test(word.toLowerCase())){
+                message = message.replaceAll("(?i)" + word, "*".repeat(word.length()));
             }
         }
         return message;
