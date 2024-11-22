@@ -59,6 +59,8 @@ public class TextColor {
         textMap.put("bright-white", "\u001B[97m");
     }
 
+    private boolean OUT = false;
+    private boolean IN = false;
     public TextColor(ServerManager serverManager){
         this.serverManager = serverManager;
     }
@@ -67,36 +69,52 @@ public class TextColor {
         if (input.startsWith("/setcolor ")) {
             String color = input.substring(10).trim();
             setTextColor(color);
+            checkWhichToChange(input);
             return true;
         } else if (input.startsWith("/setbg ")) {
             String color = input.substring(7).trim();
             setBackgroundColor(color);
+            checkWhichToChange(input);
             return true;
         } else if (input.equals("/resetcolor")) {
             resetTextColor();
+            checkWhichToChange(input);
             return true;
         } else if (input.equals("/resetbg")) {
             resetBackgroundColor();
+            checkWhichToChange(input);
             return true;
         }
         return false;
     }
 
-    private void setTextColor(String color) {
+    private void checkWhichToChange(String message){
+        String check = message.split(" ")[2];
+        if (check.equalsIgnoreCase("out")) OUT = true;
+        if (check.equalsIgnoreCase("in")) IN = true;
+        if (OUT) serverManager.setColorOut(currentTextColor, currentBackgroundColor);
+        if (IN) serverManager.setColorIn(currentTextColor, currentBackgroundColor);
+        currentBackgroundColor = DEFAULT;
+        currentTextColor = DEFAULT;
+        OUT = false;
+        IN = false;
+    }
+
+    private void setTextColor(String input) {
+        String color = input.split(" ")[0];
         for (String key : textMap.keySet()){
             if (key.equalsIgnoreCase(color)){
                 currentTextColor = textMap.get(key);
-                serverManager.setColor(currentTextColor, currentBackgroundColor);
                 return;
             }
         }
     }
 
-    private void setBackgroundColor(String color) {
+    private void setBackgroundColor(String input) {
+        String color = input.split(" ")[0];
         for (String key : backgroundMap.keySet()){
             if (key.equalsIgnoreCase(color)){
                 currentBackgroundColor = backgroundMap.get(key);
-                serverManager.setColor(currentTextColor, currentBackgroundColor);
                 return;
             }
         }
@@ -104,11 +122,9 @@ public class TextColor {
 
     private void resetTextColor() {
         currentTextColor = DEFAULT;
-        serverManager.setColor(currentTextColor, currentBackgroundColor);
     }
 
     private void resetBackgroundColor() {
         currentBackgroundColor = DEFAULT;
-        serverManager.setColor(currentTextColor, currentBackgroundColor);
     }
 }

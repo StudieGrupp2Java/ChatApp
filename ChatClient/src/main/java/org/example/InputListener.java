@@ -8,10 +8,11 @@ import org.example.logininfo.LoginInfo;
 import java.util.Scanner;
 
 public class InputListener {
-    private Emoji emoji;
+    private final Emoji emoji;
     private final ChatClient main;
     private final LoginInfo login;
     private final Scanner scan = new Scanner(System.in);
+    private String username = "";
 
     public InputListener(ChatClient main, LoginInfo login) {
         this.main = main;
@@ -22,7 +23,7 @@ public class InputListener {
     public void listenForInput() {
         while (scan.hasNext()) {
             String message = scan.nextLine();
-
+            checkUsername(message);
             if (main.getCommandManager().executeCommand(message) && !message.equalsIgnoreCase("/help")) {
                 continue;
             }
@@ -44,6 +45,16 @@ public class InputListener {
             }
             main.getServerManager().sendMessageToServer(message);
         }
+    }
+
+    private void checkUsername(String message){
+        if (message.contains("/login") || message.contains("/register")){
+            username = message.split(" ")[1];
+        }
+    }
+
+    public String getUsername(){
+        return username;
     }
 
     private void checkLogin(String message) {
@@ -93,6 +104,7 @@ public class InputListener {
                     // tell server we're using auto-login
                     main.getServerManager().sendMessageToServer("true");
                     main.getServerManager().sendMessageToServer("/login " + info[0] + " " + info[1]);
+                    username = info[0];
                     return;
                 } else if (answer.equalsIgnoreCase("no")) {
                     break;

@@ -15,10 +15,15 @@ public class ServerManager {
     private BufferedReader in;
     protected boolean running = true;
     private final ChatClient main;
-    public final String RESET = "\u001B[0m";
-    public final String DEFAULT = "\u001B[39m";
-    public String TEXTCOLOR = DEFAULT;
-    public String BGCOLOR = DEFAULT;
+    private final String RESET = "\u001B[0m";
+    private final String DEFAULT = "\u001B[39m";
+    private String TEXTCOLOROUT = DEFAULT;
+    private String BGCOLOROUT = DEFAULT;
+    private String TEXTCOLORIN = DEFAULT;
+    private String BGCOLORIN = DEFAULT;
+    private String TEXT = DEFAULT;
+    private String BACKGROUND = DEFAULT;
+
 
 
 
@@ -55,9 +60,13 @@ public class ServerManager {
         out.println(message);
     }
 
-    public void setColor(String textColor, String backgroundColor){
-        TEXTCOLOR = textColor;
-        BGCOLOR = backgroundColor;
+    public void setColorOut(String textColor, String backgroundColor){
+        TEXTCOLOROUT = textColor;
+        BGCOLOROUT = backgroundColor;
+    }
+    public void setColorIn(String textColor, String backgroundColor){
+        TEXTCOLORIN = textColor;
+        BGCOLORIN = backgroundColor;
     }
 
     public void closeConnections() {
@@ -73,6 +82,19 @@ public class ServerManager {
 
     public boolean isConnected() {
         return running;
+    }
+
+    private boolean checkIfMyUsername(String message){
+        String incomingUsername = "";
+        String username = main.getInputListener().getUsername();
+        String[] split = message.split("] ");
+        if (split.length > 1){
+            incomingUsername = split[1].split(": ")[0];
+        }
+        if (username.equals(incomingUsername)){
+            return true;
+        }
+        return false;
     }
 
     private class ServerListener implements Runnable {
@@ -92,12 +114,19 @@ public class ServerManager {
         }
 
         private void printWithColor(String message){
-            if (BGCOLOR == RESET || BGCOLOR == DEFAULT)
-                System.out.println(TEXTCOLOR + message + RESET);
-            else if (TEXTCOLOR == RESET || TEXTCOLOR == DEFAULT)
-                System.out.println(BGCOLOR + message + RESET);
+            if (checkIfMyUsername(message)){
+                TEXT = TEXTCOLOROUT;
+                BACKGROUND = BGCOLOROUT;
+            } else {
+                TEXT = TEXTCOLORIN;
+                BACKGROUND = BGCOLORIN;
+            }
+            if (BACKGROUND == RESET || BACKGROUND == DEFAULT)
+                System.out.println(TEXT + message + RESET);
+            else if (TEXT == RESET || TEXT == DEFAULT)
+                System.out.println(BACKGROUND + message + RESET);
             else
-                System.out.println(BGCOLOR + TEXTCOLOR + message + RESET);
+                System.out.println(BACKGROUND + TEXT + message + RESET);
         }
     }
 }
