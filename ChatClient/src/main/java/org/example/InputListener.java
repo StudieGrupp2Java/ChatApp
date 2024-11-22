@@ -103,4 +103,8 @@ public class InputListener {
         // tell server we're NOT using auto-login
         main.getServerManager().sendMessageToServer("false");
     }
+
+    public Emoji getEmoji(){
+        return emoji;
+    }
 }

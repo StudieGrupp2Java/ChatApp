@@ -12,6 +12,7 @@ public class CommandManager {
         addCommand(new LeaveCommand(main));
         addCommand(new ConnectCommand(main));
         addCommand(new HelpCommand(main));
+        addCommand(new ListEmojiCommand(main));
     }
 
     public void addCommand(Command command) {

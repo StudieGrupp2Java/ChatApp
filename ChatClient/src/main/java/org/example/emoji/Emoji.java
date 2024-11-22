@@ -22,6 +22,12 @@ public class Emoji {
         emojiMap.put("!<3", "❤️");
         emojiMap.put("!thinking", "\uD83E\uDD14");
         emojiMap.put("!sadface", "\uD83E\uDD7A");
+        emojiMap.put("!clap", "\uD83D\uDC4F");
+        emojiMap.put("!thumbsup", "\uD83D\uDC4D");
+        emojiMap.put("!nice", "\uD83D\uDC4C");
+        emojiMap.put("!thumbsdown", "\uD83D\uDC4E");
+        emojiMap.put("!shrug", "\uD83E\uDD37");
+        emojiMap.put("!facepalm", "\uD83E\uDD26");
     }
 
     public String emojiPicker(String message, Scanner terminalIn) {
@@ -51,7 +57,7 @@ public class Emoji {
         String emoji = (choice > 0 && choice <= emojiList.size()) ? emojiList.get(choice - 1) : "";
 
         if (!emoji.isEmpty()) {
-            message += message.replace("!emoji", emoji);
+            message = message.replace("!emoji", emoji);
         }
         return message;
     }
