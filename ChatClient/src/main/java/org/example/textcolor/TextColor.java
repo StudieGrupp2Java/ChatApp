@@ -69,31 +69,7 @@ public class TextColor {
     public TextColor(){
 
     }
-
-    /*public boolean handleInput(String input) {
-        String[] split = input.split(" ");
-        String check = "";
-        if (split.length >= 3) check = split[2];
-
-        if (input.startsWith("/setcolor ")) {
-            String color = input.substring(10).trim();
-            setTextColor(color, check);
-            return true;
-        } else if (input.startsWith("/setbg ")) {
-            String color = input.substring(7).trim();
-            setBackgroundColor(color, check);
-            return true;
-        } else if (input.startsWith("/resetcolor")) {
-            resetTextColor(input);
-            return true;
-        } else if (input.startsWith("/resetbg")) {
-            resetBackgroundColor(input);
-            return true;
-        }
-        return false;
-    }*/
-
-
+    
     public void setTextColor(String input, String check) {
         String color = input.split(" ")[0];
         for (String key : textMap.keySet()){
