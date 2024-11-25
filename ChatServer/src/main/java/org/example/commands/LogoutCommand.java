@@ -19,6 +19,7 @@ public class LogoutCommand extends Command {
         sender.logout();
         sender.sendMessage("Bye!");
 
+        user.setStatus(User.Status.OFFLINE);
         main.getClientManager().broadcastMessage(user.getName() + " logged out!", true);
     }
 

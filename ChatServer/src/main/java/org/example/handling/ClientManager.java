@@ -74,6 +74,7 @@ public class ClientManager {
     public void login(ConnectionHandler sender, User user) {
         connections.remove(sender.getIdentifier());
         sender.login(user);
+        user.setOnline();
         connections.put(sender.getIdentifier(), sender);
     }
 }

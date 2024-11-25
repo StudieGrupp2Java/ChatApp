@@ -16,6 +16,7 @@ public class CommandFactory {
         commandMap.put("removeword", RemoveBannedWordCommand::new);
         commandMap.put("addword", AddBannedWordsCommand::new);
         commandMap.put("help", HelpCommand::new);
+        commandMap.put("online", OnlineCommand::new);
     }
 
     public static Command getCommand(String commandName) {
