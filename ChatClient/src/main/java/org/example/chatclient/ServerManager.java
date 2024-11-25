@@ -7,12 +7,22 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ServerManager {
-
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     protected boolean running = true;
     private final ChatClient main;
+    private final String RESET = "\u001B[0m";
+    private final String DEFAULT = "\u001B[39m";
+    private String TEXTCOLOROUT = DEFAULT;
+    private String BGCOLOROUT = DEFAULT;
+    private String TEXTCOLORIN = DEFAULT;
+    private String BGCOLORIN = DEFAULT;
+    private String TEXT = DEFAULT;
+    private String BACKGROUND = DEFAULT;
+
+
+
 
     public ServerManager(ChatClient main){
         this.main = main;
@@ -47,6 +57,15 @@ public class ServerManager {
         out.println(message);
     }
 
+    public void setColorOut(String textColor, String backgroundColor){
+        TEXTCOLOROUT = textColor;
+        BGCOLOROUT = backgroundColor;
+    }
+    public void setColorIn(String textColor, String backgroundColor){
+        TEXTCOLORIN = textColor;
+        BGCOLORIN = backgroundColor;
+    }
+
     public void closeConnections() {
         try {
             running = false;
@@ -62,6 +81,19 @@ public class ServerManager {
         return running;
     }
 
+    private boolean checkIfMyUsername(String message){
+        String incomingUsername = "";
+        String username = main.getInputListener().getUsername();
+        String[] split = message.split("] ");
+        if (split.length > 1){
+            incomingUsername = split[1].split(": ")[0];
+        }
+        if (username.equals(incomingUsername)){
+            return true;
+        }
+        return false;
+    }
+
     private class ServerListener implements Runnable {
         public void run() {
             try {
@@ -69,13 +101,32 @@ public class ServerManager {
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
-                    System.out.println(serverMessage);
+                    printWithColor(serverMessage);
                 }
 
             } catch (IOException e) {
             } finally {
                 closeConnections();
             }
+        }
+
+        private void printWithColor(String message){
+            if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")){
+                main.getInputListener().loggedIn = true;
+            }
+            if (checkIfMyUsername(message)){
+                TEXT = TEXTCOLOROUT;
+                BACKGROUND = BGCOLOROUT;
+            } else {
+                TEXT = TEXTCOLORIN;
+                BACKGROUND = BGCOLORIN;
+            }
+            if (BACKGROUND == RESET || BACKGROUND == DEFAULT)
+                System.out.println(TEXT + message + RESET);
+            else if (TEXT == RESET || TEXT == DEFAULT)
+                System.out.println(BACKGROUND + message + RESET);
+            else
+                System.out.println(BACKGROUND + TEXT + message + RESET);
         }
     }
 }

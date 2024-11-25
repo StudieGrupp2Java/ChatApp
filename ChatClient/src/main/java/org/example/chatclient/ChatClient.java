@@ -5,12 +5,14 @@ import org.example.InputListener;
 import org.example.commandmanager.CommandManager;
 import org.example.filemanager.FileManager;
 import org.example.logininfo.LoginInfo;
+import org.example.textcolor.TextColor;
 
 public class ChatClient {
     private CommandManager commandManager;
     private FileManager manager;
     private LoginInfo login;
     private InputListener listener;
+    private TextColor textColor;
 
     private ServerManager serverManager;
     private static final String SERVER_ADRESS = "localhost";
@@ -28,6 +30,7 @@ public class ChatClient {
 
     public void init() {
         this.serverManager = new ServerManager(this);
+        textColor = new TextColor(serverManager);
         this.commandManager = new CommandManager(this);
         this.login = new LoginInfo();
         this.manager = new FileManager(login);
@@ -45,6 +48,10 @@ public class ChatClient {
 
     public InputListener getInputListener() {
         return listener;
+    }
+
+    public TextColor getTextColor(){
+        return textColor;
     }
 
 }
