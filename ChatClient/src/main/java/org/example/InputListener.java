@@ -31,7 +31,6 @@ public class InputListener {
             if (validateMessage(message)) {
                 continue;
             }
-            //if (main.getTextColor().handleInput(message)) continue;
 
             main.getServerManager().sendMessageToServer(message);
         }
