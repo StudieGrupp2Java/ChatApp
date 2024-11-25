@@ -2,6 +2,7 @@ package org.example.handling;
 
 import org.example.ChatServer;
 import org.example.users.User;
+import org.example.util.ChatLog;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -79,7 +80,7 @@ public class ClientManager {
                 .forEach(connection -> connection.sendMessage(toSend));
 
         // Save to chat history
-        main.getChatInfo().addMessage(toSend);
+        main.getChatInfo().addMessage(message);
     }
 
     public void login(ConnectionHandler sender, User user) {
@@ -89,9 +90,10 @@ public class ClientManager {
         connections.put(sender.getIdentifier(), sender);
 
         main.getChatInfo().getChatLogs().stream()
-                .sorted(Comparator.reverseOrder())
+                .sorted(Comparator.comparingLong(ChatLog::getTimestamp).reversed())
                 .limit(MESSAGESTOSHOW)
-                .sorted(Comparator.naturalOrder())
+                .sorted(Comparator.comparingLong(ChatLog::getTimestamp))
+                .map(log -> String.format("[%s] %s", DATE_FORMAT.format(log.getTimestamp()), log.getMessage()))
                 .forEach(sender::sendMessage);
     }
 
