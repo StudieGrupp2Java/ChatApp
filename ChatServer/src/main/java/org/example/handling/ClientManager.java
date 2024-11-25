@@ -74,6 +74,9 @@ public class ClientManager {
         connections.values().stream()
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
                 .forEach(connection -> connection.sendMessage(message));
+
+        // Save to chat history
+        main.getChatInfo().addMessage(message);
     }
 
     public void login(ConnectionHandler sender, User user) {

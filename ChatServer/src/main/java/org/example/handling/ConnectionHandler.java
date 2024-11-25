@@ -71,9 +71,6 @@ public class ConnectionHandler extends Thread {
 
                 // Send to every connected client
                 main.getClientManager().broadcastMessage(fullMessage, true);
-
-                // Save to chat history
-                main.getChatInfo().addMessage(fullMessage);
             }
         } catch (IOException e) {
             System.err.println("Error in reading/writing to connection");
