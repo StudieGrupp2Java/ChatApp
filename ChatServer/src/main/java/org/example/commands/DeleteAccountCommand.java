@@ -22,13 +22,13 @@ public class DeleteMeCommand extends Command {
         }
 
         // 2. Radera användaren
-        userManager.deleteUser(user.getUsername());
+        userManager.deleteUser(user.getName());
 
         // 3. Skicka bekräftelsemeddelande till klienten
         sender.sendMessage("Your account is now deleted. We're sorry to see you go!");
 
         // 4. Eventuellt: Logga händelse för administratörsändamål
-        // ChatLogs.getChatLogs().logAction("User " + user.getUsername() + " deleted their account.");
+        // ChatLogs.getChatLogs().logAction("User " + user.getName() + " deleted their account.");
     }
 
     @Override
