@@ -36,10 +36,10 @@ public class LoginCommand extends Command {
             return;
         }
 
-        main.getClientManager().login(sender, user);
-
         sender.sendMessage("Welcome " + user.getName() + "!");
         main.getClientManager().broadcastMessage(user.getName() + " logged in!", true);
+
+        main.getClientManager().login(sender, user);
     }
 
     @Override

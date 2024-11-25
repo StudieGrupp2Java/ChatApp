@@ -5,16 +5,16 @@ import org.example.users.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collections;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClientManager {
     private static final int SERVER_PORT = 2147; //TODO: changeable
     private final ChatServer main;
     private final int MESSAGESTOSHOW = 30;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+
     private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
 
     public ClientManager(ChatServer chatServer) {
@@ -71,12 +71,15 @@ public class ClientManager {
      * @param onlyLoggedIn whether to only send to logged-in users
      */
     public void broadcastMessage(String message, boolean onlyLoggedIn) {
+        String timestamp = "[" + DATE_FORMAT.format(System.currentTimeMillis()) + "]";
+        final String toSend = timestamp + " " + message;
+
         connections.values().stream()
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
-                .forEach(connection -> connection.sendMessage(message));
+                .forEach(connection -> connection.sendMessage(toSend));
 
         // Save to chat history
-        main.getChatInfo().addMessage(message);
+        main.getChatInfo().addMessage(toSend);
     }
 
     public void login(ConnectionHandler sender, User user) {

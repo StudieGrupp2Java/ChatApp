@@ -14,8 +14,6 @@ public class ConnectionHandler extends Thread {
     private final Socket socket;
     private boolean running = true;
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-
     private final BufferedReader in;
     private final PrintWriter out;
 
@@ -63,8 +61,7 @@ public class ConnectionHandler extends Thread {
 
                 final String name = sender.getName();
                 final String fullMessage = String.format(
-                        "[%s] %s: %s",
-                        DATE_FORMAT.format(System.currentTimeMillis()),
+                        "%s: %s",
                         name,
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
