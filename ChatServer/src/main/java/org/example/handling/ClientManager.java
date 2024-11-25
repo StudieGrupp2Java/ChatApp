@@ -79,6 +79,9 @@ public class ClientManager {
                         connection.sendMessage(message);
                     }
                 });
+        // Save to chat history
+        main.getChatInfo().addMessage(message);
+
     }
 
     private String getUsername(String message){
@@ -94,7 +97,12 @@ public class ClientManager {
         sender.login(user);
         user.setStatus(User.Status.ONLINE);
         connections.put(sender.getIdentifier(), sender);
-        main.getChatInfo().getChatLogs().stream().sorted(Comparator.reverseOrder()).limit(MESSAGESTOSHOW).forEach(sender::sendMessage);
+
+        main.getChatInfo().getChatLogs().stream()
+                .sorted(Comparator.reverseOrder())
+                .limit(MESSAGESTOSHOW)
+                .sorted(Comparator.naturalOrder())
+                .forEach(sender::sendMessage);
     }
 
     public void logout(ConnectionHandler sender) {
