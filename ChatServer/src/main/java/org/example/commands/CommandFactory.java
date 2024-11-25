@@ -19,7 +19,6 @@ public class CommandFactory {
         commandMap.put("online", OnlineCommand::new);
         commandMap.put("block", BlockUserCommand::new);
         commandMap.put("unblock", RemoveBlockedUserCommand::new);
-        commandMap.put("listmembers", ListUsersCommand::new);
         commandMap.put("listblocked", ListBlockedUsersCommand::new);
     }
 
