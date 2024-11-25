@@ -37,8 +37,10 @@ public class ChatServer {
     }
 
     private void shutdown() {
+        System.out.println("Shutting down and saving data...");
         fileManager.saveAll();
         updateTracker.close();
+        System.out.println("Save complete");
     }
 
     public ClientManager getClientManager() {

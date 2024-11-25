@@ -1,7 +1,5 @@
 package org.example.textcolor;
 
-import org.example.chatclient.ServerManager;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +8,7 @@ public class TextColor {
     // Reset
     public static final String RESET = "\u001B[0m";
     public static final String DEFAULT = "\u001B[39m";
+    public static final String CLEAR_LINE = "\u001B[1A\u001B[2K";
     private static final Map<String, String> backgroundMap = new HashMap<>();
     private static final Map<String, String> textMap = new HashMap<>();
     private String TEXTCOLOROUT = DEFAULT;

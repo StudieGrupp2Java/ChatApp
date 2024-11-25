@@ -100,7 +100,6 @@ public class FileManager {
         saveBannedWords();
         save(server.getChatInfo().getChatLogs(), FOLDER + "/" + CHATLOGS);
         save(Arrays.asList(server.getUserManager().getUsers().toArray()), FOLDER + "/" + USERS);
-
     }
 
     private void startSaveTask() {
