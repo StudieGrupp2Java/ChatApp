@@ -10,7 +10,7 @@ public class RemoveBlockedUserCommand extends Command{
         User user = main.getUserManager().getUser(sender.getIdentifier());
         main.getUserManager().getUsers().stream().map(User::getName).forEach(name -> {
             if (name.equals(args[0])){
-                user.removeBlockedUser(name);
+                user.removeBlockedUser(name, sender);
                 sender.sendMessage("Removed " + name + " from blocked list!");
             }
         });

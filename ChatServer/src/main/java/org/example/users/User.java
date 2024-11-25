@@ -2,6 +2,7 @@ package org.example.users;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.handling.ConnectionHandler;
 
 import java.io.Serializable;
 import java.util.*;
@@ -43,17 +44,17 @@ public class User implements Serializable {
         }
     }
 
-    public void addBlockedUser(String name){
+    public void addBlockedUser(String name, ConnectionHandler sender){
         if (blockedUsers.contains(name)){
-            System.out.println("User is already blocked!");
+            sender.sendMessage("User is already blocked!");
             return;
         }
         blockedUsers.add(name);
     }
 
-    public void removeBlockedUser(String name){
+    public void removeBlockedUser(String name, ConnectionHandler sender){
         if (blockedUsers.contains(name)){
-            System.out.println("User is not in your blocked list!");
+            sender.sendMessage("User is not in your blocked list!");
             return;
         }
         blockedUsers.remove(name);

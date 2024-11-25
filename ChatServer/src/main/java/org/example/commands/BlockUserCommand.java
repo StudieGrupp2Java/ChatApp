@@ -10,7 +10,7 @@ public class BlockUserCommand extends Command{
         User user = main.getUserManager().getUser(sender.getIdentifier());
         main.getUserManager().getUsers().stream().map(User::getName).forEach(name -> {
             if (name.equals(args[0])){
-                user.addBlockedUser(name);
+                user.addBlockedUser(name, sender);
                 sender.sendMessage("Added " + name + " to blocked list!");
             }
         });
