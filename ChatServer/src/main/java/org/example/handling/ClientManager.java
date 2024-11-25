@@ -70,9 +70,23 @@ public class ClientManager {
      * @param onlyLoggedIn whether to only send to logged-in users
      */
     public void broadcastMessage(String message, boolean onlyLoggedIn) {
+        final String username = getUsername(message);
         connections.values().stream()
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
-                .forEach(connection -> connection.sendMessage(message));
+                .forEach(connection -> {
+                    User user = main.getUserManager().getUser(connection.getIdentifier());
+                    if (!user.getBlockedUsers().contains(username)){
+                        connection.sendMessage(message);
+                    }
+                });
+    }
+
+    private String getUsername(String message){
+        String[] split = message.split("] ");
+        String test = "";
+        if (split.length >= 2)
+            test = split[1].split(": ")[0];
+        return test;
     }
 
     public void login(ConnectionHandler sender, User user) {

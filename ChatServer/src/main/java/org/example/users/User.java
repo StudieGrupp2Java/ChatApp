@@ -1,13 +1,18 @@
 package org.example.users;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
-import java.util.UUID;
+import java.util.*;
 
 public class User implements Serializable {
     private final int identifier;
     private final String name;
     private String password; //TODO: store encrypted or other more secure way
     private ChatRole role;
+    @Getter
+    private List<String> blockedUsers;
 
     private Status status;
     private long lastSeen;
@@ -16,6 +21,7 @@ public class User implements Serializable {
         this.identifier = Math.abs(UUID.randomUUID().hashCode()); // ensure positive identifier
         this.name = name;
         this.password = password;
+        blockedUsers = new ArrayList<>();
     }
 
     public int getIdentifier() {
@@ -35,6 +41,22 @@ public class User implements Serializable {
         if (status != Status.AWAY) {
             this.lastSeen = System.currentTimeMillis();
         }
+    }
+
+    public void addBlockedUser(String name){
+        if (blockedUsers.contains(name)){
+            System.out.println("User is already blocked!");
+            return;
+        }
+        blockedUsers.add(name);
+    }
+
+    public void removeBlockedUser(String name){
+        if (blockedUsers.contains(name)){
+            System.out.println("User is not in your blocked list!");
+            return;
+        }
+        blockedUsers.remove(name);
     }
 
     public Status getStatus() {
