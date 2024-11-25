@@ -126,6 +126,7 @@ public class FileManager {
             }
             for (int i = 0; i < size; i++){
                 User user = (User) usersStream.readObject();
+                user.setInitalStatus(User.Status.OFFLINE);
                 server.getUserManager().loadUser(user.getIdentifier(), user);
             }
             chatLogIn = new FileInputStream(FOLDER + "/" + CHATLOGS);
