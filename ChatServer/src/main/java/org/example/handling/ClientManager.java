@@ -5,10 +5,7 @@ import org.example.users.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClientManager {
@@ -70,6 +67,7 @@ public class ClientManager {
      * @param onlyLoggedIn whether to only send to logged-in users
      */
     public void broadcastMessage(String message, boolean onlyLoggedIn) {
+
         final String username = getUsername(message);
         connections.values().stream()
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
@@ -77,12 +75,17 @@ public class ClientManager {
                     User user = main.getUserManager().getUser(connection.getIdentifier());
                     if (!user.getBlockedUsers().contains(username)){
                         connection.sendMessage(message);
+                        if (connection.getCurrentRoom() != null){
+                            if (main.getChatRoom().getRoomList().contains(connection.getCurrentRoom())){
+                                main.getChatRoom().broadcastToRoom(connection.getCurrentRoom(), message);
+                            }
+                        }
                     }
                 });
         // Save to chat history
         main.getChatInfo().addMessage(message);
-
     }
+
 
     private String getUsername(String message){
         String[] split = message.split("] ");

@@ -1,5 +1,7 @@
 package org.example.handling;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.ChatServer;
 import org.example.users.User;
 
@@ -13,6 +15,9 @@ public class ConnectionHandler extends Thread {
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
+    @Getter
+    @Setter
+    private String currentRoom;
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
@@ -79,6 +84,7 @@ public class ConnectionHandler extends Thread {
             main.getClientManager().removeConnection(this);
         }
     }
+
 
     private boolean isCommand(String message) {
         return message.startsWith("/") || message.startsWith("@");
