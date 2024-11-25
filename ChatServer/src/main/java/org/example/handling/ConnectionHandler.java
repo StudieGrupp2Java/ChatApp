@@ -46,6 +46,9 @@ public class ConnectionHandler extends Thread {
                     break;
                 }
 
+                // User has sent something, reset their last-seen
+                main.getUpdateTracker().updateStatus(this.identifier);
+
                 if (isCommand(incomingMessage)) {
                     main.getCommandManager().handleIncomingCommand(incomingMessage, this);
                     continue;

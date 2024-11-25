@@ -1,12 +1,12 @@
 package org.example;
 
-import org.example.commands.CommandFactory;
 import org.example.commands.CommandManager;
 import org.example.filemanager.FileManager;
 import org.example.filter.ChatFilter;
 import org.example.handling.ClientManager;
 import org.example.users.UserManager;
 import org.example.util.ChatLogs;
+import org.example.util.UpdateTracker;
 
 public class ChatServer {
     private FileManager fileManager;
@@ -15,12 +15,14 @@ public class ChatServer {
     private ClientManager clientManager;
     private UserManager userManager;
     private CommandManager commandManager;
+    private UpdateTracker updateTracker;
 
     public ChatServer() {
         System.out.println("Starting ChatServer...");
         init();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> fileManager.saveAll()));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+        updateTracker.runTick();
         clientManager.listen();
     }
 
@@ -31,6 +33,12 @@ public class ChatServer {
         this.filter = new ChatFilter(chatInfo);
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
+        this.updateTracker = new UpdateTracker(this);
+    }
+
+    private void shutdown() {
+        fileManager.saveAll();
+        updateTracker.close();
     }
 
     public ClientManager getClientManager() {
@@ -55,5 +63,9 @@ public class ChatServer {
 
     public FileManager getFileManager() {
         return fileManager;
+    }
+
+    public UpdateTracker getUpdateTracker() {
+        return updateTracker;
     }
 }
