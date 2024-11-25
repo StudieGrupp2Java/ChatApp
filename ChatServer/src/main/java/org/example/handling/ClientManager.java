@@ -57,6 +57,7 @@ public class ClientManager {
         final User user = main.getUserManager().getUser(connection.getIdentifier());
         if (user != null) {
             this.broadcastMessage(user.getName() + " disconnected!", true);
+            user.setStatus(User.Status.OFFLINE);
         }
     }
 
@@ -80,7 +81,12 @@ public class ClientManager {
         sender.login(user);
         user.setStatus(User.Status.ONLINE);
         connections.put(sender.getIdentifier(), sender);
-        main.getChatInfo().getChatLogs().stream().limit(MESSAGESTOSHOW).forEach(sender::sendMessage);
+
+        main.getChatInfo().getChatLogs().stream()
+                .sorted(Comparator.reverseOrder())
+                .limit(MESSAGESTOSHOW)
+                .sorted(Comparator.naturalOrder())
+                .forEach(sender::sendMessage);
     }
 
     public void logout(ConnectionHandler sender) {
