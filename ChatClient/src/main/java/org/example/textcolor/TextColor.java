@@ -69,7 +69,7 @@ public class TextColor {
     public TextColor(){
 
     }
-    
+
     public void setTextColor(String input, String check) {
         String color = input.split(" ")[0];
         for (String key : textMap.keySet()){

@@ -94,8 +94,10 @@ public class ServerManager {
         }
 
         private void printWithColor(String message){
-            if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")){
-                main.getInputListener().loggedIn = true;
+            if (!main.getInputListener().loggedIn){
+                if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")){
+                    main.getInputListener().loggedIn = true;
+                }
             }
             if (checkIfMyUsername(message)){
                 main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLOROUT());
