@@ -1,7 +1,12 @@
 package org.example;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        System.setProperty("file.encoding", "UTF-8");
+        System.setOut(new PrintStream(System.out, true, "UTF8"));
         new ChatServer();
     }
 }
