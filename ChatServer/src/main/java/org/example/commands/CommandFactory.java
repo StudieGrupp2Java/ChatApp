@@ -23,6 +23,7 @@ public class CommandFactory {
         commandMap.put("createroom", CreateRoomCommand::new);
         commandMap.put("leaveroom", LeaveRoomCommand::new);
         commandMap.put("join", JoinRoomCommand::new);
+        commandMap.put("listrooms", ListActiveRoomsCommand::new);
     }
 
     public static Command getCommand(String commandName) {

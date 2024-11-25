@@ -15,9 +15,7 @@ public class ConnectionHandler extends Thread {
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
-    @Getter
-    @Setter
-    private String currentRoom;
+
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
@@ -73,9 +71,13 @@ public class ConnectionHandler extends Thread {
                         name,
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
-
+                main.getClientManager().setCurrentSender(sender);
                 // Send to every connected client
-                main.getClientManager().broadcastMessage(fullMessage, true);
+                if (sender.getCurrentRoom() != null){
+                    main.getClientManager().broadcastMessage(fullMessage, true);
+                }
+                else
+                    this.sendMessage("Need to join a chat room first! /help for more information");
             }
         } catch (IOException e) {
             System.err.println("Error in reading/writing to connection");

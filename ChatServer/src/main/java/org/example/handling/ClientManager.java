@@ -13,6 +13,7 @@ public class ClientManager {
     private final ChatServer main;
     private final int MESSAGESTOSHOW = 30;
     private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
+    private User currentSender;
 
     public ClientManager(ChatServer chatServer) {
         this.main = chatServer;
@@ -66,24 +67,31 @@ public class ClientManager {
      * @param message to be broadcasted
      * @param onlyLoggedIn whether to only send to logged-in users
      */
-    public void broadcastMessage(String message, boolean onlyLoggedIn) {
-
+    public synchronized void broadcastMessage(String message, boolean onlyLoggedIn) {
+        if (currentSender == null){
+            return;
+        }
+        if (!main.getChatRoom().getChatRooms().containsKey(currentSender.getCurrentRoom())){
+            return;
+        }
+        List<ConnectionHandler> room = main.getChatRoom().getChatRooms().get(currentSender.getCurrentRoom());
         final String username = getUsername(message);
-        connections.values().stream()
+        room.stream()
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
                 .forEach(connection -> {
                     User user = main.getUserManager().getUser(connection.getIdentifier());
                     if (!user.getBlockedUsers().contains(username)){
                         connection.sendMessage(message);
-                        if (connection.getCurrentRoom() != null){
-                            if (main.getChatRoom().getRoomList().contains(connection.getCurrentRoom())){
-                                main.getChatRoom().broadcastToRoom(connection.getCurrentRoom(), message);
-                            }
-                        }
                     }
                 });
+
+
         // Save to chat history
         main.getChatInfo().addMessage(message);
+    }
+
+    public synchronized void setCurrentSender(User sender){
+        this.currentSender = sender;
     }
 
 

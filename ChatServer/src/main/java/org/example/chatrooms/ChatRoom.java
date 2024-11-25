@@ -3,6 +3,7 @@ package org.example.chatrooms;
 import lombok.Getter;
 import org.example.ChatServer;
 import org.example.handling.ConnectionHandler;
+import org.example.users.User;
 
 import java.util.*;
 
@@ -23,9 +24,10 @@ public class ChatRoom {
         if (chatRooms.containsKey(roomName)){
             chatRooms.get(roomName).add(client);
         }
-        //chatRooms.computeIfAbsent(roomName, k -> new ArrayList<>()).add(client);
-        client.setCurrentRoom(roomName);
+        main.getUserManager().getUser(client.getIdentifier()).setCurrentRoom(roomName);
         client.sendMessage("Joined room: " + roomName);
+        User user = main.getUserManager().getUser(client.getIdentifier());
+        main.getClientManager().broadcastMessage(user.getName() + " joined the chat!", true);
     }
 
     public void removeUserFromRoom(ConnectionHandler client, String roomName) {
@@ -34,15 +36,8 @@ public class ChatRoom {
             room.remove(client);
         }
         client.sendMessage("Left room: " + roomName);
-    }
-
-    public void broadcastToRoom(String roomName, String message) {
-        List<ConnectionHandler> room = chatRooms.get(roomName);
-        if (room != null) {
-            for (ConnectionHandler client : room) {
-                client.sendMessage("Sent in " + roomName + ": " + message);
-            }
-        }
+        User user = main.getUserManager().getUser(client.getIdentifier());
+        main.getClientManager().broadcastMessage(user.getName() + " left the chat!", true);
     }
 
     public List<String> getRoomList() {

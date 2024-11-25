@@ -14,6 +14,9 @@ public class User implements Serializable {
     private ChatRole role;
     @Getter
     private List<String> blockedUsers;
+    @Getter
+    @Setter
+    private String currentRoom;
 
     private Status status;
     private long lastSeen;
