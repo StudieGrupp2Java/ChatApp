@@ -13,7 +13,6 @@ public class LeaveCommand extends Command {
         if (main.getServerManager().isConnected()) {
             main.getServerManager().closeConnections(); // Anropar befintlig funktion för att koppla från servern
             System.out.println("You disconnected");
-            main.getInputListener().loggedIn = false;
         } else {
             System.out.println("You're not connected, can't disconnect");
         }

@@ -12,16 +12,6 @@ public class ServerManager {
     private BufferedReader in;
     protected boolean running = true;
     private final ChatClient main;
-    private final String RESET = "\u001B[0m";
-    private final String DEFAULT = "\u001B[39m";
-    private String TEXTCOLOROUT = DEFAULT;
-    private String BGCOLOROUT = DEFAULT;
-    private String TEXTCOLORIN = DEFAULT;
-    private String BGCOLORIN = DEFAULT;
-    private String TEXT = DEFAULT;
-    private String BACKGROUND = DEFAULT;
-
-
 
 
     public ServerManager(ChatClient main){
@@ -57,14 +47,6 @@ public class ServerManager {
         out.println(message);
     }
 
-    public void setColorOut(String textColor, String backgroundColor){
-        TEXTCOLOROUT = textColor;
-        BGCOLOROUT = backgroundColor;
-    }
-    public void setColorIn(String textColor, String backgroundColor){
-        TEXTCOLORIN = textColor;
-        BGCOLORIN = backgroundColor;
-    }
 
     public void closeConnections() {
         try {
@@ -72,6 +54,7 @@ public class ServerManager {
             if (socket != null) socket.close();
             if (out != null) out.close();
             if (in != null) in.close();
+            if (main.getInputListener().loggedIn) main.getInputListener().loggedIn = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,18 +98,18 @@ public class ServerManager {
                 main.getInputListener().loggedIn = true;
             }
             if (checkIfMyUsername(message)){
-                TEXT = TEXTCOLOROUT;
-                BACKGROUND = BGCOLOROUT;
+                main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLOROUT());
+                main.getTextColor().setBG(main.getTextColor().getBGCOLOROUT());
             } else {
-                TEXT = TEXTCOLORIN;
-                BACKGROUND = BGCOLORIN;
+                main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLORIN());
+                main.getTextColor().setBG(main.getTextColor().getBGCOLORIN());
             }
-            if (BACKGROUND == RESET || BACKGROUND == DEFAULT)
-                System.out.println(TEXT + message + RESET);
-            else if (TEXT == RESET || TEXT == DEFAULT)
-                System.out.println(BACKGROUND + message + RESET);
+            if (main.getTextColor().getBACKGROUND() == main.getTextColor().getReset() || main.getTextColor().getBACKGROUND() == main.getTextColor().getDefault())
+                System.out.println(main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
+            else if (main.getTextColor().getTEXT() == main.getTextColor().getReset() || main.getTextColor().getTEXT() == main.getTextColor().getDefault())
+                System.out.println(main.getTextColor().getBACKGROUND() + message + main.getTextColor().getReset());
             else
-                System.out.println(BACKGROUND + TEXT + message + RESET);
+                System.out.println(main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
         }
     }
 }

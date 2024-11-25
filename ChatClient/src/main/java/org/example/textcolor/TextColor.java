@@ -9,12 +9,19 @@ public class TextColor {
 
     // Reset
     public static final String RESET = "\u001B[0m";
-    private static String currentTextColor = RESET;
-    private static String currentBackgroundColor = RESET;
-    private final ServerManager serverManager;
     public static final String DEFAULT = "\u001B[39m";
     private static final Map<String, String> backgroundMap = new HashMap<>();
     private static final Map<String, String> textMap = new HashMap<>();
+    private String TEXTCOLOROUT = DEFAULT;
+    private String BGCOLOROUT = DEFAULT;
+    private String TEXTCOLORIN = DEFAULT;
+    private String BGCOLORIN = DEFAULT;
+    private String TEXT = DEFAULT;
+    private String BACKGROUND = DEFAULT;
+
+
+
+
     static
     {
         backgroundMap.put("bright-black", "\u001B[100m");
@@ -59,72 +66,128 @@ public class TextColor {
         textMap.put("bright-white", "\u001B[97m");
     }
 
-    private boolean OUT = false;
-    private boolean IN = false;
-    public TextColor(ServerManager serverManager){
-        this.serverManager = serverManager;
+    public TextColor(){
+
     }
 
-    public boolean handleInput(String input) {
+    /*public boolean handleInput(String input) {
+        String[] split = input.split(" ");
+        String check = "";
+        if (split.length >= 3) check = split[2];
+
         if (input.startsWith("/setcolor ")) {
             String color = input.substring(10).trim();
-            setTextColor(color);
-            checkWhichToChange(input);
+            setTextColor(color, check);
             return true;
         } else if (input.startsWith("/setbg ")) {
             String color = input.substring(7).trim();
-            setBackgroundColor(color);
-            checkWhichToChange(input);
+            setBackgroundColor(color, check);
             return true;
-        } else if (input.equals("/resetcolor")) {
-            resetTextColor();
-            checkWhichToChange(input);
+        } else if (input.startsWith("/resetcolor")) {
+            resetTextColor(input);
             return true;
-        } else if (input.equals("/resetbg")) {
-            resetBackgroundColor();
-            checkWhichToChange(input);
+        } else if (input.startsWith("/resetbg")) {
+            resetBackgroundColor(input);
             return true;
         }
         return false;
-    }
+    }*/
 
-    private void checkWhichToChange(String message){
-        String check = message.split(" ")[2];
-        if (check.equalsIgnoreCase("out")) OUT = true;
-        if (check.equalsIgnoreCase("in")) IN = true;
-        if (OUT) serverManager.setColorOut(currentTextColor, currentBackgroundColor);
-        if (IN) serverManager.setColorIn(currentTextColor, currentBackgroundColor);
-        currentBackgroundColor = DEFAULT;
-        currentTextColor = DEFAULT;
-        OUT = false;
-        IN = false;
-    }
 
-    private void setTextColor(String input) {
+    public void setTextColor(String input, String check) {
         String color = input.split(" ")[0];
         for (String key : textMap.keySet()){
             if (key.equalsIgnoreCase(color)){
-                currentTextColor = textMap.get(key);
+                if (check.equalsIgnoreCase("out")){
+                    TEXTCOLOROUT = textMap.get(key);
+                } else if (check.equalsIgnoreCase("in")) {
+                    TEXTCOLORIN = textMap.get(key);
+                }
+                System.out.println("Text color changed!");
                 return;
             }
         }
     }
 
-    private void setBackgroundColor(String input) {
+    public void setBackgroundColor(String input, String check) {
         String color = input.split(" ")[0];
         for (String key : backgroundMap.keySet()){
             if (key.equalsIgnoreCase(color)){
-                currentBackgroundColor = backgroundMap.get(key);
+                if (check.equalsIgnoreCase("out")){
+                    BGCOLOROUT = backgroundMap.get(key);
+                } else if (check.equalsIgnoreCase("in")) {
+                    BGCOLORIN = backgroundMap.get(key);
+                }
+                System.out.println("Background color changed!");
                 return;
             }
         }
     }
 
-    private void resetTextColor() {
-        currentTextColor = DEFAULT;
+    public String getTEXTCOLOROUT() {
+        return TEXTCOLOROUT;
     }
 
-    private void resetBackgroundColor() {
-        currentBackgroundColor = DEFAULT;
+    public String getBGCOLOROUT() {
+        return BGCOLOROUT;
+    }
+
+    public String getTEXTCOLORIN() {
+        return TEXTCOLORIN;
+    }
+
+    public String getBGCOLORIN() {
+        return BGCOLORIN;
+    }
+
+    public void setTEXT(String color){
+        TEXT = color;
+    }
+
+    public void setBG(String color){
+        BACKGROUND = color;
+    }
+
+    public String getReset(){
+        return RESET;
+    }
+
+    public String getDefault(){
+        return DEFAULT;
+    }
+
+    public String getTEXT() {
+        return TEXT;
+    }
+
+    public String getBACKGROUND() {
+        return BACKGROUND;
+    }
+
+    public void resetTextColor(String check) {
+        System.out.println(check);
+        if (check.equalsIgnoreCase("out")) {
+            TEXTCOLOROUT = DEFAULT;
+            System.out.println("Text color reset!");
+        }
+        else if (check.equalsIgnoreCase("in")) {
+            TEXTCOLORIN = DEFAULT;
+            System.out.println("Text color reset!");
+        } else {
+            System.out.println("Invalid input!");
+        }
+    }
+
+    public void resetBackgroundColor(String check) {
+        if (check.equalsIgnoreCase("out")) {
+            BGCOLOROUT = DEFAULT;
+            System.out.println("Background color reset!");
+        }
+        else if (check.equalsIgnoreCase("in")){
+            BGCOLORIN = DEFAULT;
+            System.out.println("Background color reset!");
+        } else {
+            System.out.println("Invalid input!");
+        }
     }
 }

@@ -30,7 +30,7 @@ public class ChatClient {
 
     public void init() {
         this.serverManager = new ServerManager(this);
-        textColor = new TextColor(serverManager);
+        textColor = new TextColor();
         this.commandManager = new CommandManager(this);
         this.login = new LoginInfo();
         this.manager = new FileManager(login);
