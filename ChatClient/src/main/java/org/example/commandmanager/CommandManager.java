@@ -12,6 +12,7 @@ public class CommandManager {
         addCommand(new LeaveCommand(main));
         addCommand(new ConnectCommand(main));
         addCommand(new HelpCommand(main));
+        addCommand(new ListEmojiCommand(main));
         addCommand(new SetColorCommand(main));
         addCommand(new SetBackgroundCommand(main));
         addCommand(new ResetColorCommand(main));

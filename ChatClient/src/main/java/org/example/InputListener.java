@@ -1,13 +1,14 @@
 package org.example;
 
 import org.example.chatclient.ChatClient;
+import org.example.emoji.Emoji;
 import org.example.filemanager.FileManager;
 import org.example.logininfo.LoginInfo;
 
 import java.util.Scanner;
 
 public class InputListener {
-
+    private Emoji emoji;
     private final ChatClient main;
     private final LoginInfo login;
     private final Scanner scan = new Scanner(System.in);
@@ -17,6 +18,7 @@ public class InputListener {
     public InputListener(ChatClient main, LoginInfo login) {
         this.main = main;
         this.login = login;
+        emoji = new Emoji();
     }
 
     public void listenForInput() {
@@ -32,6 +34,15 @@ public class InputListener {
                 continue;
             }
 
+            for (String key : emoji.getEmojiMap().keySet()){
+                if (message.contains(key)){
+                    message = emoji.getEmoji(message);
+                }
+            }
+
+            if (message.contains("!emoji")){
+                message = emoji.emojiPicker(message, scan);
+            }
             main.getServerManager().sendMessageToServer(message);
         }
     }
@@ -106,5 +117,9 @@ public class InputListener {
         }
         // tell server we're NOT using auto-login
         main.getServerManager().sendMessageToServer("false");
+    }
+
+    public Emoji getEmoji(){
+        return emoji;
     }
 }

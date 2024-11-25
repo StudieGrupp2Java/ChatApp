@@ -76,4 +76,10 @@ public class ClientManager {
         sender.login(user);
         connections.put(sender.getIdentifier(), sender);
     }
+
+    public void logout(ConnectionHandler sender) {
+        connections.remove(sender.getIdentifier());
+        sender.logout();
+        connections.put(sender.getIdentifier(), sender);
+    }
 }
