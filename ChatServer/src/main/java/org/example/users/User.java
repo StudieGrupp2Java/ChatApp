@@ -45,6 +45,10 @@ public class User implements Serializable {
         return lastSeen;
     }
 
+    public void setInitalStatus(Status status) {
+        this.status = status;
+    }
+
     public enum Status {
         ONLINE,
         AWAY,

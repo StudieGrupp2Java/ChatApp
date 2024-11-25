@@ -21,6 +21,11 @@ public class OnlineCommand extends Command {
                 .forEach(user -> {
                     online.append(GREEN).append(user.getName()).append(RESET).append(", ");
                 });
+        // Remove last comma
+        if (online.length() > "ONLINE: ".length()) {
+            online.setLength(online.length() - 2);
+        }
+
         sender.sendMessage(online.toString());
 
         StringBuilder away = new StringBuilder("AWAY: ");
@@ -37,6 +42,10 @@ public class OnlineCommand extends Command {
                             .append(RESET)
                             .append(", ");
                 });
+        // Remove last comma
+        if (away.length() > "AWAY: ".length()) {
+            away.setLength(away.length() - 2);
+        }
 
         sender.sendMessage(away.toString());
 
@@ -55,6 +64,11 @@ public class OnlineCommand extends Command {
                             .append(RESET)
                             .append(", ");
                 });
+        // Remove last comma
+        if (offline.length() > "OFFLINE: ".length()) {
+            offline.setLength(offline.length() - 2);
+        }
+
         sender.sendMessage(offline.toString());
     }
 
