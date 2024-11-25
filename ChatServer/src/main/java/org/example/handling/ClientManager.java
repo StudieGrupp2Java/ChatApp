@@ -88,6 +88,7 @@ public class ClientManager {
 
         // Save to chat history
         main.getChatInfo().addMessage(message);
+        main.getChatRoom().addToChatLog(currentSender.getCurrentRoom(), message);
     }
 
     public synchronized void setCurrentSender(User sender){

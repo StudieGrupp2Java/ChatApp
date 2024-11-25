@@ -10,6 +10,8 @@ import java.util.*;
 public class ChatRoom {
     @Getter
     private final Map<String, List<ConnectionHandler>> chatRooms = new HashMap<>();
+    @Getter
+    private final Map<String, List<String>> chatRoomLogs = new HashMap<>();
     private final ChatServer main;
     public ChatRoom(ChatServer main){
         this.main = main;
@@ -42,6 +44,13 @@ public class ChatRoom {
 
     public List<String> getRoomList() {
         return new ArrayList<>(chatRooms.keySet());
+    }
+
+    public void addToChatLog(String roomName, String message){
+        if (chatRoomLogs.containsKey(roomName)){
+            chatRoomLogs.get(roomName).add(message);
+        }
+        System.out.println("Added logs to " + roomName + " with " + message);
     }
 
 }
