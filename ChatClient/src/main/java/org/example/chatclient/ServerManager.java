@@ -7,12 +7,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ServerManager {
-
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     protected boolean running = true;
     private final ChatClient main;
+
 
     public ServerManager(ChatClient main){
         this.main = main;
@@ -47,12 +47,14 @@ public class ServerManager {
         out.println(message);
     }
 
+
     public void closeConnections() {
         try {
             running = false;
             if (socket != null) socket.close();
             if (out != null) out.close();
             if (in != null) in.close();
+            if (main.getInputListener().loggedIn) main.getInputListener().loggedIn = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +64,19 @@ public class ServerManager {
         return running;
     }
 
+    private boolean checkIfMyUsername(String message){
+        String incomingUsername = "";
+        String username = main.getInputListener().getUsername();
+        String[] split = message.split("] ");
+        if (split.length > 1){
+            incomingUsername = split[1].split(": ")[0];
+        }
+        if (username.equals(incomingUsername)){
+            return true;
+        }
+        return false;
+    }
+
     private class ServerListener implements Runnable {
         public void run() {
             try {
@@ -69,13 +84,34 @@ public class ServerManager {
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
-                    System.out.println(serverMessage);
+                    printWithColor(serverMessage);
                 }
 
             } catch (IOException e) {
             } finally {
                 closeConnections();
             }
+        }
+
+        private void printWithColor(String message){
+            if (!main.getInputListener().loggedIn){
+                if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")){
+                    main.getInputListener().loggedIn = true;
+                }
+            }
+            if (checkIfMyUsername(message)){
+                main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLOROUT());
+                main.getTextColor().setBG(main.getTextColor().getBGCOLOROUT());
+            } else {
+                main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLORIN());
+                main.getTextColor().setBG(main.getTextColor().getBGCOLORIN());
+            }
+            if (main.getTextColor().getBACKGROUND() == main.getTextColor().getReset() || main.getTextColor().getBACKGROUND() == main.getTextColor().getDefault())
+                System.out.println(main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
+            else if (main.getTextColor().getTEXT() == main.getTextColor().getReset() || main.getTextColor().getTEXT() == main.getTextColor().getDefault())
+                System.out.println(main.getTextColor().getBACKGROUND() + message + main.getTextColor().getReset());
+            else
+                System.out.println(main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
         }
     }
 }
