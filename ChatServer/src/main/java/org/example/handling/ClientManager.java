@@ -5,12 +5,16 @@ import org.example.users.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClientManager {
     private static final int SERVER_PORT = 2147; //TODO: changeable
     private final ChatServer main;
-
+    private final int MESSAGESTOSHOW = 30;
     private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
 
     public ClientManager(ChatServer chatServer) {
@@ -75,6 +79,7 @@ public class ClientManager {
         connections.remove(sender.getIdentifier());
         sender.login(user);
         connections.put(sender.getIdentifier(), sender);
+        main.getChatInfo().getChatLogs().stream().sorted(Comparator.reverseOrder()).limit(MESSAGESTOSHOW).forEach(sender::sendMessage);
     }
 
     public void logout(ConnectionHandler sender) {

@@ -20,8 +20,6 @@ public class TextColor {
     private String BACKGROUND = DEFAULT;
 
 
-
-
     static
     {
         backgroundMap.put("bright-black", "\u001B[100m");
@@ -64,10 +62,6 @@ public class TextColor {
         textMap.put("bright-purple", "\u001B[95m");
         textMap.put("bright-cyan", "\u001B[96m");
         textMap.put("bright-white", "\u001B[97m");
-    }
-
-    public TextColor(){
-
     }
 
     public void setTextColor(String input, String check) {
@@ -141,7 +135,6 @@ public class TextColor {
     }
 
     public void resetTextColor(String check) {
-        System.out.println(check);
         if (check.equalsIgnoreCase("out")) {
             TEXTCOLOROUT = DEFAULT;
             System.out.println("Text color reset!");
