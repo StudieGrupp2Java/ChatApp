@@ -80,7 +80,7 @@ public class ClientManager {
         sender.login(user);
         user.setStatus(User.Status.ONLINE);
         connections.put(sender.getIdentifier(), sender);
-        main.getChatInfo().getChatLogs().stream().sorted(Comparator.reverseOrder()).limit(MESSAGESTOSHOW).forEach(sender::sendMessage);
+        main.getChatInfo().getChatLogs().stream().limit(MESSAGESTOSHOW).forEach(sender::sendMessage);
     }
 
     public void logout(ConnectionHandler sender) {

@@ -1,7 +1,5 @@
 package org.example.chatclient;
 
-import org.example.emoji.Emoji;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -73,10 +71,7 @@ public class ServerManager {
         if (split.length > 1){
             incomingUsername = split[1].split(": ")[0];
         }
-        if (username.equals(incomingUsername)){
-            return true;
-        }
-        return false;
+        return username.equals(incomingUsername);
     }
 
     private class ServerListener implements Runnable {
@@ -91,6 +86,7 @@ public class ServerManager {
 
             } catch (IOException e) {
             } finally {
+                System.out.println("Disconnected from server.");
                 closeConnections();
             }
         }
