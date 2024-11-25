@@ -75,6 +75,7 @@ public class ConnectionHandler extends Thread {
                 // Send to every connected client
                 if (sender.getCurrentRoom() != null){
                     main.getClientManager().broadcastMessage(fullMessage, true);
+                    main.getChatRoom().addToChatLog(sender.getCurrentRoom(), fullMessage);
                 }
                 else
                     this.sendMessage("Need to join a chat room first! /help for more information");

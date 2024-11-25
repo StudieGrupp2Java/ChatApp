@@ -20,10 +20,10 @@ public class CommandFactory {
         commandMap.put("block", BlockUserCommand::new);
         commandMap.put("unblock", RemoveBlockedUserCommand::new);
         commandMap.put("listblocked", ListBlockedUsersCommand::new);
-        commandMap.put("createroom", CreateRoomCommand::new);
+        commandMap.put("create", CreateRoomCommand::new);
         commandMap.put("leaveroom", LeaveRoomCommand::new);
         commandMap.put("join", JoinRoomCommand::new);
-        commandMap.put("listrooms", ListActiveRoomsCommand::new);
+        commandMap.put("rooms", ListActiveRoomsCommand::new);
     }
 
     public static Command getCommand(String commandName) {

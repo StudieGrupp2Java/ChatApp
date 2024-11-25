@@ -81,14 +81,13 @@ public class ClientManager {
                 .forEach(connection -> {
                     User user = main.getUserManager().getUser(connection.getIdentifier());
                     if (!user.getBlockedUsers().contains(username)){
-                        connection.sendMessage(message);
+                        connection.sendMessage("["+user.getCurrentRoom()+"]" + message);
+
                     }
                 });
 
-
         // Save to chat history
         main.getChatInfo().addMessage(message);
-        main.getChatRoom().addToChatLog(currentSender.getCurrentRoom(), message);
     }
 
     public synchronized void setCurrentSender(User sender){

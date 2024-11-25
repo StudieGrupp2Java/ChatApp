@@ -20,16 +20,22 @@ public class ChatRoom {
     public void createRoom(String roomName, ConnectionHandler sender) {
         chatRooms.putIfAbsent(roomName, new ArrayList<>());
         sender.sendMessage("Created room: " + roomName);
+        chatRoomLogs.put(roomName, new ArrayList<>());
     }
 
     public void addUserToRoom(ConnectionHandler client, String roomName) {
-        if (chatRooms.containsKey(roomName)){
-            chatRooms.get(roomName).add(client);
+        if (!chatRooms.containsKey(roomName)){
+            client.sendMessage("No room with that name exists!");
+            return;
         }
+        chatRooms.get(roomName).add(client);
         main.getUserManager().getUser(client.getIdentifier()).setCurrentRoom(roomName);
         client.sendMessage("Joined room: " + roomName);
         User user = main.getUserManager().getUser(client.getIdentifier());
         main.getClientManager().broadcastMessage(user.getName() + " joined the chat!", true);
+        if (chatRoomLogs.containsKey(user.getCurrentRoom()) && !chatRoomLogs.get(user.getCurrentRoom()).isEmpty())
+            chatRoomLogs.get(user.getCurrentRoom()).stream().limit(30).sorted(Comparator.reverseOrder()).forEach(client::sendMessage);
+        
     }
 
     public void removeUserFromRoom(ConnectionHandler client, String roomName) {
@@ -50,7 +56,6 @@ public class ChatRoom {
         if (chatRoomLogs.containsKey(roomName)){
             chatRoomLogs.get(roomName).add(message);
         }
-        System.out.println("Added logs to " + roomName + " with " + message);
     }
 
 }
