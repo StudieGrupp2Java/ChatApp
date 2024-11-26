@@ -53,9 +53,9 @@ public class ClientManager {
         connections.remove(connection.getIdentifier());
         System.out.println(connection.getSocket() + " disconnected!");
 
+        main.getClientManager().logout(connection);
         final User user = main.getUserManager().getUser(connection.getIdentifier());
         if (user != null) {
-//            main.getChatRoom().removeUserFromRoom(connection, user.getCurrentRoom());
             this.broadcastMessageInRoom(user.getName() + " disconnected!", true, user);
             user.setStatus(User.Status.OFFLINE);
         }
