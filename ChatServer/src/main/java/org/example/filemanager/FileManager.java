@@ -2,6 +2,7 @@ package org.example.filemanager;
 
 import org.example.ChatServer;
 import org.example.users.User;
+import org.example.util.ChatLog;
 
 import java.io.*;
 import java.util.Arrays;
@@ -100,7 +101,6 @@ public class FileManager {
         saveBannedWords();
         save(server.getChatInfo().getChatLogs(), FOLDER + "/" + CHATLOGS);
         save(Arrays.asList(server.getUserManager().getUsers().toArray()), FOLDER + "/" + USERS);
-
     }
 
     private void startSaveTask() {
@@ -136,7 +136,7 @@ public class FileManager {
                 server.getChatInfo().getChatLogs().clear();
             }
             for (int i = 0; i < size; i++){
-                String log = (String) chatLogStream.readObject();
+                ChatLog log = (ChatLog) chatLogStream.readObject();
                 server.getChatInfo().getChatLogs().add(log);
             }
         }catch (Exception e){

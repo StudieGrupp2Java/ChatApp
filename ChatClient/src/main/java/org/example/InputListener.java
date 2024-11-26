@@ -4,6 +4,7 @@ import org.example.chatclient.ChatClient;
 import org.example.emoji.Emoji;
 import org.example.filemanager.FileManager;
 import org.example.logininfo.LoginInfo;
+import org.example.textcolor.TextColor;
 
 import java.util.Scanner;
 
@@ -24,6 +25,7 @@ public class InputListener {
     public void listenForInput() {
         while (scan.hasNext()) {
             String message = scan.nextLine();
+            System.out.print(TextColor.CLEAR_LINE); // clear the current line, doesnt work in all terminals
             checkUsername(message);
             if (main.getCommandManager().executeCommand(message) && !message.equalsIgnoreCase("/help")) {
                 continue;

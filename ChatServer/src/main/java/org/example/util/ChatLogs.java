@@ -1,17 +1,15 @@
 package org.example.util;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChatLogs implements Serializable {
     private final List<String> bannedWords = new ArrayList<>();
-    private final List<String> chatLog = new ArrayList<>();
+    private final List<ChatLog> chatLog = new ArrayList<>();
 
     public synchronized void addMessage(String logEntry) {
-        chatLog.add(logEntry);
+        chatLog.add(new ChatLog(System.currentTimeMillis(), logEntry));
     }
 
     public List<String> getBannedWords(){
@@ -26,7 +24,7 @@ public class ChatLogs implements Serializable {
         bannedWords.remove(word);
     }
 
-    public List<String> getChatLogs(){
+    public List<ChatLog> getChatLogs(){
         return chatLog;
     }
 }

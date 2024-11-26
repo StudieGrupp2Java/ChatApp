@@ -2,15 +2,22 @@ package org.example.handling;
 
 import org.example.ChatServer;
 import org.example.users.User;
+import org.example.util.ChatLog;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClientManager {
     private static final int SERVER_PORT = 2147; //TODO: changeable
     private final ChatServer main;
+    private final int MESSAGESTOSHOW = 30;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+
     private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
 
     public ClientManager(ChatServer chatServer) {
@@ -54,6 +61,7 @@ public class ClientManager {
         if (user != null) {
             main.getChatRoom().removeUserFromRoom(connection, user.getCurrentRoom());
             this.broadcastMessageInRoom(user.getName() + " disconnected!", true, user);
+            user.setStatus(User.Status.OFFLINE);
         }
     }
 
@@ -66,11 +74,14 @@ public class ClientManager {
      * @param message to be broadcasted
      * @param onlyLoggedIn whether to only send to logged-in users
      */
-    public synchronized void broadcastMessage(String message, boolean onlyLoggedIn) {
-        final String username = getUsername(message);
+    public void broadcastMessage(String message, boolean onlyLoggedIn) {
+        String timestamp = "[" + DATE_FORMAT.format(System.currentTimeMillis()) + "]";
+        final String toSend = timestamp + " " + message;
+
         connections.values().stream()
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
-                .forEach(connection -> connection.sendMessage(message));
+                .forEach(connection -> connection.sendMessage(toSend));
+
         // Save to chat history
         main.getChatInfo().addMessage(message);
     }
@@ -111,12 +122,6 @@ public class ClientManager {
         sender.login(user);
         user.setStatus(User.Status.ONLINE);
         connections.put(sender.getIdentifier(), sender);
-
-//        main.getChatInfo().getChatLogs().stream()
-//                .sorted(Comparator.reverseOrder())
-//                .limit(MESSAGESTOSHOW)
-//                .sorted(Comparator.naturalOrder())
-//                .forEach(sender::sendMessage);
 
         main.getChatRoom().addUserToRoom(sender, user.getCurrentRoom());
     }
