@@ -28,12 +28,12 @@ public class ChatServer {
 
     private void init() {
         this.userManager = new UserManager(this);
-        this.fileManager = new FileManager(this);
         this.filter = new ChatFilter();
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
         this.updateTracker = new UpdateTracker(this);
         this.chatRoom = new ChatRoom(this);
+        this.fileManager = new FileManager(this);
     }
 
     private void shutdown() {

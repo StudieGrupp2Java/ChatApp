@@ -1,7 +1,6 @@
 package org.example.filemanager;
 
 import org.example.ChatServer;
-import org.example.handling.ConnectionHandler;
 import org.example.users.User;
 import org.example.util.ChatLog;
 
@@ -23,7 +22,7 @@ public class FileManager {
 
     public FileManager(ChatServer server){
         this.server = server;
-        try{
+        try {
             loadPaths();
             load();
             loadWords();
@@ -119,6 +118,11 @@ public class FileManager {
     }
 
     private void load(){
+        File chatlogsFolder = new File(FOLDER + "/" + CHATLOGS_FOLDER);
+        if (!chatlogsFolder.exists()) {
+            chatlogsFolder.mkdirs();
+        }
+
         FileInputStream usersIn = null;
         ObjectInputStream usersStream = null;
         FileInputStream chatLogIn = null;
@@ -137,6 +141,7 @@ public class FileManager {
             }
             File chatLogsFolder = new File(FOLDER + "/" + CHATLOGS_FOLDER);
             Map<String, List<ChatLog>> chatLogMap = server.getChatRoom().getChatRoomLogs();
+
             for (File chatlog : chatLogsFolder.listFiles()) {
                 chatLogIn = new FileInputStream(chatlog);
                 chatLogStream = new ObjectInputStream(chatLogIn);
@@ -145,17 +150,21 @@ public class FileManager {
                     chatLogMap.clear();
                 }
                 String roomName = chatlog.getName().substring(0, chatlog.getName().length() - 4);
+                System.out.println(roomName);
                 chatLogMap.put(roomName, new ArrayList<>());
+                server.getChatRoom().getChatRooms().put(roomName, new ArrayList<>());
                 List<ChatLog> list = chatLogMap.get(roomName);
                 for (int i = 0; i < size; i++){
                     ChatLog log = (ChatLog) chatLogStream.readObject();
 
+                    System.out.println(log.getMessage());
                     list.add(log);
                 }
             }
 
         }catch (Exception e){
             System.out.println("Something went wrong loading the files!");
+            e.printStackTrace();
         } finally {
             try {
                 if (usersStream != null) usersStream.close();
