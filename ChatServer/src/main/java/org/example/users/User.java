@@ -12,6 +12,8 @@ public class User implements Serializable {
     private final String name;
     private String password; //TODO: store encrypted or other more secure way
     private ChatRole role;
+    private boolean pendingDeletion = false;
+
     @Getter
     private List<String> blockedUsers;
     @Getter
@@ -20,6 +22,7 @@ public class User implements Serializable {
 
     private Status status;
     private long lastSeen;
+
 
     public User(String name, String password) {
         this.identifier = Math.abs(UUID.randomUUID().hashCode()); // ensure positive identifier
@@ -79,5 +82,13 @@ public class User implements Serializable {
         ONLINE,
         AWAY,
         OFFLINE
+    }
+
+    public boolean isPendingDeletion() {
+        return pendingDeletion;
+    }
+
+    public void setPendingDeletion(boolean pendingDeletion) {
+        this.pendingDeletion = pendingDeletion;
     }
 }

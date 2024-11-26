@@ -16,6 +16,8 @@ public class CommandFactory {
         commandMap.put("removeword", RemoveBannedWordCommand::new);
         commandMap.put("addword", AddBannedWordsCommand::new);
         commandMap.put("help", HelpCommand::new);
+        commandMap.put("deleteaccount", DeleteAccountCommand::new);
+        commandMap.put("confirmdelete", ConfirmDeleteCommand::new);
         commandMap.put("online", OnlineCommand::new);
         commandMap.put("block", BlockUserCommand::new);
         commandMap.put("unblock", RemoveBlockedUserCommand::new);
