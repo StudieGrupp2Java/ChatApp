@@ -5,6 +5,7 @@ import org.example.handling.ConnectionHandler;
 import org.example.users.User;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ListActiveRoomsCommand extends Command {
     @Override
@@ -21,10 +22,10 @@ public class ListActiveRoomsCommand extends Command {
             for (ConnectionHandler handler : roomUsers) {
                 User user = main.getUserManager().getUser(handler.getIdentifier());
                 if (user == null) continue;
-                if (user.getStatus().equals(User.Status.ONLINE))
+                if (user.getStatus().equals(User.Status.ONLINE) || user.getStatus().equals(User.Status.AWAY))
                     peopleInRoom++;
             }
-            sender.sendMessage("Room '" + room + "' currently has " + roomSize + " members! " + " but only " + peopleInRoom + " are online!");
+            sender.sendMessage("Room '" + room + "' currently has " + roomSize + " members, " + peopleInRoom +  " of which are online");
             sender.sendMessage(getStatusForRoom(roomUsers, main));
             peopleInRoom = 0;
         }
@@ -47,6 +48,7 @@ public class ListActiveRoomsCommand extends Command {
         StringBuilder builder = new StringBuilder("USERS: ");
         room.stream()
                 .map(con -> main.getUserManager().getUser(con.getIdentifier()))
+                .filter(Objects::nonNull) //TODO: offline users are currently null. Should change ChatRooms to hold Users instead of ConnectionHandlers.
                 .forEach(user -> {
                     if (user.getStatus().equals(User.Status.ONLINE)) {
                         builder.append(GREEN).append(user.getName()).append(RESET).append(", ");
