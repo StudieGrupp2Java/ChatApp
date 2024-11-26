@@ -26,12 +26,13 @@ public class ChatRoom {
         chatRoomLogs.put(roomName, new ArrayList<>());
     }
 
-    public void addUserToRoom(ConnectionHandler client, String roomName) {
+    // Returns true if the room exists
+    public boolean addUserToRoom(ConnectionHandler client, String roomName) {
         if (!chatRooms.containsKey(roomName)){
             client.sendMessage("No room with that name exists!");
-            return;
+            return false;
         }
-        if (chatRooms.get(roomName).contains(client)) return;
+        if (chatRooms.get(roomName).contains(client)) return true;
         chatRooms.get(roomName).add(client);
         main.getUserManager().getUser(client.getIdentifier()).setCurrentRoom(roomName);
         client.sendMessage("Joined room: " + roomName);
@@ -45,7 +46,23 @@ public class ChatRoom {
                     .map(log -> String.format("[%s] %s", Util.DATE_FORMAT.format(log.getTimestamp()), log.getMessage()))
                     .forEach(client::sendMessage);
         }
+        return true;
+    }
 
+    public void switchRoom(ConnectionHandler client, String roomName) {
+        User user = main.getUserManager().getUser(client.getIdentifier());
+        List<ConnectionHandler> room = chatRooms.get(user.getCurrentRoom());
+        if (room != null) {
+            room.remove(client);
+        }
+        String lastRoom = user.getCurrentRoom();
+
+        if (!addUserToRoom(client, roomName)) {
+            addUserToRoom(client, "Default");
+            client.sendMessage("No room with that name exists!");
+            return;
+        }
+        client.sendMessage("Switched from " + lastRoom + " to " + roomName);
     }
 
     public void removeUserFromRoom(ConnectionHandler client, String roomName) {
@@ -57,7 +74,7 @@ public class ChatRoom {
         User user = main.getUserManager().getUser(client.getIdentifier());
         main.getClientManager().broadcastMessageInRoom(user.getName() + " left the chat!", true, user);
         // Join default room
-        addUserToRoom(client, "Default");
+
     }
 
     public List<String> getRoomList() {
