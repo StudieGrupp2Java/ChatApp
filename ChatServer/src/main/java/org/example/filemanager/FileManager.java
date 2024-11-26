@@ -101,7 +101,7 @@ public class FileManager {
     public void saveAll() {
         System.out.println("Executing save task...");
         saveBannedWords();
-        for (Map.Entry<String, List<ChatLog>> entry : server.getChatRoom().getChatRoomLogs().entrySet()) {
+        for (Map.Entry<String, List<ChatLog>> entry : server.getChatRoomManager().getChatRoomLogs().entrySet()) {
             save(entry.getValue(), FOLDER + "/" + CHATLOGS_FOLDER + entry.getKey() + ".log");
         }
 
@@ -140,7 +140,7 @@ public class FileManager {
                 server.getUserManager().loadUser(user.getIdentifier(), user);
             }
             File chatLogsFolder = new File(FOLDER + "/" + CHATLOGS_FOLDER);
-            Map<String, List<ChatLog>> chatLogMap = server.getChatRoom().getChatRoomLogs();
+            Map<String, List<ChatLog>> chatLogMap = server.getChatRoomManager().getChatRoomLogs();
 
             for (File chatlog : chatLogsFolder.listFiles()) {
                 chatLogIn = new FileInputStream(chatlog);
@@ -151,7 +151,7 @@ public class FileManager {
                 }
                 String roomName = chatlog.getName().substring(0, chatlog.getName().length() - 4);
                 chatLogMap.put(roomName, new ArrayList<>());
-                server.getChatRoom().getChatRooms().put(roomName, new ArrayList<>());
+                server.getChatRoomManager().getChatRooms().put(roomName, new ArrayList<>());
                 List<ChatLog> list = chatLogMap.get(roomName);
                 for (int i = 0; i < size; i++){
                     ChatLog log = (ChatLog) chatLogStream.readObject();

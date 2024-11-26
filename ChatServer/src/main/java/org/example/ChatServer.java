@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.chatrooms.ChatRoom;
+import org.example.chatrooms.ChatRoomManager;
 import org.example.commands.CommandManager;
 import org.example.filemanager.FileManager;
 import org.example.filter.ChatFilter;
@@ -9,7 +9,7 @@ import org.example.users.UserManager;
 import org.example.util.UpdateTracker;
 
 public class ChatServer {
-    private ChatRoom chatRoom;
+    private ChatRoomManager chatRoomManager;
     private FileManager fileManager;
     private ChatFilter filter;
     private ClientManager clientManager;
@@ -32,7 +32,7 @@ public class ChatServer {
         this.commandManager = new CommandManager(this);
         this.clientManager = new ClientManager(this);
         this.updateTracker = new UpdateTracker(this);
-        this.chatRoom = new ChatRoom(this);
+        this.chatRoomManager = new ChatRoomManager(this);
         this.fileManager = new FileManager(this);
     }
 
@@ -55,8 +55,8 @@ public class ChatServer {
         return commandManager;
     }
 
-    public ChatRoom getChatRoom(){
-        return chatRoom;
+    public ChatRoomManager getChatRoomManager(){
+        return chatRoomManager;
     }
 
     public ChatFilter getChatFilter() {

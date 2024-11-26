@@ -66,16 +66,17 @@ public class ClientManager {
     }
 
     public synchronized void broadcastMessageInRoom(String message, boolean onlyLoggedIn, User currentSender) {
-        if (currentSender == null){
+        if (currentSender == null) {
             return;
         }
-        if (!main.getChatRoom().getChatRooms().containsKey(currentSender.getCurrentRoom())){
+        if (!main.getChatRoomManager().roomExists(currentSender.getCurrentRoom())){
             return;
         }
+
         String timestamp = "[" + Util.DATE_FORMAT.format(System.currentTimeMillis()) + "]";
         final String toSend = timestamp + " " + message;
 
-        List<ConnectionHandler> room = main.getChatRoom().getChatRooms().get(currentSender.getCurrentRoom());
+        List<ConnectionHandler> room = main.getChatRoomManager().getUsersIn(currentSender.getCurrentRoom());
         final String username = currentSender.getName();
         room.stream()
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
@@ -87,7 +88,7 @@ public class ClientManager {
                 });
 
         // Save to chat history
-        main.getChatRoom().addToChatLog(currentSender.getCurrentRoom(), message);
+        main.getChatRoomManager().addToChatLog(currentSender.getCurrentRoom(), message);
     }
 
     public void login(ConnectionHandler sender, User user) {
@@ -96,7 +97,7 @@ public class ClientManager {
         user.setStatus(User.Status.ONLINE);
         connections.put(sender.getIdentifier(), sender);
 
-        main.getChatRoom().addUserToRoom(sender, user.getCurrentRoom());
+        main.getChatRoomManager().addUserToRoom(sender, user.getCurrentRoom());
     }
 
     public void logout(ConnectionHandler sender) {

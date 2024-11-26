@@ -13,10 +13,10 @@ public class JoinRoomCommand extends Command{
         }
         User user = main.getUserManager().getUser(sender.getIdentifier());
         if (!args[0].equals(user.getCurrentRoom())){
-            main.getChatRoom().switchRoom(sender, args[0]);
+            main.getChatRoomManager().switchRoom(sender, args[0]);
             return;
         }
-        main.getChatRoom().addUserToRoom(sender, args[0]);
+        main.getChatRoomManager().addUserToRoom(sender, args[0]);
     }
 
     @Override

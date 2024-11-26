@@ -9,16 +9,16 @@ import java.util.List;
 public class ListActiveRoomsCommand extends Command {
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
-        if (main.getChatRoom().getChatRooms().isEmpty()){
+        if (main.getChatRoomManager().getChatRooms().isEmpty()) {
             sender.sendMessage("No rooms have been created. /create <room name> to create a new room!");
             return;
         }
         int peopleInRoom = 0;
         sender.sendMessage("--Current rooms--");
-        for (String room : main.getChatRoom().getRoomList()){
-            List<ConnectionHandler> roomUsers = main.getChatRoom().getChatRooms().get(room);
+        for (String room : main.getChatRoomManager().getRoomList()) {
+            List<ConnectionHandler> roomUsers = main.getChatRoomManager().getUsersIn(room);
             int roomSize = roomUsers.size();
-            for (ConnectionHandler handler : roomUsers){
+            for (ConnectionHandler handler : roomUsers) {
                 User user = main.getUserManager().getUser(handler.getIdentifier());
                 if (user == null) continue;
                 if (user.getStatus().equals(User.Status.ONLINE))

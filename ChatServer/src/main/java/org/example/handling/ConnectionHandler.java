@@ -66,12 +66,13 @@ public class ConnectionHandler extends Thread {
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
 
-                // Send to every connected client
-                if (sender.getCurrentRoom() != null){
+                // Send to the current room
+                if (sender.getCurrentRoom() != null) {
                     main.getClientManager().broadcastMessageInRoom(fullMessage, true, sender);
                 }
-                else
+                else {
                     this.sendMessage("Need to join a chat room first! /help for more information");
+                }
             }
         } catch (IOException e) {
             System.err.println("Error in reading/writing to connection");

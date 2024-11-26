@@ -10,7 +10,7 @@ public class CreateRoomCommand extends Command{
             sender.sendMessage("Need to enter a name for the room!");
             return;
         }
-        main.getChatRoom().createRoom(args[0], sender);
+        main.getChatRoomManager().createRoom(args[0], sender);
     }
 
     @Override

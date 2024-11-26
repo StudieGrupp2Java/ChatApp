@@ -9,13 +9,13 @@ import org.example.util.Util;
 
 import java.util.*;
 
-public class ChatRoom {
+public class ChatRoomManager {
     @Getter
     private final Map<String, List<ConnectionHandler>> chatRooms = new HashMap<>();
     @Getter
     private final Map<String, List<ChatLog>> chatRoomLogs = new HashMap<>();
     private final ChatServer main;
-    public ChatRoom(ChatServer main){
+    public ChatRoomManager(ChatServer main){
         this.main = main;
 
         chatRooms.putIfAbsent("Default", new ArrayList<>());
@@ -39,11 +39,14 @@ public class ChatRoom {
             chatRooms.get(roomName).add(client);
         }
 
-        main.getUserManager().getUser(client.getIdentifier()).setCurrentRoom(roomName);
+        final User user = main.getUserManager().getUser(client.getIdentifier());
+        user.setCurrentRoom(roomName);
         client.sendMessage("Joined room: " + roomName);
-        User user = main.getUserManager().getUser(client.getIdentifier());
-        if (chatRoomLogs.containsKey(user.getCurrentRoom()) && !chatRoomLogs.get(user.getCurrentRoom()).isEmpty()) {
-            chatRoomLogs.get(user.getCurrentRoom()).stream()
+
+        List<ChatLog> logs = chatRoomLogs.get(roomName);
+
+        if (logs != null && !logs.isEmpty()) {
+            logs.stream()
                     .sorted(Comparator.comparingLong(ChatLog::getTimestamp).reversed())
                     .limit(30)
                     .sorted(Comparator.comparingLong(ChatLog::getTimestamp))
@@ -71,16 +74,6 @@ public class ChatRoom {
         client.sendMessage("Switched from " + lastRoom + " to " + roomName);
     }
 
-    public void removeUserFromRoom(ConnectionHandler client, String roomName) {
-        List<ConnectionHandler> room = chatRooms.get(roomName);
-        if (room != null) {
-            room.remove(client);
-        }
-        client.sendMessage("Left room: " + roomName);
-        User user = main.getUserManager().getUser(client.getIdentifier());
-        main.getClientManager().broadcastMessageInRoom(user.getName() + " left the chat!", true, user);
-    }
-
     public List<String> getRoomList() {
         return new ArrayList<>(chatRooms.keySet());
     }
@@ -91,4 +84,11 @@ public class ChatRoom {
         }
     }
 
+    public boolean roomExists(String room) {
+        return this.chatRooms.containsKey(room);
+    }
+
+    public List<ConnectionHandler> getUsersIn(String room) {
+        return this.chatRooms.get(room);
+    }
 }
