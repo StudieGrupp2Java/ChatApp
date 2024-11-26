@@ -25,6 +25,7 @@ public class ConfirmDeleteCommand extends Command {
 
         // Delete account from UserManager
         userManager.removeUser(sender.getIdentifier());
+        main.getClientManager().logout(sender);
         sender.sendMessage("Your account has been permanently deleted.");
 
         // TODO: maybe we should log this kind of stuff

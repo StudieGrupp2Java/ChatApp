@@ -26,11 +26,7 @@ public class UserManager implements Serializable {
     }
 
     public void removeUser(int identifier) {
-        final User user = this.getUser(identifier);
         users.remove(identifier);
-        if (user != null) {
-            System.out.println(user.getName() + " disconnected!");
-        }
     }
 
     public User getUser(int identifier) {
