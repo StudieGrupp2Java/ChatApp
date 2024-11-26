@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.example.ChatServer;
 import org.example.handling.ConnectionHandler;
 import org.example.users.User;
+import org.example.util.ChatLog;
+import org.example.util.Util;
 
 import java.util.*;
 
@@ -11,7 +13,7 @@ public class ChatRoom {
     @Getter
     private final Map<String, List<ConnectionHandler>> chatRooms = new HashMap<>();
     @Getter
-    private final Map<String, List<String>> chatRoomLogs = new HashMap<>();
+    private final Map<String, List<ChatLog>> chatRoomLogs = new HashMap<>();
     private final ChatServer main;
     public ChatRoom(ChatServer main){
         this.main = main;
@@ -35,9 +37,15 @@ public class ChatRoom {
         client.sendMessage("Joined room: " + roomName);
         User user = main.getUserManager().getUser(client.getIdentifier());
         main.getClientManager().broadcastMessageInRoom(user.getName() + " joined the chat!", true, user);
-        if (chatRoomLogs.containsKey(user.getCurrentRoom()) && !chatRoomLogs.get(user.getCurrentRoom()).isEmpty())
-            chatRoomLogs.get(user.getCurrentRoom()).stream().limit(30).sorted(Comparator.reverseOrder()).forEach(client::sendMessage);
-        
+        if (chatRoomLogs.containsKey(user.getCurrentRoom()) && !chatRoomLogs.get(user.getCurrentRoom()).isEmpty()) {
+            chatRoomLogs.get(user.getCurrentRoom()).stream()
+                    .sorted(Comparator.comparingLong(ChatLog::getTimestamp).reversed())
+                    .limit(30)
+                    .sorted(Comparator.comparingLong(ChatLog::getTimestamp))
+                    .map(log -> String.format("[%s] %s", Util.DATE_FORMAT.format(log.getTimestamp()), log.getMessage()))
+                    .forEach(client::sendMessage);
+        }
+
     }
 
     public void removeUserFromRoom(ConnectionHandler client, String roomName) {
@@ -58,7 +66,7 @@ public class ChatRoom {
 
     public void addToChatLog(String roomName, String message){
         if (chatRoomLogs.containsKey(roomName)){
-            chatRoomLogs.get(roomName).add(message);
+            chatRoomLogs.get(roomName).add(new ChatLog(System.currentTimeMillis(), message));
         }
     }
 

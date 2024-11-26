@@ -1,13 +1,10 @@
 package org.example.handling;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.example.ChatServer;
 import org.example.users.User;
 
 import java.io.*;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -68,10 +65,10 @@ public class ConnectionHandler extends Thread {
                         name,
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
+
                 // Send to every connected client
                 if (sender.getCurrentRoom() != null){
                     main.getClientManager().broadcastMessageInRoom(fullMessage, true, sender);
-                    main.getChatRoom().addToChatLog(sender.getCurrentRoom(), fullMessage);
                 }
                 else
                     this.sendMessage("Need to join a chat room first! /help for more information");
