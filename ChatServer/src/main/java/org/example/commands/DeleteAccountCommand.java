@@ -15,20 +15,21 @@ public class DeleteAccountCommand extends Command {
         User user = userManager.getUser(sender.getIdentifier());
         //ChatLogs chatLogs = new ChatLogs();
 
-        // Kolla om användaren är inloggad
+        // Kolla om användaren är inloggad, annars returnera felmeddelande
         if (user == null){
             sender.sendMessage("You're not logged in and can't delete your account.");
             return;
         }
 
-        // Radera användaren
-        userManager.removeUser(sender.getIdentifier());
+        // Om användaren redan är markerad för radering, meddela att den måste bekräfta
+        if (user.isPendingDeletion()){
+            sender.sendMessage("Your account is already marked for deletion. Confirm with /confirmdelete ");
+            return;
+        }
 
-        // Skicka bekräftelsemeddelande till klienten
-        sender.sendMessage("Your account is now deleted. We're sorry to see you go!");
-
-        // Eventuellt: Logga händelse för administratörsändamål
-        // ChatLogs.getChatLogs().logAction("User " + user.getName() + " deleted their account.");
+        // Markera användaren för "väntar på radering"
+        user.setPendingDeletion(true);
+        sender.sendMessage("Your account is now marked for deletion. Confirm with /confirmdelete ");
     }
 
     @Override

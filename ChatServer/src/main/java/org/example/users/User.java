@@ -7,6 +7,7 @@ public class User implements Serializable {
     private final String name;
     private String password; //TODO: store encrypted or other more secure way
     private ChatRole role;
+    private boolean pendingDeletion = false;
 
     public User(int identifier, String name, String password) {
         this.identifier = identifier;
@@ -28,5 +29,13 @@ public class User implements Serializable {
 
     public void setIdentifier(int identifier) {
         this.identifier = identifier;
+    }
+
+    public boolean isPendingDeletion() {
+        return pendingDeletion;
+    }
+
+    public void setPendingDeletion(boolean pendingDeletion) {
+        this.pendingDeletion = pendingDeletion;
     }
 }
