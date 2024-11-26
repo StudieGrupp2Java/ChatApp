@@ -35,7 +35,7 @@ public class RegisterCommand extends Command {
         sender.sendMessage("Successfully registered.");
 
         sender.sendMessage("Welcome " + user.getName() + "!");
-        main.getClientManager().broadcastMessage(user.getName() + " logged in for the first time! Say hi!", true);
+        main.getClientManager().broadcastMessageInRoom(user.getName() + " logged in for the first time! Say hi!", true, user);
 
         user.setCurrentRoom("Default");
         main.getChatRoom().addUserToRoom(sender, user.getCurrentRoom());

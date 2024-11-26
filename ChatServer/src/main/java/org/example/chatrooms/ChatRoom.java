@@ -34,7 +34,7 @@ public class ChatRoom {
         main.getUserManager().getUser(client.getIdentifier()).setCurrentRoom(roomName);
         client.sendMessage("Joined room: " + roomName);
         User user = main.getUserManager().getUser(client.getIdentifier());
-        main.getClientManager().broadcastMessage(user.getName() + " joined the chat!", true);
+        main.getClientManager().broadcastMessageInRoom(user.getName() + " joined the chat!", true, user);
         if (chatRoomLogs.containsKey(user.getCurrentRoom()) && !chatRoomLogs.get(user.getCurrentRoom()).isEmpty())
             chatRoomLogs.get(user.getCurrentRoom()).stream().limit(30).sorted(Comparator.reverseOrder()).forEach(client::sendMessage);
         
@@ -47,7 +47,7 @@ public class ChatRoom {
         }
         client.sendMessage("Left room: " + roomName);
         User user = main.getUserManager().getUser(client.getIdentifier());
-        main.getClientManager().broadcastMessage(user.getName() + " left the chat!", true);
+        main.getClientManager().broadcastMessageInRoom(user.getName() + " left the chat!", true, user);
         // Join default room
         addUserToRoom(client, "Default");
     }
