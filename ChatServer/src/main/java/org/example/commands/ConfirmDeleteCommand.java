@@ -13,7 +13,7 @@ public class ConfirmDeleteCommand extends Command {
 
         // Check if user is logged in
         if (user == null){
-            sender.sendMessage("You're not logged in, anc cannot confirm account deletion.");
+            sender.sendMessage("You're not logged in, and cannot confirm account deletion.");
             return;
         }
 
