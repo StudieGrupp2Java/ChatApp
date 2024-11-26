@@ -17,7 +17,9 @@ public class ChatRoom {
     private final ChatServer main;
     public ChatRoom(ChatServer main){
         this.main = main;
-        chatRooms.put("Default", new ArrayList<>());
+
+        chatRooms.putIfAbsent("Default", new ArrayList<>());
+        chatRoomLogs.putIfAbsent("Default", new ArrayList<>());
     }
 
     public void createRoom(String roomName, ConnectionHandler sender) {
@@ -28,12 +30,15 @@ public class ChatRoom {
 
     // Returns true if the room exists
     public boolean addUserToRoom(ConnectionHandler client, String roomName) {
+        System.out.println("adding user to " + roomName);
         if (!chatRooms.containsKey(roomName)){
             client.sendMessage("No room with that name exists!");
             return false;
         }
-        if (chatRooms.get(roomName).contains(client)) return true;
-        chatRooms.get(roomName).add(client);
+        if (!chatRooms.get(roomName).contains(client)) {
+            chatRooms.get(roomName).add(client);
+        }
+
         main.getUserManager().getUser(client.getIdentifier()).setCurrentRoom(roomName);
         client.sendMessage("Joined room: " + roomName);
         User user = main.getUserManager().getUser(client.getIdentifier());

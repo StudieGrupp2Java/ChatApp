@@ -20,6 +20,7 @@ public class ListActiveRoomsCommand extends Command {
             int roomSize = roomUsers.size();
             for (ConnectionHandler handler : roomUsers){
                 User user = main.getUserManager().getUser(handler.getIdentifier());
+                if (user == null) continue;
                 if (user.getStatus().equals(User.Status.ONLINE))
                     peopleInRoom++;
             }

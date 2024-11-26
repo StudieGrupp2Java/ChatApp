@@ -150,14 +150,12 @@ public class FileManager {
                     chatLogMap.clear();
                 }
                 String roomName = chatlog.getName().substring(0, chatlog.getName().length() - 4);
-                System.out.println(roomName);
                 chatLogMap.put(roomName, new ArrayList<>());
                 server.getChatRoom().getChatRooms().put(roomName, new ArrayList<>());
                 List<ChatLog> list = chatLogMap.get(roomName);
                 for (int i = 0; i < size; i++){
                     ChatLog log = (ChatLog) chatLogStream.readObject();
 
-                    System.out.println(log.getMessage());
                     list.add(log);
                 }
             }

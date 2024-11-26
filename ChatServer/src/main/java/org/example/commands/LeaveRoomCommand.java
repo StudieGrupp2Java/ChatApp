@@ -6,7 +6,7 @@ import org.example.handling.ConnectionHandler;
 public class LeaveRoomCommand extends Command{
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
-        main.getChatRoom().removeUserFromRoom(sender, main.getUserManager().getUser(sender.getIdentifier()).getCurrentRoom());
+        main.getChatRoom().switchRoom(sender, "Default");
     }
 
     @Override

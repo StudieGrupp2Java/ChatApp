@@ -28,7 +28,8 @@ public class User implements Serializable {
         this.identifier = Math.abs(UUID.randomUUID().hashCode()); // ensure positive identifier
         this.name = name;
         this.password = password;
-        blockedUsers = new ArrayList<>();
+        this.blockedUsers = new ArrayList<>();
+        this.currentRoom = "Default";
     }
 
     public int getIdentifier() {
