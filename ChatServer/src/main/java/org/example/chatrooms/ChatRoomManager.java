@@ -22,10 +22,14 @@ public class ChatRoomManager {
         chatRoomLogs.putIfAbsent("Default", new ArrayList<>());
     }
 
-    public void createRoom(String roomName, ConnectionHandler sender) {
-        chatRooms.putIfAbsent(roomName, new ArrayList<>());
-        sender.sendMessage("Created room: " + roomName);
+    public void loadRoom(String roomName) {
+        chatRooms.put(roomName, new ArrayList<>());
         chatRoomLogs.put(roomName, new ArrayList<>());
+    }
+
+    public void createRoom(String roomName, ConnectionHandler sender) {
+        this.loadRoom(roomName);
+        sender.sendMessage("Created room: " + roomName);
     }
 
     // Returns true if the room exists
@@ -92,4 +96,5 @@ public class ChatRoomManager {
     public List<ConnectionHandler> getUsersIn(String room) {
         return this.chatRooms.get(room);
     }
+
 }

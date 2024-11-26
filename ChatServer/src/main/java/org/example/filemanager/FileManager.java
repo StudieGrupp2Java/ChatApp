@@ -20,7 +20,7 @@ public class FileManager {
     private String USERS;
     private final String FILEPATHS = "configPaths.txt";
 
-    public FileManager(ChatServer server){
+    public FileManager(ChatServer server) {
         this.server = server;
         try {
             loadPaths();
@@ -32,9 +32,9 @@ public class FileManager {
         }
     }
 
-    private void loadPaths(){
+    private void loadPaths() {
         File paths = new File(FOLDER + "/" + FILEPATHS);
-        if (!paths.exists()){
+        if (!paths.exists()) {
             CHATLOGS_FOLDER = "chatlogs/";
             WORDS = "ForbiddenWords.txt";
             USERS = "Users.txt";
@@ -44,54 +44,54 @@ public class FileManager {
         try {
             pathReader = new BufferedReader(new FileReader(paths));
             String path;
-            while((path = pathReader.readLine()) != null){
+            while ((path = pathReader.readLine()) != null) {
                 String[] splitPath = path.split("=");
-                if (splitPath[0].equalsIgnoreCase("ChatLogs")){
+                if (splitPath[0].equalsIgnoreCase("ChatLogs")) {
                     CHATLOGS_FOLDER = splitPath[1];
-                } else if (splitPath[0].equalsIgnoreCase("BannedWords")){
+                } else if (splitPath[0].equalsIgnoreCase("BannedWords")) {
                     WORDS = splitPath[1];
                 } else if (splitPath[0].equalsIgnoreCase("Users")) {
                     USERS = splitPath[1];
                 }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Something went wrong loading file paths");
         } finally {
             try {
                 if (pathReader != null) pathReader.close();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public synchronized <T> void save(List<T> object, String filePath){
+    public synchronized <T> void save(List<T> object, String filePath) {
         if (object.isEmpty()) return;
         File file = new File(filePath);
         FileOutputStream fileOut = null;
         ObjectOutputStream out = null;
-        try{
+        try {
             fileOut = new FileOutputStream(file);
             out = new ObjectOutputStream(fileOut);
             int size = object.size();
             out.write(size);
-            for (T item : object){
+            for (T item : object) {
                 out.writeObject(item);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Something went wrong while saving to file!");
         } finally {
-            try{
-                if (out != null){
+            try {
+                if (out != null) {
                     out.flush();
                     out.close();
                 }
-                if (fileOut != null){
+                if (fileOut != null) {
                     fileOut.flush();
                     fileOut.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.err.println("Error while closing saveFunction!");
                 e.printStackTrace();
             }
@@ -117,7 +117,7 @@ public class FileManager {
         System.out.println("Scheduler started with a 3-minute interval.");
     }
 
-    private void load(){
+    private void load() {
         File chatlogsFolder = new File(FOLDER + "/" + CHATLOGS_FOLDER);
         if (!chatlogsFolder.exists()) {
             chatlogsFolder.mkdirs();
@@ -127,14 +127,14 @@ public class FileManager {
         ObjectInputStream usersStream = null;
         FileInputStream chatLogIn = null;
         ObjectInputStream chatLogStream = null;
-        try{
+        try {
             usersIn = new FileInputStream(FOLDER + "/" + USERS);
             usersStream = new ObjectInputStream(usersIn);
             int size = usersStream.read();
-            if (!server.getUserManager().getUsers().isEmpty()){
+            if (!server.getUserManager().getUsers().isEmpty()) {
                 server.getUserManager().getUsers().clear();
             }
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 User user = (User) usersStream.readObject();
                 user.setInitalStatus(User.Status.OFFLINE);
                 server.getUserManager().loadUser(user.getIdentifier(), user);
@@ -146,21 +146,20 @@ public class FileManager {
                 chatLogIn = new FileInputStream(chatlog);
                 chatLogStream = new ObjectInputStream(chatLogIn);
                 size = chatLogStream.read();
-                if (!chatLogMap.isEmpty()){
-                    chatLogMap.clear();
-                }
                 String roomName = chatlog.getName().substring(0, chatlog.getName().length() - 4);
                 chatLogMap.put(roomName, new ArrayList<>());
-                server.getChatRoomManager().getChatRooms().put(roomName, new ArrayList<>());
+                server.getChatRoomManager().loadRoom(roomName);
+
                 List<ChatLog> list = chatLogMap.get(roomName);
-                for (int i = 0; i < size; i++){
+                if (!list.isEmpty()) list.clear();
+                for (int i = 0; i < size; i++) {
                     ChatLog log = (ChatLog) chatLogStream.readObject();
 
                     list.add(log);
                 }
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Something went wrong loading the files!");
             e.printStackTrace();
         } finally {
@@ -169,7 +168,7 @@ public class FileManager {
                 if (usersIn != null) usersIn.close();
                 if (chatLogStream != null) chatLogStream.close();
                 if (chatLogIn != null) chatLogIn.close();
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println("Something went wrong closing streams while loading.");
             }
         }
@@ -182,51 +181,51 @@ public class FileManager {
         }
 
         File words = new File(FOLDER + "/" + WORDS);
-        if (!words.exists()){
+        if (!words.exists()) {
             System.out.println("Can't find config!");
             words.createNewFile();
             return;
         }
 
         BufferedReader reader = null;
-        try{
+        try {
             reader = new BufferedReader(new FileReader(words));
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 server.getChatFilter().getBannedWords().add(line);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Something went wrong loading from file!");
         } finally {
-            try{
+            try {
                 if (!(reader == null)) reader.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Something went wrong closing the buffered reader!");
             }
         }
     }
 
-    private void saveBannedWords(){
+    private void saveBannedWords() {
         File words = new File(FOLDER + "/" + WORDS);
-        if (!words.exists()){
+        if (!words.exists()) {
             System.out.println("Cannot find config path!");
             return;
         }
         BufferedWriter writer = null;
-        try{
+        try {
             writer = new BufferedWriter(new FileWriter(words));
-            for (String word : server.getChatFilter().getBannedWords()){
+            for (String word : server.getChatFilter().getBannedWords()) {
                 writer.write(word + "\n");
                 writer.flush();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Something went wrong saving to config!");
         } finally {
-            try{
+            try {
                 if (!(writer == null)) writer.close();
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Something went wrong closing the bufferedwriter!");
             }
         }
