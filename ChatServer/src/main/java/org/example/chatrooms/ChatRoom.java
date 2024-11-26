@@ -15,6 +15,7 @@ public class ChatRoom {
     private final ChatServer main;
     public ChatRoom(ChatServer main){
         this.main = main;
+        chatRooms.put("Default", new ArrayList<>());
     }
 
     public void createRoom(String roomName, ConnectionHandler sender) {
@@ -28,6 +29,7 @@ public class ChatRoom {
             client.sendMessage("No room with that name exists!");
             return;
         }
+        if (chatRooms.get(roomName).contains(client)) return;
         chatRooms.get(roomName).add(client);
         main.getUserManager().getUser(client.getIdentifier()).setCurrentRoom(roomName);
         client.sendMessage("Joined room: " + roomName);
@@ -46,6 +48,8 @@ public class ChatRoom {
         client.sendMessage("Left room: " + roomName);
         User user = main.getUserManager().getUser(client.getIdentifier());
         main.getClientManager().broadcastMessage(user.getName() + " left the chat!", true);
+        // Join default room
+        addUserToRoom(client, "Default");
     }
 
     public List<String> getRoomList() {

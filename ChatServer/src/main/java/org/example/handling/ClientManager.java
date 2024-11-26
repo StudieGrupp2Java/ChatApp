@@ -11,9 +11,7 @@ import java.util.stream.Collectors;
 public class ClientManager {
     private static final int SERVER_PORT = 2147; //TODO: changeable
     private final ChatServer main;
-    private final int MESSAGESTOSHOW = 30;
     private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
-    private User currentSender;
 
     public ClientManager(ChatServer chatServer) {
         this.main = chatServer;
@@ -54,6 +52,7 @@ public class ClientManager {
 
         final User user = main.getUserManager().getUser(connection.getIdentifier());
         if (user != null) {
+            main.getChatRoom().removeUserFromRoom(connection, user.getCurrentRoom());
             this.broadcastMessage(user.getName() + " disconnected!", true);
         }
     }
@@ -68,6 +67,15 @@ public class ClientManager {
      * @param onlyLoggedIn whether to only send to logged-in users
      */
     public synchronized void broadcastMessage(String message, boolean onlyLoggedIn) {
+        final String username = getUsername(message);
+        connections.values().stream()
+                .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
+                .forEach(connection -> connection.sendMessage(message));
+        // Save to chat history
+        main.getChatInfo().addMessage(message);
+    }
+
+    public synchronized void broadcastMessageInRoom(String message, boolean onlyLoggedIn, User currentSender) {
         if (currentSender == null){
             return;
         }
@@ -82,16 +90,11 @@ public class ClientManager {
                     User user = main.getUserManager().getUser(connection.getIdentifier());
                     if (!user.getBlockedUsers().contains(username)){
                         connection.sendMessage("["+user.getCurrentRoom()+"]" + message);
-
                     }
                 });
 
         // Save to chat history
         main.getChatInfo().addMessage(message);
-    }
-
-    public synchronized void setCurrentSender(User sender){
-        this.currentSender = sender;
     }
 
 
@@ -109,11 +112,13 @@ public class ClientManager {
         user.setStatus(User.Status.ONLINE);
         connections.put(sender.getIdentifier(), sender);
 
-        main.getChatInfo().getChatLogs().stream()
-                .sorted(Comparator.reverseOrder())
-                .limit(MESSAGESTOSHOW)
-                .sorted(Comparator.naturalOrder())
-                .forEach(sender::sendMessage);
+//        main.getChatInfo().getChatLogs().stream()
+//                .sorted(Comparator.reverseOrder())
+//                .limit(MESSAGESTOSHOW)
+//                .sorted(Comparator.naturalOrder())
+//                .forEach(sender::sendMessage);
+
+        main.getChatRoom().addUserToRoom(sender, user.getCurrentRoom());
     }
 
     public void logout(ConnectionHandler sender) {

@@ -8,6 +8,7 @@ import org.example.users.User;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
@@ -71,10 +72,9 @@ public class ConnectionHandler extends Thread {
                         name,
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
-                main.getClientManager().setCurrentSender(sender);
                 // Send to every connected client
                 if (sender.getCurrentRoom() != null){
-                    main.getClientManager().broadcastMessage(fullMessage, true);
+                    main.getClientManager().broadcastMessageInRoom(fullMessage, true, sender);
                     main.getChatRoom().addToChatLog(sender.getCurrentRoom(), fullMessage);
                 }
                 else
@@ -136,4 +136,16 @@ public class ConnectionHandler extends Thread {
         return identifier >= 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConnectionHandler that = (ConnectionHandler) o;
+        return identifier == that.identifier;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifier);
+    }
 }
