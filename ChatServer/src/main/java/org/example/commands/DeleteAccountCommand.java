@@ -4,7 +4,7 @@ import org.example.ChatServer;
 import org.example.handling.ConnectionHandler;
 import org.example.users.User;
 import org.example.users.UserManager;
-import org.example.util.ChatLogs;
+import org.example.util.ChatLog;
 
 public class DeleteAccountCommand extends Command {
 
