@@ -13,8 +13,7 @@ public class DeleteAccountCommand extends Command {
 
         UserManager userManager = main.getUserManager();
         User user = userManager.getUser(sender.getIdentifier());
-        //ChatLogs chatLogs = new ChatLogs();
-
+        
         // Kolla om användaren är inloggad, annars returnera felmeddelande
         if (user == null){
             sender.sendMessage("You're not logged in and can't delete your account.");
