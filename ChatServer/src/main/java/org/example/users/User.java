@@ -60,7 +60,7 @@ public class User implements Serializable {
     }
 
     public void removeBlockedUser(String name, ConnectionHandler sender){
-        if (blockedUsers.contains(name)){
+        if (!blockedUsers.contains(name)){
             sender.sendMessage("User is not in your blocked list!");
             return;
         }
