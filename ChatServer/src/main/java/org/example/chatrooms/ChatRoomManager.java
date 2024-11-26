@@ -30,7 +30,6 @@ public class ChatRoomManager {
 
     // Returns true if the room exists
     public boolean addUserToRoom(ConnectionHandler client, String roomName) {
-        System.out.println("adding user to " + roomName);
         if (!chatRooms.containsKey(roomName)){
             client.sendMessage("No room with that name exists!");
             return false;
@@ -79,9 +78,11 @@ public class ChatRoomManager {
     }
 
     public void addToChatLog(String roomName, String message){
-        if (chatRoomLogs.containsKey(roomName)){
-            chatRoomLogs.get(roomName).add(new ChatLog(System.currentTimeMillis(), message));
-        }
+        // Create new chatlog object for the room if it doesnt exist
+        chatRoomLogs.computeIfAbsent(roomName, k -> new ArrayList<>());
+
+        // add the message to the chatlog
+        chatRoomLogs.get(roomName).add(new ChatLog(System.currentTimeMillis(), message));
     }
 
     public boolean roomExists(String room) {
