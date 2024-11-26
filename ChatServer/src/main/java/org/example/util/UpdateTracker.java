@@ -27,14 +27,14 @@ public class UpdateTracker {
         user.setStatus(User.Status.ONLINE);
 
         if (lastStatus.equals(AWAY)) {
-            main.getClientManager().broadcastMessage(user.getName() + " is no longer AFK.", true);
+            main.getClientManager().broadcastMessageInRoom(user.getName() + " is no longer AFK.", true, user);
         }
     }
 
     private void setAway(User user) {
         user.setStatus(AWAY);
 
-        main.getClientManager().broadcastMessage(user.getName() + " is now AFK.", true);
+        main.getClientManager().broadcastMessageInRoom(user.getName() + " is now AFK.", true, user);
 
     }
 

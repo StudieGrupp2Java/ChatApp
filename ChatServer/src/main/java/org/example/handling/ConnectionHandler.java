@@ -1,11 +1,14 @@
 package org.example.handling;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.ChatServer;
 import org.example.users.User;
 
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
@@ -13,6 +16,7 @@ public class ConnectionHandler extends Thread {
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
+
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
@@ -68,9 +72,13 @@ public class ConnectionHandler extends Thread {
                         name,
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
-
                 // Send to every connected client
-                main.getClientManager().broadcastMessage(fullMessage, true);
+                if (sender.getCurrentRoom() != null){
+                    main.getClientManager().broadcastMessageInRoom(fullMessage, true, sender);
+                    main.getChatRoom().addToChatLog(sender.getCurrentRoom(), fullMessage);
+                }
+                else
+                    this.sendMessage("Need to join a chat room first! /help for more information");
             }
         } catch (IOException e) {
             System.err.println("Error in reading/writing to connection");
@@ -79,6 +87,7 @@ public class ConnectionHandler extends Thread {
             main.getClientManager().removeConnection(this);
         }
     }
+
 
     private boolean isCommand(String message) {
         return message.startsWith("/") || message.startsWith("@");
@@ -127,4 +136,16 @@ public class ConnectionHandler extends Thread {
         return identifier >= 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConnectionHandler that = (ConnectionHandler) o;
+        return identifier == that.identifier;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifier);
+    }
 }
