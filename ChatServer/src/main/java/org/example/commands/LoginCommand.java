@@ -11,7 +11,7 @@ public class LoginCommand extends Command {
 
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
-        if (main.getUserManager().getUser(sender.getIdentifier()) != null) {
+        if (sender.isLoggedIn()) {
             sender.sendMessage("You are already logged in.");
             return;
         }
@@ -36,10 +36,10 @@ public class LoginCommand extends Command {
             return;
         }
 
-        main.getUserManager().updateIdentity(user, sender.getIdentifier());
-
         sender.sendMessage("Welcome " + user.getName() + "!");
-        main.getClientManager().broadcastMessage(user.getName() + " logged in!", true);
+        main.getClientManager().login(sender, user);
+
+        main.getClientManager().broadcastMessageInRoom(user.getName() + " logged in!", true, user);
     }
 
     @Override

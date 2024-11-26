@@ -18,6 +18,14 @@ public class CommandFactory {
         commandMap.put("help", HelpCommand::new);
         commandMap.put("deleteaccount", DeleteAccountCommand::new);
         commandMap.put("confirmdelete", ConfirmDeleteCommand::new);
+        commandMap.put("online", OnlineCommand::new);
+        commandMap.put("block", BlockUserCommand::new);
+        commandMap.put("unblock", RemoveBlockedUserCommand::new);
+        commandMap.put("listblocked", ListBlockedUsersCommand::new);
+        commandMap.put("create", CreateRoomCommand::new);
+        commandMap.put("leaveroom", LeaveRoomCommand::new);
+        commandMap.put("join", JoinRoomCommand::new);
+        commandMap.put("rooms", ListActiveRoomsCommand::new);
     }
 
     public static Command getCommand(String commandName) {

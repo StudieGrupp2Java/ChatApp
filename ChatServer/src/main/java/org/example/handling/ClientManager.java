@@ -2,11 +2,13 @@ package org.example.handling;
 
 import org.example.ChatServer;
 import org.example.users.User;
+import org.example.util.Util;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.*;
+
 
 public class ClientManager {
     private static final int SERVER_PORT = 2147; //TODO: changeable
@@ -51,28 +53,55 @@ public class ClientManager {
         connections.remove(connection.getIdentifier());
         System.out.println(connection.getSocket() + " disconnected!");
 
+        main.getClientManager().logout(connection);
         final User user = main.getUserManager().getUser(connection.getIdentifier());
         if (user != null) {
-            this.broadcastMessage(user.getName() + " disconnected!", true);
+            this.broadcastMessageInRoom(user.getName() + " disconnected!", true, user);
+            user.setStatus(User.Status.OFFLINE);
         }
-    }
-
-    public Collection<ConnectionHandler> getConnections() {
-        return connections.values();
-    }
-
-    /**
-     * Broadcasts message to all connected users
-     * @param message to be broadcasted
-     * @param onlyLoggedIn whether to only send to logged-in users
-     */
-    public void broadcastMessage(String message, boolean onlyLoggedIn) {
-        connections.values().stream()
-                .filter(connection -> !onlyLoggedIn || main.getUserManager().containsIdentifier(connection.getIdentifier()))
-                .forEach(connection -> connection.sendMessage(message));
     }
 
     public boolean isConnected(int identifier) {
         return connections.get(identifier) != null;
+    }
+
+    public synchronized void broadcastMessageInRoom(String message, boolean onlyLoggedIn, User currentSender) {
+        if (currentSender == null){
+            return;
+        }
+        if (!main.getChatRoom().getChatRooms().containsKey(currentSender.getCurrentRoom())){
+            return;
+        }
+        String timestamp = "[" + Util.DATE_FORMAT.format(System.currentTimeMillis()) + "]";
+        final String toSend = timestamp + " " + message;
+
+        List<ConnectionHandler> room = main.getChatRoom().getChatRooms().get(currentSender.getCurrentRoom());
+        final String username = currentSender.getName();
+        room.stream()
+                .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
+                .forEach(connection -> {
+                    User user = main.getUserManager().getUser(connection.getIdentifier());
+                    if (!user.getBlockedUsers().contains(username)){
+                        connection.sendMessage("[" + user.getCurrentRoom() + "]" + toSend);
+                    }
+                });
+
+        // Save to chat history
+        main.getChatRoom().addToChatLog(currentSender.getCurrentRoom(), message);
+    }
+
+    public void login(ConnectionHandler sender, User user) {
+        connections.remove(sender.getIdentifier());
+        sender.login(user);
+        user.setStatus(User.Status.ONLINE);
+        connections.put(sender.getIdentifier(), sender);
+
+        main.getChatRoom().addUserToRoom(sender, user.getCurrentRoom());
+    }
+
+    public void logout(ConnectionHandler sender) {
+        connections.remove(sender.getIdentifier());
+        sender.logout();
+        connections.put(sender.getIdentifier(), sender);
     }
 }

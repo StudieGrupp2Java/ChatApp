@@ -1,26 +1,32 @@
 package org.example;
 
 import org.example.chatclient.ChatClient;
+import org.example.emoji.Emoji;
 import org.example.filemanager.FileManager;
 import org.example.logininfo.LoginInfo;
+import org.example.textcolor.TextColor;
 
 import java.util.Scanner;
 
 public class InputListener {
-
+    private Emoji emoji;
     private final ChatClient main;
     private final LoginInfo login;
     private final Scanner scan = new Scanner(System.in);
+    private String username = "";
+    public boolean loggedIn = false;
 
     public InputListener(ChatClient main, LoginInfo login) {
         this.main = main;
         this.login = login;
+        emoji = new Emoji();
     }
 
     public void listenForInput() {
         while (scan.hasNext()) {
             String message = scan.nextLine();
-
+            System.out.print(TextColor.CLEAR_LINE); // clear the current line, doesnt work in all terminals
+            checkUsername(message);
             if (main.getCommandManager().executeCommand(message) && !message.equalsIgnoreCase("/help")) {
                 continue;
             }
@@ -29,8 +35,30 @@ public class InputListener {
             if (validateMessage(message)) {
                 continue;
             }
+
+            for (String key : emoji.getEmojiMap().keySet()){
+                if (message.contains(key)){
+                    message = emoji.getEmoji(message);
+                }
+            }
+
+            if (message.contains("!emoji")){
+                message = emoji.emojiPicker(message, scan);
+            }
             main.getServerManager().sendMessageToServer(message);
         }
+    }
+
+    private void checkUsername(String message){
+        if (!loggedIn){
+            if (message.contains("/login") || message.contains("/register")){
+                username = message.split(" ")[1];
+            }
+        }
+    }
+
+    public String getUsername(){
+        return username;
     }
 
     private void checkLogin(String message) {
@@ -80,6 +108,7 @@ public class InputListener {
                     // tell server we're using auto-login
                     main.getServerManager().sendMessageToServer("true");
                     main.getServerManager().sendMessageToServer("/login " + info[0] + " " + info[1]);
+                    username = info[0];
                     return;
                 } else if (answer.equalsIgnoreCase("no")) {
                     break;
@@ -90,5 +119,9 @@ public class InputListener {
         }
         // tell server we're NOT using auto-login
         main.getServerManager().sendMessageToServer("false");
+    }
+
+    public Emoji getEmoji(){
+        return emoji;
     }
 }

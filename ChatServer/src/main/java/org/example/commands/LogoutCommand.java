@@ -16,10 +16,11 @@ public class LogoutCommand extends Command {
         }
 
         sender.sendMessage("Logging out...");
-        main.getUserManager().logout(sender.getIdentifier());
+        main.getClientManager().logout(sender);
         sender.sendMessage("Bye!");
 
-        main.getClientManager().broadcastMessage(user.getName() + " logged out!", true);
+        user.setStatus(User.Status.OFFLINE);
+        main.getClientManager().broadcastMessageInRoom(user.getName() + " logged out!", true, user);
     }
 
     @Override

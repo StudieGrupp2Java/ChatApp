@@ -5,22 +5,20 @@ import org.example.users.User;
 
 import java.io.*;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ConnectionHandler extends Thread {
-    private final int identifier;
+    private int identifier;
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     private final BufferedReader in;
     private final PrintWriter out;
 
     public ConnectionHandler(ChatServer main, Socket socket) {
-        this.identifier = UUID.randomUUID().hashCode();
+        this.identifier = -Math.abs(UUID.randomUUID().hashCode()); // ensure negative identifier on initialization (logged out)
         this.main = main;
         this.socket = socket;
 
@@ -46,6 +44,9 @@ public class ConnectionHandler extends Thread {
                     break;
                 }
 
+                // User has sent something, reset their last-seen
+                main.getUpdateTracker().updateStatus(this.identifier);
+
                 if (isCommand(incomingMessage)) {
                     main.getCommandManager().handleIncomingCommand(incomingMessage, this);
                     continue;
@@ -60,17 +61,17 @@ public class ConnectionHandler extends Thread {
 
                 final String name = sender.getName();
                 final String fullMessage = String.format(
-                        "[%s] %s: %s",
-                        DATE_FORMAT.format(System.currentTimeMillis()),
+                        "%s: %s",
                         name,
                         main.getChatFilter().filterMessage(incomingMessage)
                 );
 
                 // Send to every connected client
-                main.getClientManager().broadcastMessage(fullMessage, true);
-
-                // Save to chat history
-                main.getChatInfo().addMessage(fullMessage);
+                if (sender.getCurrentRoom() != null){
+                    main.getClientManager().broadcastMessageInRoom(fullMessage, true, sender);
+                }
+                else
+                    this.sendMessage("Need to join a chat room first! /help for more information");
             }
         } catch (IOException e) {
             System.err.println("Error in reading/writing to connection");
@@ -79,6 +80,7 @@ public class ConnectionHandler extends Thread {
             main.getClientManager().removeConnection(this);
         }
     }
+
 
     private boolean isCommand(String message) {
         return message.startsWith("/") || message.startsWith("@");
@@ -104,7 +106,39 @@ public class ConnectionHandler extends Thread {
         return socket;
     }
 
+    private void setIdentifier(int identifier) {
+        this.identifier = identifier;
+    }
+
     public int getIdentifier() {
         return identifier;
+    }
+
+    public void logout() {
+        this.setIdentifier(-Math.abs(this.getIdentifier()));
+    }
+
+    public void login(User user) {
+        this.setIdentifier(user.getIdentifier());
+    }
+
+    /**
+     * Logged in connections have positive identifiers
+     */
+    public boolean isLoggedIn() {
+        return identifier >= 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConnectionHandler that = (ConnectionHandler) o;
+        return identifier == that.identifier;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifier);
     }
 }

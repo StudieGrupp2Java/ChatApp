@@ -2,10 +2,13 @@ package org.example.filemanager;
 
 import org.example.ChatServer;
 import org.example.users.User;
+import org.example.util.ChatLog;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -13,13 +16,13 @@ public class FileManager {
     private final ChatServer server;
     private final String FOLDER = "config";
     private String WORDS;
-    private String CHATLOGS;
+    private String CHATLOGS_FOLDER;
     private String USERS;
     private final String FILEPATHS = "configPaths.txt";
 
     public FileManager(ChatServer server){
         this.server = server;
-        try{
+        try {
             loadPaths();
             load();
             loadWords();
@@ -32,7 +35,7 @@ public class FileManager {
     private void loadPaths(){
         File paths = new File(FOLDER + "/" + FILEPATHS);
         if (!paths.exists()){
-            CHATLOGS = "chatLogs.txt";
+            CHATLOGS_FOLDER = "chatlogs/";
             WORDS = "ForbiddenWords.txt";
             USERS = "Users.txt";
             return;
@@ -44,7 +47,7 @@ public class FileManager {
             while((path = pathReader.readLine()) != null){
                 String[] splitPath = path.split("=");
                 if (splitPath[0].equalsIgnoreCase("ChatLogs")){
-                    CHATLOGS = splitPath[1];
+                    CHATLOGS_FOLDER = splitPath[1];
                 } else if (splitPath[0].equalsIgnoreCase("BannedWords")){
                     WORDS = splitPath[1];
                 } else if (splitPath[0].equalsIgnoreCase("Users")) {
@@ -98,9 +101,11 @@ public class FileManager {
     public void saveAll() {
         System.out.println("Executing save task...");
         saveBannedWords();
-        save(server.getChatInfo().getChatLogs(), FOLDER + "/" + CHATLOGS);
-        save(Arrays.asList(server.getUserManager().getUsers().toArray()), FOLDER + "/" + USERS);
+        for (Map.Entry<String, List<ChatLog>> entry : server.getChatRoom().getChatRoomLogs().entrySet()) {
+            save(entry.getValue(), FOLDER + "/" + CHATLOGS_FOLDER + entry.getKey() + ".log");
+        }
 
+        save(Arrays.asList(server.getUserManager().getUsers().toArray()), FOLDER + "/" + USERS);
     }
 
     private void startSaveTask() {
@@ -113,6 +118,11 @@ public class FileManager {
     }
 
     private void load(){
+        File chatlogsFolder = new File(FOLDER + "/" + CHATLOGS_FOLDER);
+        if (!chatlogsFolder.exists()) {
+            chatlogsFolder.mkdirs();
+        }
+
         FileInputStream usersIn = null;
         ObjectInputStream usersStream = null;
         FileInputStream chatLogIn = null;
@@ -126,20 +136,35 @@ public class FileManager {
             }
             for (int i = 0; i < size; i++){
                 User user = (User) usersStream.readObject();
+                user.setInitalStatus(User.Status.OFFLINE);
                 server.getUserManager().loadUser(user.getIdentifier(), user);
             }
-            chatLogIn = new FileInputStream(FOLDER + "/" + CHATLOGS);
-            chatLogStream = new ObjectInputStream(chatLogIn);
-            size = chatLogStream.read();
-            if (!server.getChatInfo().getChatLogs().isEmpty()){
-                server.getChatInfo().getChatLogs().clear();
+            File chatLogsFolder = new File(FOLDER + "/" + CHATLOGS_FOLDER);
+            Map<String, List<ChatLog>> chatLogMap = server.getChatRoom().getChatRoomLogs();
+
+            for (File chatlog : chatLogsFolder.listFiles()) {
+                chatLogIn = new FileInputStream(chatlog);
+                chatLogStream = new ObjectInputStream(chatLogIn);
+                size = chatLogStream.read();
+                if (!chatLogMap.isEmpty()){
+                    chatLogMap.clear();
+                }
+                String roomName = chatlog.getName().substring(0, chatlog.getName().length() - 4);
+                System.out.println(roomName);
+                chatLogMap.put(roomName, new ArrayList<>());
+                server.getChatRoom().getChatRooms().put(roomName, new ArrayList<>());
+                List<ChatLog> list = chatLogMap.get(roomName);
+                for (int i = 0; i < size; i++){
+                    ChatLog log = (ChatLog) chatLogStream.readObject();
+
+                    System.out.println(log.getMessage());
+                    list.add(log);
+                }
             }
-            for (int i = 0; i < size; i++){
-                String log = (String) chatLogStream.readObject();
-                server.getChatInfo().getChatLogs().add(log);
-            }
+
         }catch (Exception e){
             System.out.println("Something went wrong loading the files!");
+            e.printStackTrace();
         } finally {
             try {
                 if (usersStream != null) usersStream.close();
@@ -170,7 +195,7 @@ public class FileManager {
             reader = new BufferedReader(new FileReader(words));
             String line;
             while ((line = reader.readLine()) != null){
-                server.getChatInfo().getBannedWords().add(line);
+                server.getChatFilter().getBannedWords().add(line);
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -193,7 +218,7 @@ public class FileManager {
         BufferedWriter writer = null;
         try{
             writer = new BufferedWriter(new FileWriter(words));
-            for (String word : server.getChatInfo().getBannedWords()){
+            for (String word : server.getChatFilter().getBannedWords()){
                 writer.write(word + "\n");
                 writer.flush();
             }

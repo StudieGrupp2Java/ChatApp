@@ -19,7 +19,7 @@ public class RegisterCommand extends Command {
 
         boolean exists = main.getUserManager().userExists(username);
 
-        if (username.isEmpty()){
+        if (username.isEmpty()) {
             sender.sendMessage("Username cannot be empty!");
             return;
         }
@@ -28,12 +28,17 @@ public class RegisterCommand extends Command {
             return;
         }
 
-        final User user = new User(sender.getIdentifier(), username, password);
-        main.getUserManager().addUser(sender.getIdentifier(), user);
+        final User user = new User(username, password);
+
+        main.getUserManager().addUser(user.getIdentifier(), user);
+        main.getClientManager().login(sender, user);
         sender.sendMessage("Successfully registered.");
 
         sender.sendMessage("Welcome " + user.getName() + "!");
-        main.getClientManager().broadcastMessage(user.getName() + " logged in for the first time! Say hi!", true);
+        main.getClientManager().broadcastMessageInRoom(user.getName() + " logged in for the first time! Say hi!", true, user);
+
+        user.setCurrentRoom("Default");
+        main.getChatRoom().addUserToRoom(sender, user.getCurrentRoom());
     }
 
     @Override
