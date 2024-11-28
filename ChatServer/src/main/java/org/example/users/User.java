@@ -19,6 +19,12 @@ public class User implements Serializable {
     @Getter
     @Setter
     private String currentRoom;
+    @Getter
+    @Setter
+    private boolean inDMS;
+    @Getter
+    @Setter
+    private ConnectionHandler recipient;
 
     private Status status;
     private long lastSeen;
@@ -30,6 +36,7 @@ public class User implements Serializable {
         this.password = password;
         this.blockedUsers = new ArrayList<>();
         this.currentRoom = "Default";
+        this.inDMS = false;
     }
 
     public int getIdentifier() {
