@@ -98,6 +98,11 @@ public class ServerManager {
         private String lastRoom = "";
         private void handleMessage(String serverMessage) {
             if (serverMessage.startsWith("Joined room:")) {
+                if (lastWasRoomMessage) {
+                    // Finish the room box
+                    System.out.println(RoomDrawer.getFooter());
+                    lastWasRoomMessage = false;
+                }
                 String roomName = serverMessage.split("Joined room: ")[1].split(" ")[0];
                 System.out.println(RoomDrawer.getHeader(roomName));
                 lastRoom = roomName;
