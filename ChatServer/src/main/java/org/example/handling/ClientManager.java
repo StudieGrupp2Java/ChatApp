@@ -97,34 +97,21 @@ public class ClientManager {
     }
 
     public synchronized void broadcastDM(String message, ConnectionHandler sender, ConnectionHandler recipient) {
-        User recipientz = main.getUserManager().getUser(recipient.getIdentifier());
-        User senderUser = main.getUserManager().getUser(sender.getIdentifier());
-        String roomName = recipientz.getName() + senderUser.getName();
+
 
         String timestamp = "[" + Util.DATE_FORMAT.format(System.currentTimeMillis()) + "]";
         final String toSend = timestamp + " " + message;
-        if (main.getChatRoomManager().getDmMap().isEmpty()){
-            main.getChatRoomManager().createDMRoom(recipient, sender, roomName);
-            main.getChatRoomManager().addUserToDMRoom(sender, recipient);
-            broadcastDM(message, sender, recipient);
-        }
 
-        if (!main.getChatRoomManager().getDmMap().containsKey(roomName)){
-            main.getChatRoomManager().createDMRoom(recipient, sender, roomName);
-            main.getChatRoomManager().addUserToDMRoom(sender, recipient);
-            broadcastDM(message, sender, recipient);
-        }
 
         for (String room : main.getChatRoomManager().getDmMap().keySet()){
             if (main.getChatRoomManager().getDmMap().get(room).contains(sender) && main.getChatRoomManager().getDmMap().get(room).contains(recipient)){
                 User recipientUser = main.getUserManager().getUser(recipient.getIdentifier());
+                System.out.println(room);
+                System.out.println(recipientUser.getCurrentRoom());
                 if (recipientUser.getCurrentRoom().equals(room)){
                     for (ConnectionHandler handler : main.getChatRoomManager().getDmMap().get(room)){
                         handler.sendMessage("[DM]" + toSend);
                     }
-                    main.getChatRoomManager().addDMChatLogs(room, message);
-                    return;
-                } else {
                     main.getChatRoomManager().addDMChatLogs(room, message);
                     return;
                 }

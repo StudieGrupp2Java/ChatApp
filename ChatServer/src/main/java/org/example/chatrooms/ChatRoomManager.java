@@ -44,7 +44,7 @@ public class ChatRoomManager {
         loadDMRoom(roomName);
         dmMap.get(roomName).add(sender);
         dmMap.get(roomName).add(recipient);
-        sender.sendMessage("Created DM-Room with");
+        sender.sendMessage("Created DM-Room");
     }
 
     public void createRoom(String roomName, ConnectionHandler sender) {
