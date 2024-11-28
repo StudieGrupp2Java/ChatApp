@@ -5,15 +5,10 @@ import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
 import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.TextColor;
 import org.example.util.Util;
 
 public class OnlineCommand extends Command {
-    // TODO: replace with TextColor reference once merged
-    private static final String GREEN = "\u001B[32m";
-    private static final String RESET = "\u001B[0m";
-    private static final String WHITE = "\u001B[37m";
-    private static final String RED = "\u001B[31m";
-
 
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
@@ -21,7 +16,7 @@ public class OnlineCommand extends Command {
         main.getUserManager().getUsers()
                 .stream().filter(user -> user.getStatus().equals(User.Status.ONLINE))
                 .forEach(user -> {
-                    online.append(GREEN).append(user.getName()).append(RESET).append(", ");
+                    online.append(TextColor.GREEN).append(user.getName()).append(TextColor.RESET).append(", ");
                 });
         // Remove last comma
         if (online.length() > "ONLINE: ".length()) {
@@ -36,12 +31,12 @@ public class OnlineCommand extends Command {
                 .forEach(user -> {
                     String timeSince = Util.timeSince(user.getLastSeen());
 
-                    away.append(WHITE)
+                    away.append(TextColor.WHITE)
                             .append(user.getName())
                             .append(" (last seen ")
                             .append(timeSince)
                             .append(")")
-                            .append(RESET)
+                            .append(TextColor.RESET)
                             .append(", ");
                 });
         // Remove last comma
@@ -58,12 +53,12 @@ public class OnlineCommand extends Command {
                 .forEach(user -> {
                     String timeSince = Util.timeSince(user.getLastSeen());
 
-                    offline.append(RED)
+                    offline.append(TextColor.RED)
                             .append(user.getName())
                             .append(" (last seen ")
                             .append(timeSince)
                             .append(")")
-                            .append(RESET)
+                            .append(TextColor.RESET)
                             .append(", ");
                 });
         // Remove last comma
