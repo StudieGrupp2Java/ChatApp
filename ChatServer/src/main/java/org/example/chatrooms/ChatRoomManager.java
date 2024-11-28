@@ -50,6 +50,10 @@ public class ChatRoomManager {
         sender.sendMessage("Created DM-Room");
     }
 
+    public int incrementDMNmr(){
+        return nmr++;
+    }
+
     public void createRoom(String roomName, ConnectionHandler sender) {
         this.loadRoom(roomName);
         sender.sendMessage("Created room: " + roomName);

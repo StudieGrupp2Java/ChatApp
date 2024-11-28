@@ -6,7 +6,7 @@ import org.example.users.User;
 
 
 public class DMCommand extends Command {
-    private int nmr = 0;
+    String roomName = "DM-Room";
     ChatServer main;
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
@@ -19,16 +19,14 @@ public class DMCommand extends Command {
 
         for (Integer key : main.getClientManager().getConnections().keySet()){
             User User = main.getUserManager().getUser(main.getClientManager().getConnections().get(key).getIdentifier());
-            String roomName = "DM-Room";
-            roomName = roomName + nmr;
             if (User.getName().equals(recipient)){
+                roomName = roomName + main.getChatRoomManager().incrementDMNmr();
                 User me = main.getUserManager().getUser(sender.getIdentifier());
                 me.setRecipient(main.getClientManager().getConnections().get(key));
                 if (main.getChatRoomManager().getDmMap().isEmpty()){
                     main.getChatRoomManager().createDMRoom(main.getClientManager().getConnections().get(key), sender, roomName);
                     main.getChatRoomManager().addUserToDMRoom(sender, main.getClientManager().getConnections().get(key));
                     main.getClientManager().broadcastDM(me.getName() + ": " + getFullMessage(args), sender, main.getClientManager().getConnections().get(key));
-                    nmr++;
                     return;
                 }
 
@@ -40,7 +38,6 @@ public class DMCommand extends Command {
                     main.getChatRoomManager().createDMRoom(main.getClientManager().getConnections().get(key), sender, roomName);
                     main.getChatRoomManager().addUserToDMRoom(sender, main.getClientManager().getConnections().get(key));
                     main.getClientManager().broadcastDM(me.getName() + ": " + getFullMessage(args), sender, main.getClientManager().getConnections().get(key));
-                    nmr++;
                     return;
                 }
 
