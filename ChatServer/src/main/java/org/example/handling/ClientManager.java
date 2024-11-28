@@ -83,7 +83,7 @@ public class ClientManager {
                 .forEach(connection -> {
                     User user = main.getUserManager().getUser(connection.getIdentifier());
                     if (!user.getBlockedUsers().contains(username)){
-                        connection.sendMessage("[" + user.getCurrentRoom() + "]" + toSend);
+                        connection.sendMessage(toSend);
                     }
                 });
 

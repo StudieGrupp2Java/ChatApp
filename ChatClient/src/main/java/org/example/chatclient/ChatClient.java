@@ -3,10 +3,12 @@ package org.example.chatclient;
 
 import org.example.InputListener;
 import org.example.commandmanager.CommandManager;
-import org.example.emoji.Emoji;
 import org.example.filemanager.FileManager;
 import org.example.logininfo.LoginInfo;
+import org.example.textcolor.RoomDrawer;
 import org.example.textcolor.TextColor;
+
+import java.io.IOException;
 
 public class ChatClient {
     private CommandManager commandManager;
@@ -22,7 +24,6 @@ public class ChatClient {
 
     public ChatClient() {
         System.out.println("Welcome User");
-
         init();
         serverManager.connect(SERVER_ADRESS, SERVER_PORT);
 

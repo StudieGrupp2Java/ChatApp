@@ -1,10 +1,13 @@
 package org.example.chatclient;
 
+import org.example.textcolor.RoomDrawer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ServerManager {
     private Socket socket;
@@ -30,7 +33,6 @@ public class ServerManager {
             main.getInputListener().automaticLogin();
             new Thread(new ServerListener()).start();
 
-            //System.out.println("Server has closed the connection.");
         } catch (IOException e) {
             System.out.println("Error in connection: " + e.getMessage());
             e.printStackTrace();
@@ -78,10 +80,40 @@ public class ServerManager {
         public void run() {
             try {
 
+                boolean lastWasRoomMessage = false;
+                String lastRoom = "";
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
-                    printWithColor(serverMessage);
+
+                    if (serverMessage.startsWith("Joined room:")) {
+                        String roomName = serverMessage.split("Joined room: ")[1].split(" ")[0];
+                        System.out.println(RoomDrawer.getHeader(roomName));
+                        lastRoom = roomName;
+                        continue;
+                    }
+                    if (serverMessage.startsWith("\u00a7CHATLOGS")) {
+                        String[] chatlogs = serverMessage.substring(9).split("\u00a7");
+                        for (String log : chatlogs) {
+                            System.out.println(RoomDrawer.drawBoxed(log));
+                            lastWasRoomMessage = true;
+                        }
+                        continue;
+                    }
+                    if (serverMessage.startsWith("[")) {
+                        if (!lastWasRoomMessage) {
+                            System.out.println(RoomDrawer.getHeader(lastRoom));
+                        }
+                        System.out.println(RoomDrawer.drawBoxed(serverMessage));
+                        lastWasRoomMessage = true;
+                        continue;
+                    } else if (lastWasRoomMessage) {
+                        // Finish the room box
+                        System.out.println(RoomDrawer.getFooter());
+                        lastWasRoomMessage = false;
+                    }
+
+                    System.out.println(printWithColor(serverMessage));
                 }
 
             } catch (IOException e) {
@@ -91,7 +123,7 @@ public class ServerManager {
             }
         }
 
-        private void printWithColor(String message){
+        private String printWithColor(String message){
             if (!main.getInputListener().loggedIn){
                 if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")){
                     main.getInputListener().loggedIn = true;
@@ -105,11 +137,11 @@ public class ServerManager {
                 main.getTextColor().setBG(main.getTextColor().getBGCOLORIN());
             }
             if (main.getTextColor().getBACKGROUND() == main.getTextColor().getReset() || main.getTextColor().getBACKGROUND() == main.getTextColor().getDefault())
-                System.out.println(main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
+                return (main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
             else if (main.getTextColor().getTEXT() == main.getTextColor().getReset() || main.getTextColor().getTEXT() == main.getTextColor().getDefault())
-                System.out.println(main.getTextColor().getBACKGROUND() + message + main.getTextColor().getReset());
+                return (main.getTextColor().getBACKGROUND() + message + main.getTextColor().getReset());
             else
-                System.out.println(main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
+                return (main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
         }
     }
 }
