@@ -37,8 +37,22 @@ public class CommandManager {
             } catch (IllegalArgumentException | CommandPermissionException e) {
                 sender.sendMessage(e.getMessage());
             }
-        } else {
-            System.out.println("Ogiltigt kommandoformat");
+        }
+    }
+
+    public void handleServerCommand(String input) {
+        if (input.startsWith("/")) {
+            input = input.substring(1);
+        }
+
+        String[] parts = input.split(" ", 2);
+        String commandName = parts[0].toLowerCase();
+        String[] args = parseArgs(parts.length > 1 ? parts[1] : "");
+        try {
+            ServerCommand command = CommandFactory.getServerCommand(commandName);
+            command.executeWithValidation(args, main);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 

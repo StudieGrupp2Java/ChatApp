@@ -12,6 +12,7 @@ public class User implements Serializable {
     private final String name;
     private String password; //TODO: store encrypted or other more secure way
     @Getter
+    @Setter
     private ChatRole role;
     private boolean pendingDeletion = false;
 

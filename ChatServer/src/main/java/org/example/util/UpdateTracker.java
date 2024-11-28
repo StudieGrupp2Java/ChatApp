@@ -13,8 +13,6 @@ public class UpdateTracker {
     private static final long AFK_THRESHOLD = TimeUnit.MINUTES.toMillis(1);
     private final ChatServer main;
 
-    private boolean running = true;
-
     public UpdateTracker(ChatServer main) {
         this.main = main;
     }
@@ -41,7 +39,7 @@ public class UpdateTracker {
     public void runTick() {
         new Thread(() -> {
             try {
-                while (this.running) {
+                while (main.running) {
                     tick();
                     Thread.sleep(50); // tick 20 times a second
                 }
@@ -63,9 +61,5 @@ public class UpdateTracker {
                         this.setAway(user);
                     }
                 });
-    }
-
-    public void close() {
-        this.running = false;
     }
 }
