@@ -13,7 +13,6 @@ public class HelpCommand extends Command {
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         StringBuilder builder = new StringBuilder("Server-side commands: ");
-        final int[] i = {0};
         var commands = CommandFactory.getCommandMap();
 
         commands.entrySet().stream()
