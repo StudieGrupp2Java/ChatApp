@@ -4,6 +4,7 @@ import org.example.ChatServer;
 import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.TextColor;
+import org.example.util.Util;
 
 import java.io.*;
 import java.net.Socket;
@@ -80,23 +81,9 @@ public class ConnectionHandler extends Thread {
 
     private String formatMessage(User sender, String incomingMessage) {
         return String.format(
-                "%s%s%s: %s",
-                colorFromRole(sender.getRole()),
-                sender.getName(),
-                TextColor.RESET,
+                "%s: %s",
+                Util.formatUserName(sender),
                 main.getChatFilter().filterMessage(incomingMessage));
-    }
-
-    private String colorFromRole(ChatRole role) {
-        switch (role) {
-            case USER -> {
-                return TextColor.GREEN;
-            }
-            case ADMIN -> {
-                return TextColor.BOLD + TextColor.RED;
-            }
-        }
-        return "";
     }
 
 

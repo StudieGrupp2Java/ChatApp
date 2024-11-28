@@ -55,7 +55,7 @@ public class ClientManager {
 
         final User user = main.getUserManager().getUser(connection.getIdentifier());
         if (user != null) {
-            this.broadcastMessageInRoom(user.getName() + " disconnected!", true, user);
+            this.broadcastMessageInRoom(Util.formatUserName(user) + " disconnected!", true, user);
             user.setStatus(User.Status.OFFLINE);
         }
         main.getClientManager().logout(connection);

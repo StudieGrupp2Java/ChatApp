@@ -5,6 +5,7 @@ import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
 import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.Util;
 
 import java.util.Optional;
 
@@ -38,10 +39,10 @@ public class LoginCommand extends Command {
             return;
         }
 
-        sender.sendMessage("Welcome " + user.getName() + "!");
+        sender.sendMessage("Welcome " + Util.formatUserName(user) + "!");
         main.getClientManager().login(sender, user);
 
-        main.getClientManager().broadcastMessageInRoom(user.getName() + " logged in!", true, user);
+        main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " logged in!", true, user);
     }
 
     @Override

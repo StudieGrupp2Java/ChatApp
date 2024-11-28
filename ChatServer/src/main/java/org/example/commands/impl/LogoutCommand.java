@@ -5,6 +5,7 @@ import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
 import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.Util;
 
 public class LogoutCommand extends Command {
 
@@ -22,7 +23,7 @@ public class LogoutCommand extends Command {
         sender.sendMessage("Bye!");
 
         user.setStatus(User.Status.OFFLINE);
-        main.getClientManager().broadcastMessageInRoom(user.getName() + " logged out!", true, user);
+        main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " logged out!", true, user);
     }
 
     @Override
