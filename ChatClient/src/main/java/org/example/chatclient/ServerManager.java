@@ -80,40 +80,11 @@ public class ServerManager {
         public void run() {
             try {
 
-                boolean lastWasRoomMessage = false;
-                String lastRoom = "";
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
 
-                    if (serverMessage.startsWith("Joined room:")) {
-                        String roomName = serverMessage.split("Joined room: ")[1].split(" ")[0];
-                        System.out.println(RoomDrawer.getHeader(roomName));
-                        lastRoom = roomName;
-                        continue;
-                    }
-                    if (serverMessage.startsWith("\u00a7CHATLOGS")) {
-                        String[] chatlogs = serverMessage.substring(9).split("\u00a7");
-                        for (String log : chatlogs) {
-                            System.out.println(RoomDrawer.drawBoxed(log));
-                            lastWasRoomMessage = true;
-                        }
-                        continue;
-                    }
-                    if (serverMessage.startsWith("[")) {
-                        if (!lastWasRoomMessage) {
-                            System.out.println(RoomDrawer.getHeader(lastRoom));
-                        }
-                        System.out.println(RoomDrawer.drawBoxed(serverMessage));
-                        lastWasRoomMessage = true;
-                        continue;
-                    } else if (lastWasRoomMessage) {
-                        // Finish the room box
-                        System.out.println(RoomDrawer.getFooter());
-                        lastWasRoomMessage = false;
-                    }
-
-                    System.out.println(printWithColor(serverMessage));
+                    handleMessage(serverMessage);
                 }
 
             } catch (IOException e) {
@@ -121,6 +92,39 @@ public class ServerManager {
                 System.out.println("Disconnected from server.");
                 closeConnections();
             }
+        }
+
+        private boolean lastWasRoomMessage = false;
+        private String lastRoom = "";
+        private void handleMessage(String serverMessage) {
+            if (serverMessage.startsWith("Joined room:")) {
+                String roomName = serverMessage.split("Joined room: ")[1].split(" ")[0];
+                System.out.println(RoomDrawer.getHeader(roomName));
+                lastRoom = roomName;
+                return;
+            }
+            if (serverMessage.startsWith("\u00a7CHATLOGS")) {
+                String[] chatlogs = serverMessage.substring(9).split("\u00a7");
+                for (String log : chatlogs) {
+                    System.out.println(RoomDrawer.drawBoxed(printWithColor(log)));
+                    lastWasRoomMessage = true;
+                }
+                return;
+            }
+            if (serverMessage.startsWith("[")) {
+                if (!lastWasRoomMessage) {
+                    System.out.println(RoomDrawer.getHeader(lastRoom));
+                }
+                System.out.println(RoomDrawer.drawBoxed(printWithColor(serverMessage)));
+                lastWasRoomMessage = true;
+                return;
+            } else if (lastWasRoomMessage) {
+                // Finish the room box
+                System.out.println(RoomDrawer.getFooter());
+                lastWasRoomMessage = false;
+            }
+
+            System.out.println(printWithColor(serverMessage));
         }
 
         private String printWithColor(String message){

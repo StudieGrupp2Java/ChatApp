@@ -77,9 +77,12 @@ public class RoomDrawer {
     }
 
     public static String drawBoxed(String log) {
+        // Strip ANSI control codes
+        int length = log.replaceAll("\\033\\[[0-9;]*[a-zA-Z]", "").length();
+
         String message = DOUBLE_VERT + " " + log;
 
-        int missing = X - message.length() - 2;
+        int missing = X - length - 4;
         if (missing > 0) {
             message += " ".repeat(missing);
         }
