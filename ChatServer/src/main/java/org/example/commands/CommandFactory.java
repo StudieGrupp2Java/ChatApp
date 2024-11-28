@@ -30,6 +30,7 @@ public class CommandFactory {
         commandMap.put("leaveroom", LeaveRoomCommand::new);
         commandMap.put("join", JoinRoomCommand::new);
         commandMap.put("rooms", ListActiveRoomsCommand::new);
+        commandMap.put("kick", KickUserCommand::new);
 
         serverCommandMap.put("admin", CreateAdminServerCommand::new);
         serverCommandMap.put("kick", KickUserServerCommand::new);

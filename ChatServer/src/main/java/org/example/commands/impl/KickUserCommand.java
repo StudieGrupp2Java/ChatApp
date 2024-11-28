@@ -1,24 +1,26 @@
 package org.example.commands.impl;
 
 import org.example.ChatServer;
-import org.example.commands.ServerCommand;
+import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
+import org.example.users.ChatRole;
 import org.example.users.User;
 
 import java.util.Optional;
 
-public class KickUserServerCommand extends ServerCommand {
-
+public class KickUserCommand extends Command {
     @Override
-    protected void execute(String[] args, ChatServer main) {
+    protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         String username = args[0];
+
+        final User senderUser = main.getUserManager().getUser(sender.getIdentifier());
 
         final Optional<User> user = main.getUserManager().getUser(username);
 
         user.ifPresent(value -> {
             ConnectionHandler connection = main.getClientManager().get(value.getIdentifier());
             if (connection != null) {
-                connection.sendMessage("Kicked by Server");
+                connection.sendMessage("Kicked by " + senderUser.getName());
                 main.getClientManager().removeConnection(connection);
             }
         });
@@ -27,5 +29,10 @@ public class KickUserServerCommand extends ServerCommand {
     @Override
     protected int getExpectedArgsCount() {
         return 1;
+    }
+
+    @Override
+    public ChatRole getPermissionLevel() {
+        return ChatRole.ADMIN;
     }
 }
