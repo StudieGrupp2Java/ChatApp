@@ -1,20 +1,23 @@
 package org.example.chatclient;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Objects;
 
 public class ServerManager {
+    private final ChatClient main;
+    protected boolean running = true;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    protected boolean running = true;
-    private final ChatClient main;
 
 
-    public ServerManager(ChatClient main){
+    public ServerManager(ChatClient main) {
         this.main = main;
     }
 
@@ -30,7 +33,6 @@ public class ServerManager {
             main.getInputListener().automaticLogin();
             new Thread(new ServerListener()).start();
 
-            //System.out.println("Server has closed the connection.");
         } catch (IOException e) {
             System.out.println("Error in connection: " + e.getMessage());
             e.printStackTrace();
@@ -64,11 +66,11 @@ public class ServerManager {
         return running;
     }
 
-    private boolean checkIfMyUsername(String message){
+    private boolean checkIfMyUsername(String message) {
         String incomingUsername = "";
         String username = main.getInputListener().getUsername();
         String[] split = message.split("] ");
-        if (split.length > 1){
+        if (split.length > 1) {
             incomingUsername = split[1].split(": ")[0];
         }
         return username.equals(incomingUsername);
@@ -77,27 +79,32 @@ public class ServerManager {
     private class ServerListener implements Runnable {
         public void run() {
             try {
-
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
-                    printWithColor(serverMessage);
-                }
 
+                    if (serverMessage.startsWith("/playSound")) {
+                        String notifikationType = serverMessage.split(" ")[1];
+                        playNotificationSound(notifikationType);
+                    } else {
+                        printWithColor(serverMessage);
+                    }
+                }
             } catch (IOException e) {
+                System.err.println("Connection lost: " + e.getMessage());
             } finally {
                 System.out.println("Disconnected from server.");
                 closeConnections();
             }
         }
 
-        private void printWithColor(String message){
-            if (!main.getInputListener().loggedIn){
-                if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")){
+        private void printWithColor(String message) {
+            if (!main.getInputListener().loggedIn) {
+                if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")) {
                     main.getInputListener().loggedIn = true;
                 }
             }
-            if (checkIfMyUsername(message)){
+            if (checkIfMyUsername(message)) {
                 main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLOROUT());
                 main.getTextColor().setBG(main.getTextColor().getBGCOLOROUT());
             } else {
@@ -112,4 +119,30 @@ public class ServerManager {
                 System.out.println(main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
         }
     }
+
+    private void playNotificationSound(String notificationType) {
+    String soundFilePath;
+    if (notificationType.equals("message")) {
+        soundFilePath = "src/main/java/org/example/sounds/message_notification.wav";
+    } else if (notificationType.equals("dm")) {
+        soundFilePath = "src/main/java/org/example/sounds/dm_notification.wav";
+    } else {
+        return; // Okänt notifikationskommando
+    }
+
+    try {
+        Clip clip = AudioSystem.getClip();
+        // Lägg till Objects.requireNonNull() för att säkerställa att resursen finns
+        clip.open(AudioSystem.getAudioInputStream(
+            Objects.requireNonNull(
+                getClass().getClassLoader().getResource(soundFilePath),
+                "Sound file not found: " + soundFilePath
+            )
+        ));
+        clip.start();
+    } catch (Exception e) {
+        System.err.println("Error playing sound: " + e.getMessage());
+    }
+}
+
 }
