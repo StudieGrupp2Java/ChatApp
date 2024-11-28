@@ -7,7 +7,6 @@ import org.example.users.User;
 
 public class DMCommand extends Command {
     private int nmr = 0;
-    String roomName = "DM-Room";
     ChatServer main;
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
@@ -20,6 +19,7 @@ public class DMCommand extends Command {
 
         for (Integer key : main.getClientManager().getConnections().keySet()){
             User User = main.getUserManager().getUser(main.getClientManager().getConnections().get(key).getIdentifier());
+            String roomName = "DM-Room";
             roomName = roomName + nmr;
             if (User.getName().equals(recipient)){
                 User me = main.getUserManager().getUser(sender.getIdentifier());

@@ -56,9 +56,6 @@ public class ChatRoomManager {
     }
 
     public void addUserToDMRoom(ConnectionHandler client, ConnectionHandler recipient) {
-        for (String room : dmMap.keySet()){
-            if (dmMap.get(room).contains(client) && dmMap.get(room).contains(recipient)) return;
-        }
         final User user = main.getUserManager().getUser(client.getIdentifier());
         final User recipientUser = main.getUserManager().getUser(recipient.getIdentifier());
         for (String room : dmMap.keySet()) {
