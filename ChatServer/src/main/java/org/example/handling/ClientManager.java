@@ -105,4 +105,8 @@ public class ClientManager {
         sender.logout();
         connections.put(sender.getIdentifier(), sender);
     }
+
+    public ConnectionHandler get(int identifier) {
+        return connections.get(identifier);
+    }
 }

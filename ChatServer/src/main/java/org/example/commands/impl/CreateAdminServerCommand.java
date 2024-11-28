@@ -2,6 +2,7 @@ package org.example.commands.impl;
 
 import org.example.ChatServer;
 import org.example.commands.ServerCommand;
+import org.example.handling.ConnectionHandler;
 import org.example.users.ChatRole;
 import org.example.users.User;
 
@@ -19,6 +20,10 @@ public class CreateAdminServerCommand extends ServerCommand {
             value.setRole(ChatRole.ADMIN);
             System.out.println("Set " + value.getName() + "'s role to " + value.getRole() + "!");
 
+            ConnectionHandler connection = main.getClientManager().get(value.getIdentifier());
+            if (connection != null) {
+                connection.sendMessage("Your role has been updated to " + value.getRole() + "!");
+            }
         });
     }
 
