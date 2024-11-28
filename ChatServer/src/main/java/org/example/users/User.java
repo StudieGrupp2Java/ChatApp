@@ -13,6 +13,7 @@ public class User implements Serializable {
     private String password; //TODO: store encrypted or other more secure way
     private ChatRole role;
     private boolean pendingDeletion = false;
+    private UserNotificationSettings notificationSettings;
 
     @Getter
     private List<String> blockedUsers;
@@ -30,6 +31,7 @@ public class User implements Serializable {
         this.password = password;
         this.blockedUsers = new ArrayList<>();
         this.currentRoom = "Default";
+        this.notificationSettings = new UserNotificationSettings();
     }
 
     public int getIdentifier() {
@@ -49,6 +51,10 @@ public class User implements Serializable {
         if (status != Status.AWAY) {
             this.lastSeen = System.currentTimeMillis();
         }
+    }
+
+    public UserNotificationSettings getNotificationSettings(){
+        return notificationSettings;
     }
 
     public void addBlockedUser(String name, ConnectionHandler sender){
