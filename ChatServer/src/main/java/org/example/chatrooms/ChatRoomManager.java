@@ -19,7 +19,7 @@ public class ChatRoomManager {
     @Getter
     private final Map<String, List<ChatLog>> dmLogs = new HashMap<>();
     private final ChatServer main;
-    private int dmNMBR = 0;
+    private int nmr = 0;
 
     public ChatRoomManager(ChatServer main) {
         this.main = main;
@@ -40,7 +40,9 @@ public class ChatRoomManager {
     }
 
     public void createDMRoom(ConnectionHandler recipient, ConnectionHandler sender, String roomName) {
-        if (dmMap.containsKey(roomName)) return;
+        System.out.println("kom hit nu iaf");
+        nmr++;
+        roomName = roomName + nmr;
         loadDMRoom(roomName);
         dmMap.get(roomName).add(sender);
         dmMap.get(roomName).add(recipient);
@@ -54,11 +56,15 @@ public class ChatRoomManager {
 
     public void addUserToDMRoom(ConnectionHandler client, ConnectionHandler recipient) {
         final User user = main.getUserManager().getUser(client.getIdentifier());
+        final User recipientUser = main.getUserManager().getUser(recipient.getIdentifier());
         for (String room : dmMap.keySet()) {
             if (dmMap.get(room).contains(recipient) && dmMap.get(room).contains(client)) {
-                client.sendMessage("Success");
+                client.sendMessage("Joined DM chat");
                 user.setCurrentRoom(room);
                 user.setInDMS(true);
+                if (recipientUser.getCurrentRoom().equals(user.getCurrentRoom())){
+                    recipient.sendMessage(recipientUser.getName() + " joined the DM Chat! You are now here together");
+                }
                 List<ChatLog> logs = dmLogs.get(room);
                 if (logs != null && !logs.isEmpty()) {
                     logs.stream()
