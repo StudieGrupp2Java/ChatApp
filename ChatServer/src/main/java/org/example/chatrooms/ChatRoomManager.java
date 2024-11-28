@@ -21,6 +21,7 @@ public class ChatRoomManager {
     private final ChatServer main;
     private int nmr = 0;
 
+
     public ChatRoomManager(ChatServer main) {
         this.main = main;
 
@@ -40,9 +41,9 @@ public class ChatRoomManager {
     }
 
     public void createDMRoom(ConnectionHandler recipient, ConnectionHandler sender, String roomName) {
-        System.out.println("kom hit nu iaf");
-        nmr++;
-        roomName = roomName + nmr;
+        for (String room : dmMap.keySet()){
+            if (dmMap.get(room).contains(sender) && dmMap.get(room).contains(recipient)) return;
+        }
         loadDMRoom(roomName);
         dmMap.get(roomName).add(sender);
         dmMap.get(roomName).add(recipient);
@@ -55,6 +56,9 @@ public class ChatRoomManager {
     }
 
     public void addUserToDMRoom(ConnectionHandler client, ConnectionHandler recipient) {
+        for (String room : dmMap.keySet()){
+            if (dmMap.get(room).contains(client) && dmMap.get(room).contains(recipient)) return;
+        }
         final User user = main.getUserManager().getUser(client.getIdentifier());
         final User recipientUser = main.getUserManager().getUser(recipient.getIdentifier());
         for (String room : dmMap.keySet()) {
