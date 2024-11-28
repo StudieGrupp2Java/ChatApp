@@ -1,5 +1,7 @@
 package org.example.commands;
 
+import org.example.commands.impl.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;

@@ -21,7 +21,7 @@ public class CommandManager {
                 Command command = CommandFactory.getCommand(commandName);
                 command.executeWithValidation(args, main, sender);
 
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | CommandPermissionException e) {
                 sender.sendMessage(e.getMessage());
             }
         } else if (input.startsWith("@")) {
@@ -34,7 +34,7 @@ public class CommandManager {
             try {
                 Command dmCommand = CommandFactory.getCommand("dm");
                 dmCommand.executeWithValidation(new String[]{username, message}, main, sender);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | CommandPermissionException e) {
                 sender.sendMessage(e.getMessage());
             }
         } else {

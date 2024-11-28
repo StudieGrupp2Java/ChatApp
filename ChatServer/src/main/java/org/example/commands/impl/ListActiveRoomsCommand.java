@@ -1,7 +1,9 @@
-package org.example.commands;
+package org.example.commands.impl;
 
 import org.example.ChatServer;
+import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
+import org.example.users.ChatRole;
 import org.example.users.User;
 
 import java.util.List;
@@ -64,5 +66,10 @@ public class ListActiveRoomsCommand extends Command {
             builder.setLength(builder.length() - 2);
         }
         return builder.toString();
+    }
+
+    @Override
+    public ChatRole getPermissionLevel() {
+        return ChatRole.USER;
     }
 }

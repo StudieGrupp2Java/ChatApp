@@ -11,6 +11,7 @@ public class User implements Serializable {
     private final int identifier;
     private final String name;
     private String password; //TODO: store encrypted or other more secure way
+    @Getter
     private ChatRole role;
     private boolean pendingDeletion = false;
 
@@ -30,6 +31,7 @@ public class User implements Serializable {
         this.password = password;
         this.blockedUsers = new ArrayList<>();
         this.currentRoom = "Default";
+        this.role =  ChatRole.USER;
     }
 
     public int getIdentifier() {
