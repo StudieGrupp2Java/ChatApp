@@ -5,6 +5,7 @@ import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
 import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.Util;
 
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public class KickUserCommand extends Command {
         user.ifPresent(value -> {
             ConnectionHandler connection = main.getClientManager().get(value.getIdentifier());
             if (connection != null) {
-                connection.sendMessage("Kicked by " + senderUser.getName());
+                connection.sendMessage("Kicked by " + Util.formatUserName(senderUser));
                 main.getClientManager().removeConnection(connection);
             }
         });
