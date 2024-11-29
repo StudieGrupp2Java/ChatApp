@@ -96,25 +96,27 @@ public class ClientManager {
         main.getChatRoomManager().addToChatLog(currentSender.getCurrentRoom(), message);
     }
 
-    public synchronized void broadcastDM(String message, ConnectionHandler sender, ConnectionHandler recipient) {
+    public synchronized void broadcastDM(String message, ConnectionHandler sender, User recipient) {
+        if (sender == null) return;
         User zender = main.getUserManager().getUser(sender.getIdentifier());
 
         String timestamp = "[" + Util.DATE_FORMAT.format(System.currentTimeMillis()) + "]";
         final String toSend = timestamp + " " + message;
-
+        ConnectionHandler recipientConnection = this.getConnections().get(recipient.getIdentifier());
 
         for (String room : main.getChatRoomManager().getDmMap().keySet()){
-            if (main.getChatRoomManager().getDmMap().get(room).contains(sender) && main.getChatRoomManager().getDmMap().get(room).contains(recipient)){
-                User recipientUser = main.getUserManager().getUser(recipient.getIdentifier());
-                if (recipientUser.getCurrentRoom().equals(room)){
+            if (main.getChatRoomManager().getDmMap().get(room).contains(sender) && main.getChatRoomManager().getDmMap().get(room).contains(recipientConnection)){
+                if (recipient.getCurrentRoom().equals(room)){
                     for (ConnectionHandler handler : main.getChatRoomManager().getDmMap().get(room)){
                         handler.sendMessage("[DM]" + toSend);
                     }
+                    main.getNotificationManager().sendNotification(recipientConnection, "dm");
                     main.getChatRoomManager().addDMChatLogs(room, message);
                     return;
                 } else {
                     sender.sendMessage("[DM]" + toSend);
-                    recipient.sendMessage(zender.getName() + " sent you a DM. Type /dm " + zender.getName() + " join, to see what they wrote!");
+                    recipientConnection.sendMessage(zender.getName() + " sent you a DM. Type /dm " + zender.getName() + " join, to see what they wrote!");
+                    main.getNotificationManager().sendNotification(recipientConnection, "dm");
                     main.getChatRoomManager().addDMChatLogs(room, message);
                 }
             }

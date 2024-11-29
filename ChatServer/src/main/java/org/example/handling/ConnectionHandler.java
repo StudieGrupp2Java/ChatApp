@@ -40,8 +40,6 @@ public class ConnectionHandler extends Thread {
                 this.sendMessage("Please register with /register <username> <password> or login with /login <username> <password>");
             }
 
-            NotificationManager notificationManager = main.getNotificationManager();
-
             while (this.running) {
                 String incomingMessage = in.readLine();
                 if (incomingMessage == null) {
@@ -77,10 +75,11 @@ public class ConnectionHandler extends Thread {
 
                     // Send notification to user in room (if their settings allows)
                     List<ConnectionHandler> roomUsers = main.getChatRoomManager().getUsersIn(sender.getCurrentRoom());
+                    if (roomUsers == null) continue;
                     for (ConnectionHandler userHandler : roomUsers){
                         User roomUser = main.getUserManager().getUser(userHandler.getIdentifier());
-                        if (roomUser != null && notificationManager.shouldNotifyForMessage(roomUser)){
-                            notificationManager.sendNotification(userHandler, "message");
+                        if (roomUser != null && main.getNotificationManager().shouldNotifyForMessage(roomUser)){
+                            main.getNotificationManager().sendNotification(userHandler, "message");
                         }
                     }
                 }

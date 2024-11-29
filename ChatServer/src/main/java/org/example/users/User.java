@@ -25,7 +25,7 @@ public class User implements Serializable {
     private boolean inDMS;
     @Getter
     @Setter
-    private ConnectionHandler recipient;
+    private User recipient;
 
     private Status status;
     private long lastSeen;
