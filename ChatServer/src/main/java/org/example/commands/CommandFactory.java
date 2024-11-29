@@ -29,7 +29,7 @@ public class CommandFactory {
         commandMap.put("create", CreateRoomCommand::new);
         commandMap.put("leaveroom", LeaveRoomCommand::new);
         commandMap.put("join", JoinRoomCommand::new);
-        commandMap.put("rooms", ListActiveRoomsCommand::new);
+        commandMap.put("rooms", ListRoomsCommand::new);
         commandMap.put("dmsound", ToggleDMSoundCommand::new);
         commandMap.put("messagesound", ToggleMessageSoundCommand::new);
         commandMap.put("kick", KickUserCommand::new);
