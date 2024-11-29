@@ -6,6 +6,7 @@ import org.example.filemanager.FileManager;
 import org.example.filter.ChatFilter;
 import org.example.handling.ClientManager;
 import org.example.users.UserManager;
+import org.example.util.NotificationManager;
 import org.example.util.UpdateTracker;
 
 public class ChatServer {
@@ -16,6 +17,7 @@ public class ChatServer {
     private UserManager userManager;
     private CommandManager commandManager;
     private UpdateTracker updateTracker;
+    private NotificationManager notificationManager;
 
     public ChatServer() {
         System.out.println("Starting ChatServer...");
@@ -34,6 +36,7 @@ public class ChatServer {
         this.updateTracker = new UpdateTracker(this);
         this.chatRoomManager = new ChatRoomManager(this);
         this.fileManager = new FileManager(this);
+        this.notificationManager = new NotificationManager();
     }
 
     private void shutdown() {
@@ -69,5 +72,9 @@ public class ChatServer {
 
     public UpdateTracker getUpdateTracker() {
         return updateTracker;
+    }
+
+    public NotificationManager getNotificationManager(){
+        return notificationManager;
     }
 }

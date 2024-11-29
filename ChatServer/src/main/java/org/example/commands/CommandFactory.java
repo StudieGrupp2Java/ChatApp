@@ -26,6 +26,8 @@ public class CommandFactory {
         commandMap.put("leaveroom", LeaveRoomCommand::new);
         commandMap.put("join", JoinRoomCommand::new);
         commandMap.put("rooms", ListActiveRoomsCommand::new);
+        commandMap.put("dmsound", ToggleDMSoundCommand::new);
+        commandMap.put("messagesound", ToggleMessageSoundCommand::new);
     }
 
     public static Command getCommand(String commandName) {

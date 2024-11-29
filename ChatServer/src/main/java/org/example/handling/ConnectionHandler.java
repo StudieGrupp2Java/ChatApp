@@ -2,9 +2,11 @@ package org.example.handling;
 
 import org.example.ChatServer;
 import org.example.users.User;
+import org.example.util.NotificationManager;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,6 +39,9 @@ public class ConnectionHandler extends Thread {
             if (in.readLine().equals("false")) {
                 this.sendMessage("Please register with /register <username> <password> or login with /login <username> <password>");
             }
+
+            NotificationManager notificationManager = main.getNotificationManager();
+
             while (this.running) {
                 String incomingMessage = in.readLine();
                 if (incomingMessage == null) {
@@ -69,6 +74,15 @@ public class ConnectionHandler extends Thread {
                 // Send to the current room
                 if (sender.getCurrentRoom() != null) {
                     main.getClientManager().broadcastMessageInRoom(fullMessage, true, sender);
+
+                    // Send notification to user in room (if their settings allows)
+                    List<ConnectionHandler> roomUsers = main.getChatRoomManager().getUsersIn(sender.getCurrentRoom());
+                    for (ConnectionHandler userHandler : roomUsers){
+                        User roomUser = main.getUserManager().getUser(userHandler.getIdentifier());
+                        if (roomUser != null && notificationManager.shouldNotifyForMessage(roomUser)){
+                            notificationManager.sendNotification(userHandler, "message");
+                        }
+                    }
                 }
                 else {
                     this.sendMessage("Need to join a chat room first! /help for more information");
