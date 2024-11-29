@@ -13,8 +13,6 @@ public class UpdateTracker {
     private static final long AFK_THRESHOLD = TimeUnit.MINUTES.toMillis(1);
     private final ChatServer main;
 
-    private boolean running = true;
-
     public UpdateTracker(ChatServer main) {
         this.main = main;
     }
@@ -27,21 +25,21 @@ public class UpdateTracker {
         user.setStatus(User.Status.ONLINE);
 
         if (lastStatus.equals(AWAY)) {
-            main.getClientManager().broadcastMessageInRoom(user.getName() + " is no longer AFK.", true, user);
+            main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " is no longer AFK.", true, user);
         }
     }
 
     private void setAway(User user) {
         user.setStatus(AWAY);
 
-        main.getClientManager().broadcastMessageInRoom(user.getName() + " is now AFK.", true, user);
+        main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " is now AFK.", true, user);
 
     }
 
     public void runTick() {
         new Thread(() -> {
             try {
-                while (this.running) {
+                while (main.running) {
                     tick();
                     Thread.sleep(50); // tick 20 times a second
                 }
@@ -63,9 +61,5 @@ public class UpdateTracker {
                         this.setAway(user);
                     }
                 });
-    }
-
-    public void close() {
-        this.running = false;
     }
 }

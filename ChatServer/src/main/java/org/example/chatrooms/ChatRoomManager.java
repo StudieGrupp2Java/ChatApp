@@ -109,7 +109,7 @@ public class ChatRoomManager {
                     .forEach(client::sendMessage);
         }
 
-        main.getClientManager().broadcastMessageInRoom(user.getName() + " joined the chat!", true, user);
+        main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " joined the chat!", true, user);
         return true;
     }
 

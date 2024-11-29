@@ -55,7 +55,7 @@ public class ClientManager {
 
         final User user = main.getUserManager().getUser(connection.getIdentifier());
         if (user != null) {
-            this.broadcastMessageInRoom(user.getName() + " disconnected!", true, user);
+            this.broadcastMessageInRoom(Util.formatUserName(user) + " disconnected!", true, user);
             user.setStatus(User.Status.OFFLINE);
         }
         main.getClientManager().logout(connection);
@@ -144,5 +144,9 @@ public class ClientManager {
         connections.remove(sender.getIdentifier());
         sender.logout();
         connections.put(sender.getIdentifier(), sender);
+    }
+
+    public ConnectionHandler get(int identifier) {
+        return connections.get(identifier);
     }
 }

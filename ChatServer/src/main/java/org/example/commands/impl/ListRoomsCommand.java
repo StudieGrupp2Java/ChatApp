@@ -1,13 +1,16 @@
-package org.example.commands;
+package org.example.commands.impl;
 
 import org.example.ChatServer;
+import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
+import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.TextColor;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ListActiveRoomsCommand extends Command {
+public class ListRoomsCommand extends Command {
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         if (main.getChatRoomManager().getChatRooms().isEmpty()) {
@@ -39,11 +42,6 @@ public class ListActiveRoomsCommand extends Command {
         return 0;
     }
 
-    private static final String GREEN = "\u001B[32m";
-    private static final String RESET = "\u001B[0m";
-    private static final String WHITE = "\u001B[37m";
-    private static final String RED = "\u001B[31m";
-
     private String getStatusForRoom(List<ConnectionHandler> room, ChatServer main) {
         StringBuilder builder = new StringBuilder("USERS: ");
         room.stream()
@@ -51,11 +49,11 @@ public class ListActiveRoomsCommand extends Command {
                 .filter(Objects::nonNull) //TODO: offline users are currently null. Should change ChatRooms to hold Users instead of ConnectionHandlers.
                 .forEach(user -> {
                     if (user.getStatus().equals(User.Status.ONLINE)) {
-                        builder.append(GREEN).append(user.getName()).append(RESET).append(", ");
+                        builder.append(TextColor.GREEN).append(user.getName()).append(TextColor.RESET).append(", ");
                     } else if (user.getStatus().equals(User.Status.AWAY)) {
-                        builder.append(WHITE).append(user.getName()).append(RESET).append(", ");
+                        builder.append(TextColor.WHITE).append(user.getName()).append(TextColor.RESET).append(", ");
                     } else if (user.getStatus().equals(User.Status.OFFLINE)) {
-                        builder.append(RED).append(user.getName()).append(RESET).append(", ");
+                        builder.append(TextColor.RED).append(user.getName()).append(TextColor.RESET).append(", ");
                     }
                 });
 
@@ -64,5 +62,10 @@ public class ListActiveRoomsCommand extends Command {
             builder.setLength(builder.length() - 2);
         }
         return builder.toString();
+    }
+
+    @Override
+    public ChatRole getPermissionLevel() {
+        return ChatRole.USER;
     }
 }

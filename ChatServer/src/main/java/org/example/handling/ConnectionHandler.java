@@ -1,8 +1,11 @@
 package org.example.handling;
 
 import org.example.ChatServer;
+import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.NotificationManager;
+import org.example.util.TextColor;
+import org.example.util.Util;
 
 import java.io.*;
 import java.net.Socket;
@@ -62,12 +65,7 @@ public class ConnectionHandler extends Thread {
                     continue;
                 }
 
-                final String name = sender.getName();
-                final String fullMessage = String.format(
-                        "%s: %s",
-                        name,
-                        main.getChatFilter().filterMessage(incomingMessage)
-                );
+                final String fullMessage = formatMessage(sender, incomingMessage);
 
                 // Send to the current room
                 if (sender.getCurrentRoom() != null) {
@@ -82,8 +80,7 @@ public class ConnectionHandler extends Thread {
                             main.getNotificationManager().sendNotification(userHandler, "message");
                         }
                     }
-                }
-                else {
+                } else {
                     this.sendMessage("Need to join a chat room first! /help for more information");
                 }
             }
@@ -93,6 +90,13 @@ public class ConnectionHandler extends Thread {
         } finally {
             main.getClientManager().removeConnection(this);
         }
+    }
+
+    private String formatMessage(User sender, String incomingMessage) {
+        return String.format(
+                "%s: %s",
+                Util.formatUserName(sender),
+                main.getChatFilter().filterMessage(incomingMessage));
     }
 
 

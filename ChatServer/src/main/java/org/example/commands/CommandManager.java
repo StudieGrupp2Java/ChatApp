@@ -21,7 +21,7 @@ public class CommandManager {
                 Command command = CommandFactory.getCommand(commandName);
                 command.executeWithValidation(args, main, sender);
 
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | CommandPermissionException e) {
                 sender.sendMessage(e.getMessage());
             }
         } else if (input.startsWith("@")) {
@@ -34,11 +34,25 @@ public class CommandManager {
             try {
                 Command dmCommand = CommandFactory.getCommand("dm");
                 dmCommand.executeWithValidation(new String[]{username, message}, main, sender);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | CommandPermissionException e) {
                 sender.sendMessage(e.getMessage());
             }
-        } else {
-            System.out.println("Ogiltigt kommandoformat");
+        }
+    }
+
+    public void handleServerCommand(String input) {
+        if (input.startsWith("/")) {
+            input = input.substring(1);
+        }
+
+        String[] parts = input.split(" ", 2);
+        String commandName = parts[0].toLowerCase();
+        String[] args = parseArgs(parts.length > 1 ? parts[1] : "");
+        try {
+            ServerCommand command = CommandFactory.getServerCommand(commandName);
+            command.executeWithValidation(args, main);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 

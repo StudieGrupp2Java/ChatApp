@@ -11,6 +11,8 @@ public class User implements Serializable {
     private final int identifier;
     private final String name;
     private String password; //TODO: store encrypted or other more secure way
+    @Getter
+    @Setter
     private ChatRole role;
     private boolean pendingDeletion = false;
     private UserNotificationSettings notificationSettings;
@@ -39,6 +41,7 @@ public class User implements Serializable {
         this.currentRoom = "Default";
         this.inDMS = false;
         this.notificationSettings = new UserNotificationSettings();
+        this.role =  ChatRole.USER;
     }
 
     public int getIdentifier() {

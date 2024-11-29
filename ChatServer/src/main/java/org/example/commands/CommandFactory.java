@@ -1,11 +1,15 @@
 package org.example.commands;
 
+import org.example.commands.impl.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class CommandFactory {
     private static final Map<String, Supplier<Command>> commandMap = new HashMap<>();
+
+    private static final Map<String, Supplier<ServerCommand>> serverCommandMap = new HashMap<>();
 
     static {
         commandMap.put("login", LoginCommand::new);
@@ -28,10 +32,22 @@ public class CommandFactory {
         commandMap.put("rooms", ListActiveRoomsCommand::new);
         commandMap.put("dmsound", ToggleDMSoundCommand::new);
         commandMap.put("messagesound", ToggleMessageSoundCommand::new);
+        commandMap.put("kick", KickUserCommand::new);
+
+        serverCommandMap.put("admin", CreateAdminServerCommand::new);
+        serverCommandMap.put("kick", KickUserServerCommand::new);
     }
 
     public static Command getCommand(String commandName) {
         Supplier<Command> commandSupplier = commandMap.get(commandName.toLowerCase());
+        if (commandSupplier != null) {
+            return commandSupplier.get();
+        }
+        throw new IllegalArgumentException("Unknown command: " + commandName);
+    }
+
+    public static ServerCommand getServerCommand(String commandName) {
+        Supplier<ServerCommand> commandSupplier = serverCommandMap.get(commandName.toLowerCase());
         if (commandSupplier != null) {
             return commandSupplier.get();
         }

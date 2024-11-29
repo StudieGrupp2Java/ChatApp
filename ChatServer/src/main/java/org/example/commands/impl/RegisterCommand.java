@@ -1,8 +1,11 @@
-package org.example.commands;
+package org.example.commands.impl;
 
 import org.example.ChatServer;
+import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
+import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.Util;
 
 public class RegisterCommand extends Command {
 
@@ -34,8 +37,8 @@ public class RegisterCommand extends Command {
         main.getClientManager().login(sender, user);
         sender.sendMessage("Successfully registered.");
 
-        sender.sendMessage("Welcome " + user.getName() + "!");
-        main.getClientManager().broadcastMessageInRoom(user.getName() + " logged in for the first time! Say hi!", true, user);
+        sender.sendMessage("Welcome " + Util.formatUserName(user) + "!");
+        main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " logged in for the first time! Say hi!", true, user);
 
         user.setCurrentRoom("Default");
         main.getChatRoomManager().addUserToRoom(sender, user.getCurrentRoom());
@@ -44,5 +47,10 @@ public class RegisterCommand extends Command {
     @Override
     protected int getExpectedArgsCount() {
         return 2;
+    }
+
+    @Override
+    public ChatRole getPermissionLevel() {
+        return ChatRole.NONE;
     }
 }

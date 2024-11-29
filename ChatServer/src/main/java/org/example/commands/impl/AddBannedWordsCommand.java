@@ -1,7 +1,9 @@
-package org.example.commands;
+package org.example.commands.impl;
 
 import org.example.ChatServer;
+import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
+import org.example.users.ChatRole;
 
 public class AddBannedWordsCommand extends Command {
 
@@ -15,5 +17,10 @@ public class AddBannedWordsCommand extends Command {
     @Override
     protected int getExpectedArgsCount() {
         return 1;
+    }
+
+    @Override
+    public ChatRole getPermissionLevel() {
+        return ChatRole.ADMIN;
     }
 }
