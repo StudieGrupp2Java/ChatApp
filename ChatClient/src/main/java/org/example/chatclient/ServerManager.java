@@ -65,6 +65,9 @@ public class ServerManager {
     }
 
     private boolean checkIfMyUsername(String message){
+        // Strip ANSI control codes
+        message = message.replaceAll("\\033\\[[0-9;]*[a-zA-Z]", "");
+
         String incomingUsername = "";
         String username = main.getInputListener().getUsername();
         String[] split = message.split("] ");
@@ -100,9 +103,13 @@ public class ServerManager {
             if (checkIfMyUsername(message)){
                 main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLOROUT());
                 main.getTextColor().setBG(main.getTextColor().getBGCOLOROUT());
+
+                message = message.replaceAll("\u001B\\[0m", "\u001B[0m" + main.getTextColor().getTEXTCOLOROUT() + main.getTextColor().getBGCOLOROUT());
             } else {
                 main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLORIN());
                 main.getTextColor().setBG(main.getTextColor().getBGCOLORIN());
+
+                message = message.replaceAll("\u001B\\[0m", "\u001B[0m" + main.getTextColor().getTEXTCOLORIN() + main.getTextColor().getBGCOLORIN());
             }
             if (main.getTextColor().getBACKGROUND() == main.getTextColor().getReset() || main.getTextColor().getBACKGROUND() == main.getTextColor().getDefault())
                 System.out.println(main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
