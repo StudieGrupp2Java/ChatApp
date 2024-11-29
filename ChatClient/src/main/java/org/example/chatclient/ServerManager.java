@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.URL;
 import java.util.Objects;
 
 public class ServerManager {
@@ -123,9 +124,9 @@ public class ServerManager {
     private void playNotificationSound(String notificationType) {
     String soundFilePath;
     if (notificationType.equals("message")) {
-        soundFilePath = "src/main/java/org/example/sounds/message_notification.wav";
+        soundFilePath = "sounds/message_notification.wav";
     } else if (notificationType.equals("dm")) {
-        soundFilePath = "src/main/java/org/example/sounds/dm_notification.wav";
+        soundFilePath = "sounds/dm_notification.wav";
     } else {
         return; // Okänt notifikationskommando
     }
@@ -135,7 +136,7 @@ public class ServerManager {
         // Lägg till Objects.requireNonNull() för att säkerställa att resursen finns
         clip.open(AudioSystem.getAudioInputStream(
             Objects.requireNonNull(
-                getClass().getClassLoader().getResource(soundFilePath),
+                this.getClass().getClassLoader().getResource(soundFilePath),
                 "Sound file not found: " + soundFilePath
             )
         ));
