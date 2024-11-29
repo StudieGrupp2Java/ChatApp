@@ -31,6 +31,10 @@ public class HelpCommand extends Command {
                     builder.append(name);
                     builder.append(", ");
                 });
+        if (builder.length() > "Server-side commands: ".length()) {
+            builder.setLength(builder.length() - 2);
+        }
+
         sender.sendMessage(builder.toString());
     }
 
