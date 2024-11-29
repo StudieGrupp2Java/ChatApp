@@ -1,6 +1,8 @@
 package org.example.users;
 
-public class UserNotificationSettings {
+import java.io.Serializable;
+
+public class UserNotificationSettings implements Serializable {
     private boolean notifyOnMessage;
     private boolean notifyOnDM;
 
