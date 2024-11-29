@@ -135,6 +135,7 @@ public class ClientManager {
         sender.login(user);
         user.setStatus(User.Status.ONLINE);
         connections.put(sender.getIdentifier(), sender);
+        if (user.getCurrentRoom().contains("DM-Room")) user.setCurrentRoom("Default");
 
         main.getChatRoomManager().addUserToRoom(sender, user.getCurrentRoom());
     }
