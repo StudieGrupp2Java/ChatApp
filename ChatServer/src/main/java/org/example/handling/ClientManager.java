@@ -69,6 +69,11 @@ public class ClientManager {
         if (currentSender == null) {
             return;
         }
+        if (currentSender.isInDMS()){
+            ConnectionHandler sender = main.getClientManager().getConnections().get(currentSender.getIdentifier());
+            broadcastDM(message, sender, currentSender.getRecipient());
+            return;
+        }
         if (!main.getChatRoomManager().roomExists(currentSender.getCurrentRoom())){
             return;
         }
@@ -82,13 +87,45 @@ public class ClientManager {
                 .filter(connection -> !onlyLoggedIn || connection.isLoggedIn())
                 .forEach(connection -> {
                     User user = main.getUserManager().getUser(connection.getIdentifier());
-                    if (!user.getBlockedUsers().contains(username)){
+                    if (!user.getBlockedUsers().contains(username) && !user.isInDMS()){
                         connection.sendMessage("[" + user.getCurrentRoom() + "]" + toSend);
                     }
                 });
 
         // Save to chat history
         main.getChatRoomManager().addToChatLog(currentSender.getCurrentRoom(), message);
+    }
+
+    public synchronized void broadcastDM(String message, ConnectionHandler sender, ConnectionHandler recipient) {
+        User zender = main.getUserManager().getUser(sender.getIdentifier());
+
+        String timestamp = "[" + Util.DATE_FORMAT.format(System.currentTimeMillis()) + "]";
+        final String toSend = timestamp + " " + message;
+
+
+        for (String room : main.getChatRoomManager().getDmMap().keySet()){
+            if (main.getChatRoomManager().getDmMap().get(room).contains(sender) && main.getChatRoomManager().getDmMap().get(room).contains(recipient)){
+                User recipientUser = main.getUserManager().getUser(recipient.getIdentifier());
+                if (recipientUser.getCurrentRoom().equals(room)){
+                    for (ConnectionHandler handler : main.getChatRoomManager().getDmMap().get(room)){
+                        handler.sendMessage("[DM]" + toSend);
+                    }
+                    main.getChatRoomManager().addDMChatLogs(room, message);
+                    return;
+                } else {
+                    sender.sendMessage("[DM]" + toSend);
+                    recipient.sendMessage(zender.getName() + " sent you a DM. Type /dm " + zender.getName() + " join, to see what they wrote!");
+                    main.getChatRoomManager().addDMChatLogs(room, message);
+                }
+            }
+        }
+
+    }
+
+
+
+    public Map<Integer, ConnectionHandler> getConnections(){
+        return connections;
     }
 
     public void login(ConnectionHandler sender, User user) {
