@@ -54,4 +54,9 @@ public class LoginCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.NONE;
     }
+
+    @Override
+    public String getUsage() {
+        return "/login <username> <password> - logs in to the server";
+    }
 }

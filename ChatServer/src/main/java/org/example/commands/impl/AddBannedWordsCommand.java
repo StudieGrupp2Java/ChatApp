@@ -23,4 +23,9 @@ public class AddBannedWordsCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.ADMIN;
     }
+
+    @Override
+    public String getUsage() {
+        return "/addword <word-to-ban> - adds a word to the banned-word list.";
+    }
 }

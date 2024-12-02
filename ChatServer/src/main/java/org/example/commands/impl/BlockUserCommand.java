@@ -27,4 +27,9 @@ public class BlockUserCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/block <username> - blocks a users messages";
+    }
 }

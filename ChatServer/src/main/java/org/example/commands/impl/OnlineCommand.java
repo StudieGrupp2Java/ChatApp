@@ -78,4 +78,9 @@ public class OnlineCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/online - lists every online user and their status";
+    }
 }

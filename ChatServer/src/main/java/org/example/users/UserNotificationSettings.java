@@ -1,5 +1,7 @@
 package org.example.users;
 
+import org.example.handling.ConnectionHandler;
+
 import java.io.Serializable;
 
 public class UserNotificationSettings implements Serializable {
@@ -15,15 +17,27 @@ public class UserNotificationSettings implements Serializable {
         return notifyOnMessage;
     }
 
-    public void setNotifyOnMessage(boolean notifyOnMessage) {
-        this.notifyOnMessage = notifyOnMessage;
+    public void toggleMessageSounds(ConnectionHandler sender) {
+        if (notifyOnMessage) {
+            sender.sendMessage("Toggled dm sounds off");
+        } else {
+            sender.sendMessage("Toggled dm sounds on");
+        }
+
+        notifyOnMessage = !notifyOnMessage;
     }
 
     public boolean isNotifyOnDM() {
         return notifyOnDM;
     }
 
-    public void setNotifyOnDM(boolean notifyOnDM) {
-        this.notifyOnDM = notifyOnDM;
+    public void toggleDmSounds(ConnectionHandler sender) {
+        if (notifyOnDM) {
+            sender.sendMessage("Toggled dm sounds off");
+        } else {
+            sender.sendMessage("Toggled dm sounds on");
+        }
+
+        notifyOnDM = !notifyOnDM;
     }
 }

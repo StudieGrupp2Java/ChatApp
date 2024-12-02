@@ -30,4 +30,9 @@ public class JoinRoomCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/join <room> - joins an existing room. Do /rooms to see what rooms exist or /create to create a new room";
+    }
 }

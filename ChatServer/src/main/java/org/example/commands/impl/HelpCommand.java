@@ -47,4 +47,9 @@ public class HelpCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.NONE;
     }
+
+    @Override
+    public String getUsage() {
+        return "/help - lists all the available commands";
+    }
 }

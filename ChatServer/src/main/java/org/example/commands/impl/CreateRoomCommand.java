@@ -24,4 +24,9 @@ public class CreateRoomCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/create <room> - creates a chatroom with a name";
+    }
 }

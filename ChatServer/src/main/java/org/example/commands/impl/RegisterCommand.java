@@ -53,4 +53,9 @@ public class RegisterCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.NONE;
     }
+
+    @Override
+    public String getUsage() {
+        return "/register <username> <password> - registers a new user and logs in";
+    }
 }

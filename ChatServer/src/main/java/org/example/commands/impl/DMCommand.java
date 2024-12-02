@@ -65,4 +65,9 @@ public class DMCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/dm <username> - starts a dm chat with a user";
+    }
 }

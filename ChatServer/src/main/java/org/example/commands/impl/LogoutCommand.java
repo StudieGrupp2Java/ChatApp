@@ -35,4 +35,9 @@ public class LogoutCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.NONE;
     }
+
+    @Override
+    public String getUsage() {
+        return "/logout - logs out of the server";
+    }
 }

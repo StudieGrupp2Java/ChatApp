@@ -19,11 +19,19 @@ public abstract class Command {
 
     protected void validateArgs(String[] args, int expectedArgs) {
         if (args.length < expectedArgs) {
-            throw new IllegalArgumentException("Invalid arguments. Expected " + expectedArgs + " arguments.");
+            throw new IllegalArgumentException("Invalid arguments. Expected " + expectedArgs + " arguments.\n" +
+                "Usage: " + getUsage());
+        }
+        for (String arg : args) {
+            if (arg.contains("-?")) {
+                throw new IllegalArgumentException("Usage: " + getUsage());
+            }
         }
     }
 
     public abstract ChatRole getPermissionLevel();
+
+    public abstract String getUsage();
 
     protected void hasPermission(ChatServer main, ConnectionHandler sender, ChatRole expectedRole) throws CommandPermissionException {
         if (expectedRole == null || expectedRole.equals(ChatRole.NONE)) return;
