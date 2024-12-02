@@ -1,11 +1,16 @@
 package org.example.handling;
 
 import org.example.ChatServer;
+import org.example.passwordencryption.Encryptor;
 import org.example.users.User;
 import org.example.util.Util;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.util.HashMap;
 import java.util.*;
 
@@ -13,17 +18,35 @@ import java.util.*;
 public class ClientManager {
     private static final int SERVER_PORT = 2147; //TODO: changeable
     private final ChatServer main;
-
+    private KeyPair keyPair;
     private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
 
     public ClientManager(ChatServer chatServer) {
         this.main = chatServer;
     }
 
+    private void encrypt() throws Exception{
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        keyPair = keyPairGenerator.generateKeyPair();
+
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(128);
+        SecretKey aesKey = keyGen.generateKey();
+
+    }
+
+
+
     public void listen() {
         try (ServerSocket socket = new ServerSocket(SERVER_PORT)) {
             System.out.println("Server started on port " + SERVER_PORT);
             System.out.println("Listening...");
+            try{
+                encrypt();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
 
 
             while (true) {
@@ -31,6 +54,8 @@ public class ClientManager {
                     ConnectionHandler handler = new ConnectionHandler(main, socket.accept());
                     this.addConnection(handler);
                     handler.start();
+                    handler.setKeyPair(keyPair);
+                    handler.sendMessage(Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
                 } catch (IOException e) {
                     System.err.println("Error handling new connection");
                     e.printStackTrace();

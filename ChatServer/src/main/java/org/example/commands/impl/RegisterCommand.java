@@ -3,6 +3,7 @@ package org.example.commands.impl;
 import org.example.ChatServer;
 import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
+import org.example.passwordencryption.Encryptor;
 import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.Util;
@@ -17,7 +18,12 @@ public class RegisterCommand extends Command {
 
         String username = args[0];
         String password = args[1];
-
+        String decryptedPassword = "";
+        try {
+            decryptedPassword = Encryptor.decryptPassword(password, sender.getDecryptedAES());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         System.out.println("Registering user: " + username);
 
         boolean exists = main.getUserManager().userExists(username);
@@ -31,7 +37,7 @@ public class RegisterCommand extends Command {
             return;
         }
 
-        final User user = new User(username, password);
+        final User user = new User(username, decryptedPassword);
 
         main.getUserManager().addUser(user.getIdentifier(), user);
         main.getClientManager().login(sender, user);

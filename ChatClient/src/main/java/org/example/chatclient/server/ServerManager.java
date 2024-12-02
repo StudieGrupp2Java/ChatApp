@@ -1,6 +1,7 @@
 package org.example.chatclient.server;
 
 import org.example.chatclient.ChatClient;
+import org.example.chatclient.encryption.PasswordEncrypter;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -84,6 +85,8 @@ public class ServerManager {
     private class ServerListener implements Runnable {
         public void run() {
             try {
+                String publicKey64 = in.readLine();
+                out.println(PasswordEncrypter.encryptKey(publicKey64));
                 while (socket.isConnected()) {
                     String serverMessage = in.readLine();
                     if (serverMessage == null) break;
@@ -95,7 +98,7 @@ public class ServerManager {
                         printWithColor(serverMessage);
                     }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
             } finally {
                 System.out.println("Disconnected from server.");
                 closeConnections();

@@ -3,6 +3,7 @@ package org.example.commands.impl;
 import org.example.ChatServer;
 import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
+import org.example.passwordencryption.Encryptor;
 import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.Util;
@@ -21,12 +22,18 @@ public class LoginCommand extends Command {
 
         String username = args[0];
         String password = args[1];
+        String decryptedPassword = "";
+        try{
+            decryptedPassword = Encryptor.decryptPassword(password, sender.getDecryptedAES());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         // Authentication logic
         System.out.println("Logging in user: " + username);
 
         final Optional<User> userOptional = main.getUserManager().getUser(username);
-        if (userOptional.isEmpty() || !userOptional.get().getPassword().equals(password)) {
+        if (userOptional.isEmpty() || !userOptional.get().getPassword().equals(decryptedPassword)) {
             sender.sendMessage("Invalid username or password.");
             return;
         }

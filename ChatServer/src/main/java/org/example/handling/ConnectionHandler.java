@@ -1,14 +1,20 @@
 package org.example.handling;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.ChatServer;
+import org.example.passwordencryption.Encryptor;
 import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.NotificationManager;
 import org.example.util.TextColor;
 import org.example.util.Util;
 
+import javax.crypto.SecretKey;
 import java.io.*;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -18,6 +24,11 @@ public class ConnectionHandler extends Thread {
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
+    @Getter
+    @Setter
+    private KeyPair keyPair;
+    @Getter
+    private SecretKey decryptedAES;
 
     private final BufferedReader in;
     private final PrintWriter out;
@@ -35,6 +46,8 @@ public class ConnectionHandler extends Thread {
         }
     }
 
+
+
     @Override
     public void run() {
         try {
@@ -42,7 +55,8 @@ public class ConnectionHandler extends Thread {
             if (in.readLine().equals("false")) {
                 this.sendMessage("Please register with /register <username> <password> or login with /login <username> <password>");
             }
-
+            String encryptedAES = in.readLine();
+            decryptedAES = Encryptor.decrypt(encryptedAES, keyPair);
             while (this.running) {
                 String incomingMessage = in.readLine();
                 if (incomingMessage == null) {
@@ -84,7 +98,7 @@ public class ConnectionHandler extends Thread {
                     this.sendMessage("Need to join a chat room first! /help for more information");
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Error in reading/writing to connection");
             e.printStackTrace();
         } finally {
