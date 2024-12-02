@@ -1,6 +1,7 @@
 package org.example.chatclient.server;
 
 import org.example.chatclient.ChatClient;
+import org.example.chatclient.textcolor.RoomDrawer;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -17,8 +18,6 @@ public class ServerManager {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private String mezzage;
-    private String afterName = "";
 
     public ServerManager(ChatClient main) {
         this.main = main;
@@ -93,7 +92,7 @@ public class ServerManager {
                         String notifikationType = serverMessage.split(" ")[1];
                         playNotificationSound(notifikationType);
                     } else {
-                        printWithColor(serverMessage);
+                        handleMessage(serverMessage);
                     }
                 }
             } catch (IOException e) {
@@ -103,26 +102,47 @@ public class ServerManager {
             }
         }
 
-
-        private void splitMessage(String message){
-            String[] splitMessage;
-            if (message.contains(": ")){
-                splitMessage = message.split(": ", 2);
-                mezzage = splitMessage[0];
-                afterName = ": " + splitMessage[1];
-            } else {
-                splitMessage = message.split(" ", 4);
-                if (splitMessage.length >= 3){
-                    afterName = splitMessage[3];
-                    mezzage = splitMessage[0] + " " + splitMessage[1] + " " + splitMessage[2] + " ";
-                } else {
-                    mezzage = splitMessage[0] + " " + splitMessage[1];
+        private boolean lastWasRoomMessage = false;
+        private String lastRoom = "";
+        private void handleMessage(String serverMessage) {
+            final RoomDrawer drawer = main.getDrawer();
+            if (serverMessage.startsWith("Joined room:")) {
+                if (lastWasRoomMessage) {
+                    // Finish the room box
+                    System.out.println(drawer.getFooter());
+                    lastWasRoomMessage = false;
                 }
+                String roomName = serverMessage.split("Joined room: ")[1].split(" ")[0];
+                System.out.println(drawer.getHeader(roomName));
+                lastRoom = roomName;
+                lastWasRoomMessage = true;
+                return;
             }
+            if (serverMessage.startsWith("\u00a7CHATLOGS")) {
+                String[] chatlogs = serverMessage.substring(9).split("\u00a7");
+                for (String log : chatlogs) {
+                    System.out.println(drawer.drawBoxed(printWithColor(log)));
+                    lastWasRoomMessage = true;
+                }
+                return;
+            }
+            if (serverMessage.startsWith("[")) {
+                if (!lastWasRoomMessage) {
+                    System.out.println(drawer.getHeader(lastRoom));
+                }
+                System.out.println(drawer.drawBoxed(printWithColor(serverMessage)));
+                lastWasRoomMessage = true;
+                return;
+            } else if (lastWasRoomMessage) {
+                // Finish the room box
+                System.out.println(drawer.getFooter());
+                lastWasRoomMessage = false;
+            }
+
+            System.out.println(printWithColor(serverMessage));
         }
 
-        private void printWithColor(String message) {
-            splitMessage(message);
+        private String printWithColor(String message) {
             if (!main.getInputListener().loggedIn) {
                 if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")) {
                     main.getInputListener().loggedIn = true;
@@ -135,12 +155,14 @@ public class ServerManager {
                 main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLORIN());
                 main.getTextColor().setBG(main.getTextColor().getBGCOLORIN());
             }
+            message = message.replaceAll("\u001B\\[0m", "\u001B[0m" + main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT());
+
             if (main.getTextColor().getBACKGROUND() == main.getTextColor().getReset() || main.getTextColor().getBACKGROUND() == main.getTextColor().getDefault())
-                System.out.println(main.getTextColor().getTEXT() + mezzage + main.getTextColor().getReset() + main.getTextColor().getTEXT() + afterName + main.getTextColor().getReset());
+                return (main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
             else if (main.getTextColor().getTEXT() == main.getTextColor().getReset() || main.getTextColor().getTEXT() == main.getTextColor().getDefault())
-                System.out.println(main.getTextColor().getBACKGROUND() + mezzage + main.getTextColor().getReset() + main.getTextColor().getBACKGROUND() + afterName + main.getTextColor().getReset());
+                return (main.getTextColor().getBACKGROUND() + message + main.getTextColor().getReset());
             else
-                System.out.println(main.getTextColor().getTEXT() + main.getTextColor().getBACKGROUND() + mezzage + main.getTextColor().getReset() + main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + afterName + main.getTextColor().getReset());
+                return (main.getTextColor().getTEXT() + main.getTextColor().getBACKGROUND() + message + main.getTextColor().getReset());
         }
     }
 

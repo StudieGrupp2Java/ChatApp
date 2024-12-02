@@ -5,6 +5,7 @@ import org.example.chatclient.commandmanager.CommandManager;
 import org.example.chatclient.filemanager.FileManager;
 import org.example.chatclient.server.LoginInfo;
 import org.example.chatclient.server.ServerManager;
+import org.example.chatclient.textcolor.RoomDrawer;
 import org.example.chatclient.textcolor.TextColor;
 
 public class ChatClient {
@@ -13,6 +14,7 @@ public class ChatClient {
     private LoginInfo login;
     private InputListener listener;
     private TextColor textColor;
+    private RoomDrawer drawer;
 
     private ServerManager serverManager;
     private static final String SERVER_ADRESS = "localhost";
@@ -21,6 +23,8 @@ public class ChatClient {
 
     public ChatClient() {
         System.out.println("Welcome User");
+        System.out.println("If the console looks weird, try setting the room width using the /setwidth <number> command.");
+        System.out.println("The default width is 61.");
 
         init();
         serverManager.connect(SERVER_ADRESS, SERVER_PORT);
@@ -29,13 +33,14 @@ public class ChatClient {
     }
 
     public void init() {
+        this.drawer = new RoomDrawer(this);
         this.serverManager = new ServerManager(this);
-        textColor = new TextColor();
+        this.textColor = new TextColor();
         this.commandManager = new CommandManager(this);
         this.login = new LoginInfo();
         this.manager = new FileManager(login);
         this.listener = new InputListener(this, login);
-        manager.load();
+        this.manager.load();
     }
 
     public CommandManager getCommandManager() {
@@ -54,4 +59,7 @@ public class ChatClient {
         return textColor;
     }
 
+    public RoomDrawer getDrawer() {
+        return drawer;
+    }
 }

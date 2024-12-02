@@ -5,10 +5,18 @@ import java.util.Map;
 
 public class TextColor {
 
+    public static final char ESC = '\u001B';
     // Reset
-    public static final String RESET = "\u001B[0m";
-    public static final String DEFAULT = "\u001B[39m";
-    public static final String CLEAR_LINE = "\u001B[1A\u001B[2K";
+    public static final String RESET = ESC + "[0m";
+    public static final String DEFAULT = ESC + "[39m";
+    public static final String CLEAR_LINE = ESC + "[1A" + ESC + "[2K";
+    public static final String CLEAR_SCREEN = ESC + "[2J";
+
+    public static final String SAVE_CURSOR = ESC + "[s";
+    public static final String MOVE_CURSOR = ESC + "[5000;5000H";
+    public static final String REQUEST_CURSOR = ESC + "[6n";
+    public static final String RESTORE_CURSOR = ESC + "[u";
+    
     private static final Map<String, String> backgroundMap = new HashMap<>();
     private static final Map<String, String> textMap = new HashMap<>();
     private String TEXTCOLOROUT = textMap.get("bright-red");
@@ -157,5 +165,9 @@ public class TextColor {
         } else {
             System.out.println("Invalid input!");
         }
+    }
+
+    public String getColors() {
+        return this.getBACKGROUND() + this.getTEXT();
     }
 }

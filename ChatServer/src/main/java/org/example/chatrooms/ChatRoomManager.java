@@ -96,17 +96,20 @@ public class ChatRoomManager {
         final User user = main.getUserManager().getUser(client.getIdentifier());
         user.setCurrentRoom(roomName);
         user.setInDMS(false);
+        // Client checks for this string for drawing a new room
         client.sendMessage("Joined room: " + roomName);
 
         List<ChatLog> logs = chatRoomLogs.get(roomName);
 
         if (logs != null && !logs.isEmpty()) {
+            StringBuilder toSend = new StringBuilder("\u00a7CHATLOGS");
             logs.stream()
                     .sorted(Comparator.comparingLong(ChatLog::getTimestamp).reversed())
                     .limit(30)
                     .sorted(Comparator.comparingLong(ChatLog::getTimestamp))
-                    .map(log -> String.format("[%s][%s] %s", roomName, Util.DATE_FORMAT.format(log.getTimestamp()), log.getMessage()))
-                    .forEach(client::sendMessage);
+                    .map(log -> String.format("[%s] %s", Util.DATE_FORMAT.format(log.getTimestamp()), log.getMessage()))
+                    .forEach(log -> toSend.append(log).append("\u00a7"));
+            client.sendMessage(toSend.toString());
         }
 
         main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " joined the chat!", true, user);
@@ -119,14 +122,11 @@ public class ChatRoomManager {
         if (room != null) {
             room.remove(client);
         }
-        String lastRoom = user.getCurrentRoom();
 
         if (!addUserToRoom(client, roomName)) {
             addUserToRoom(client, "Default");
             client.sendMessage("No room with that name exists!");
-            return;
         }
-        client.sendMessage("Switched from " + lastRoom + " to " + roomName);
     }
 
     public List<String> getRoomList() {
