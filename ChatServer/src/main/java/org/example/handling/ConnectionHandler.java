@@ -1,10 +1,15 @@
 package org.example.handling;
 
 import org.example.ChatServer;
+import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.NotificationManager;
+import org.example.util.TextColor;
+import org.example.util.Util;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,6 +42,7 @@ public class ConnectionHandler extends Thread {
             if (in.readLine().equals("false")) {
                 this.sendMessage("Please register with /register <username> <password> or login with /login <username> <password>");
             }
+
             while (this.running) {
                 String incomingMessage = in.readLine();
                 if (incomingMessage == null) {
@@ -59,18 +65,22 @@ public class ConnectionHandler extends Thread {
                     continue;
                 }
 
-                final String name = sender.getName();
-                final String fullMessage = String.format(
-                        "%s: %s",
-                        name,
-                        main.getChatFilter().filterMessage(incomingMessage)
-                );
+                final String fullMessage = formatMessage(sender, incomingMessage);
 
                 // Send to the current room
                 if (sender.getCurrentRoom() != null) {
                     main.getClientManager().broadcastMessageInRoom(fullMessage, true, sender);
-                }
-                else {
+
+                    // Send notification to user in room (if their settings allows)
+                    List<ConnectionHandler> roomUsers = main.getChatRoomManager().getUsersIn(sender.getCurrentRoom());
+                    if (roomUsers == null) continue;
+                    for (ConnectionHandler userHandler : roomUsers){
+                        User roomUser = main.getUserManager().getUser(userHandler.getIdentifier());
+                        if (roomUser != null && main.getNotificationManager().shouldNotifyForMessage(roomUser)){
+                            main.getNotificationManager().sendNotification(userHandler, "message");
+                        }
+                    }
+                } else {
                     this.sendMessage("Need to join a chat room first! /help for more information");
                 }
             }
@@ -80,6 +90,13 @@ public class ConnectionHandler extends Thread {
         } finally {
             main.getClientManager().removeConnection(this);
         }
+    }
+
+    private String formatMessage(User sender, String incomingMessage) {
+        return String.format(
+                "%s: %s",
+                Util.formatUserName(sender),
+                main.getChatFilter().filterMessage(incomingMessage));
     }
 
 

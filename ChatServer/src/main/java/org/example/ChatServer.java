@@ -6,6 +6,7 @@ import org.example.filemanager.FileManager;
 import org.example.filter.ChatFilter;
 import org.example.handling.ClientManager;
 import org.example.users.UserManager;
+import org.example.util.NotificationManager;
 import org.example.util.UpdateTracker;
 
 public class ChatServer {
@@ -16,6 +17,11 @@ public class ChatServer {
     private UserManager userManager;
     private CommandManager commandManager;
     private UpdateTracker updateTracker;
+    private NotificationManager notificationManager;
+
+    private ServerInputHandler inputHandler;
+
+    public boolean running = true;
 
     public ChatServer() {
         System.out.println("Starting ChatServer...");
@@ -23,6 +29,7 @@ public class ChatServer {
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
         updateTracker.runTick();
+        inputHandler.listenForInput();
         clientManager.listen();
     }
 
@@ -33,13 +40,15 @@ public class ChatServer {
         this.clientManager = new ClientManager(this);
         this.updateTracker = new UpdateTracker(this);
         this.chatRoomManager = new ChatRoomManager(this);
+        this.inputHandler = new ServerInputHandler(this);
         this.fileManager = new FileManager(this);
+        this.notificationManager = new NotificationManager();
     }
 
     private void shutdown() {
         System.out.println("Shutting down and saving data...");
         fileManager.saveAll();
-        updateTracker.close();
+        this.running = false;
         System.out.println("Save complete");
     }
 
@@ -69,5 +78,9 @@ public class ChatServer {
 
     public UpdateTracker getUpdateTracker() {
         return updateTracker;
+    }
+
+    public NotificationManager getNotificationManager(){
+        return notificationManager;
     }
 }

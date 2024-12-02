@@ -1,12 +1,11 @@
 package org.example.chatclient;
 
 
-import org.example.InputListener;
-import org.example.commandmanager.CommandManager;
-import org.example.filemanager.FileManager;
-import org.example.logininfo.LoginInfo;
-import org.example.textcolor.RoomDrawer;
-import org.example.textcolor.TextColor;
+import org.example.chatclient.commandmanager.CommandManager;
+import org.example.chatclient.filemanager.FileManager;
+import org.example.chatclient.server.LoginInfo;
+import org.example.chatclient.server.ServerManager;
+import org.example.chatclient.textcolor.TextColor;
 
 public class ChatClient {
     private CommandManager commandManager;
