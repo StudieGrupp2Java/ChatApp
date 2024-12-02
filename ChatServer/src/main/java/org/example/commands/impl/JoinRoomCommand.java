@@ -33,6 +33,6 @@ public class JoinRoomCommand extends Command {
 
     @Override
     public String getUsage() {
-        return "/join <room> - joins an existing room. Do /rooms to see what rooms exist or /create to create a new room";
+        return "/join <room> - joins an existing room. Do /rooms to see what rooms exist or /create <room> to create a new room";
     }
 }
