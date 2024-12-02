@@ -41,4 +41,9 @@ public class DeleteAccountCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/deleteaccount - starts the delete account process";
+    }
 }

@@ -4,7 +4,7 @@ import org.example.chatclient.ChatClient;
 
 public class ListEmojiCommand extends Command{
     public ListEmojiCommand(ChatClient main) {
-        super("/emojis", main);
+        super("/emojis", "/emojis - lists available emojis", main);
     }
 
     @Override

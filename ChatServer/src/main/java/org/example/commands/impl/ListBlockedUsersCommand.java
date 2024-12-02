@@ -23,4 +23,9 @@ public class ListBlockedUsersCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/blocklist - lists the users in your blocklist";
+    }
 }

@@ -26,4 +26,9 @@ public class ChangePasswordCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/changepassword <oldpassword> <newpassword> - changes password";
+    }
 }

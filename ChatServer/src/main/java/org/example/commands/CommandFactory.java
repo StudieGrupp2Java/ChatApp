@@ -25,13 +25,13 @@ public class CommandFactory {
         commandMap.put("online", OnlineCommand::new);
         commandMap.put("block", BlockUserCommand::new);
         commandMap.put("unblock", RemoveBlockedUserCommand::new);
-        commandMap.put("listblocked", ListBlockedUsersCommand::new);
+        commandMap.put("blocklist", ListBlockedUsersCommand::new);
         commandMap.put("create", CreateRoomCommand::new);
         commandMap.put("leaveroom", LeaveRoomCommand::new);
         commandMap.put("join", JoinRoomCommand::new);
         commandMap.put("rooms", ListRoomsCommand::new);
-        commandMap.put("dmsound", ToggleDMSoundCommand::new);
-        commandMap.put("messagesound", ToggleMessageSoundCommand::new);
+        commandMap.put("toggledmsound", ToggleDMSoundCommand::new);
+        commandMap.put("togglemessagesound", ToggleMessageSoundCommand::new);
         commandMap.put("kick", KickUserCommand::new);
 
         serverCommandMap.put("admin", CreateAdminServerCommand::new);

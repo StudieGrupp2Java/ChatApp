@@ -27,4 +27,9 @@ public class RemoveBlockedUserCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/unblock <username> - removes a user from your blocklist";
+    }
 }

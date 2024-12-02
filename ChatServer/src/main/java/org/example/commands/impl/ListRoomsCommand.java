@@ -68,4 +68,9 @@ public class ListRoomsCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/rooms - lists available rooms and their users";
+    }
 }

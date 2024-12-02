@@ -10,11 +10,7 @@ public class ToggleDMSoundCommand extends Command {
     @Override
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
         User user = main.getUserManager().getUser(sender.getIdentifier());
-        if (args[0].equalsIgnoreCase("on")){
-            user.getNotificationSettings().setNotifyOnDM(true);
-        } else if (args[0].equalsIgnoreCase("off")){
-            user.getNotificationSettings().setNotifyOnDM(false);
-        }
+        user.getNotificationSettings().toggleDmSounds(sender);
     }
 
     @Override
@@ -25,5 +21,10 @@ public class ToggleDMSoundCommand extends Command {
     @Override
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
+    }
+
+    @Override
+    public String getUsage() {
+        return "/toggledmsound - toggles dm sound notifications";
     }
 }

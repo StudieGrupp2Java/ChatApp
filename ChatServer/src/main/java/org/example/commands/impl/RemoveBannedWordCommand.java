@@ -22,4 +22,9 @@ public class RemoveBannedWordCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.ADMIN;
     }
+
+    @Override
+    public String getUsage() {
+        return "/removeword <word> - removes a word from the banned-word list";
+    }
 }

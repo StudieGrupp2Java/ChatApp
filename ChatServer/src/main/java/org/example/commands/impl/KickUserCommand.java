@@ -36,4 +36,9 @@ public class KickUserCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.ADMIN;
     }
+
+    @Override
+    public String getUsage() {
+        return "/kick <username> - kicks a user from the server";
+    }
 }

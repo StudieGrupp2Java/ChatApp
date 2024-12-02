@@ -42,4 +42,9 @@ public class ConfirmDeleteCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/confirmdelete - confirms deletion of account";
+    }
 }

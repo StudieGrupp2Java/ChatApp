@@ -7,7 +7,7 @@ import java.util.List;
 public class HelpCommand extends Command {
 
     public HelpCommand(ChatClient main) {
-        super("/help", main);
+        super("/help", "/help - prints available commands", main);
     }
 
     @Override

@@ -20,4 +20,9 @@ public class LeaveRoomCommand extends Command {
     public ChatRole getPermissionLevel() {
         return ChatRole.USER;
     }
+
+    @Override
+    public String getUsage() {
+        return "/leaveroom - leaves the current room, putting you in the default chat";
+    }
 }
