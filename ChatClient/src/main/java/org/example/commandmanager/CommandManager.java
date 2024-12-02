@@ -17,6 +17,7 @@ public class CommandManager {
         addCommand(new SetBackgroundCommand(main));
         addCommand(new ResetColorCommand(main));
         addCommand(new ResetBackgroundCommand(main));
+        addCommand(new SetWidthCommand(main));
     }
 
     public void addCommand(Command command) {

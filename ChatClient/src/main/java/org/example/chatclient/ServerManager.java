@@ -97,35 +97,37 @@ public class ServerManager {
         private boolean lastWasRoomMessage = false;
         private String lastRoom = "";
         private void handleMessage(String serverMessage) {
+            final RoomDrawer drawer = main.getDrawer();
             if (serverMessage.startsWith("Joined room:")) {
                 if (lastWasRoomMessage) {
                     // Finish the room box
-                    System.out.println(RoomDrawer.getFooter());
+                    System.out.println(drawer.getFooter());
                     lastWasRoomMessage = false;
                 }
                 String roomName = serverMessage.split("Joined room: ")[1].split(" ")[0];
-                System.out.println(RoomDrawer.getHeader(roomName));
+                System.out.println(drawer.getHeader(roomName));
                 lastRoom = roomName;
+                lastWasRoomMessage = true;
                 return;
             }
             if (serverMessage.startsWith("\u00a7CHATLOGS")) {
                 String[] chatlogs = serverMessage.substring(9).split("\u00a7");
                 for (String log : chatlogs) {
-                    System.out.println(RoomDrawer.drawBoxed(printWithColor(log)));
+                    System.out.println(drawer.drawBoxed(printWithColor(log)));
                     lastWasRoomMessage = true;
                 }
                 return;
             }
             if (serverMessage.startsWith("[")) {
                 if (!lastWasRoomMessage) {
-                    System.out.println(RoomDrawer.getHeader(lastRoom));
+                    System.out.println(drawer.getHeader(lastRoom));
                 }
-                System.out.println(RoomDrawer.drawBoxed(printWithColor(serverMessage)));
+                System.out.println(drawer.drawBoxed(printWithColor(serverMessage)));
                 lastWasRoomMessage = true;
                 return;
             } else if (lastWasRoomMessage) {
                 // Finish the room box
-                System.out.println(RoomDrawer.getFooter());
+                System.out.println(drawer.getFooter());
                 lastWasRoomMessage = false;
             }
 

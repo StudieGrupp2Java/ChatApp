@@ -11,20 +11,24 @@ public class RoomDrawer {
     public static final String DOUBLE_BOTTOM_LEFT = "\u255A";
     public static final String DOUBLE_BOTTOM_RIGHT = "\u255D";
 
-    private static final int X = 85;
-    private static final int Y = 32;
-    
+    private int width = 79;
 
-    public static String getFooter() {
-        int width = X;
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public String getFooter() {
         StringBuilder builder = new StringBuilder();
         builder.append(DOUBLE_BOTTOM_LEFT);
-        builder.append(DOUBLE_HORIZ.repeat(width-2));
+        builder.append(DOUBLE_HORIZ.repeat(width -2));
         builder.append(DOUBLE_BOTTOM_RIGHT);
         return builder.toString();
     }
 
-    public static int[] getTerminalSize() throws IOException {
+
+    // does not work :(
+    public int[] getTerminalSize() throws IOException {
         // Save the current cursor position
         System.out.print(TextColor.SAVE_CURSOR);
         // Move cursor to a very large row and column
@@ -59,8 +63,7 @@ public class RoomDrawer {
         }
     }
 
-    public static String getHeader(String roomName) {
-        int width = X;
+    public String getHeader(String roomName) {
 
         boolean isEven = roomName.length() % 2 == 0;
         int totalWidth = width - roomName.length() - 2;
@@ -76,13 +79,13 @@ public class RoomDrawer {
         return header.toString();
     }
 
-    public static String drawBoxed(String log) {
+    public String drawBoxed(String log) {
         // Strip ANSI control codes
         int length = log.replaceAll("\\033\\[[0-9;]*[a-zA-Z]", "").length();
 
         String message = DOUBLE_VERT + " " + log;
 
-        int missing = X - length - 4;
+        int missing = width - length - 4;
         if (missing > 0) {
             message += " ".repeat(missing);
         }
