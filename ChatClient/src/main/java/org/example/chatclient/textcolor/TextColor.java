@@ -19,9 +19,9 @@ public class TextColor {
     
     private static final Map<String, String> backgroundMap = new HashMap<>();
     private static final Map<String, String> textMap = new HashMap<>();
-    private String TEXTCOLOROUT = DEFAULT;
+    private String TEXTCOLOROUT = textMap.get("bright-red");
     private String BGCOLOROUT = DEFAULT;
-    private String TEXTCOLORIN = DEFAULT;
+    private String TEXTCOLORIN = textMap.get("purple");
     private String BGCOLORIN = DEFAULT;
     private String TEXT = DEFAULT;
     private String BACKGROUND = DEFAULT;
