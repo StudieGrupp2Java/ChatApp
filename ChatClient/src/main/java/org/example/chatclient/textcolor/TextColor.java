@@ -11,9 +11,9 @@ public class TextColor {
     public static final String CLEAR_LINE = "\u001B[1A\u001B[2K";
     private static final Map<String, String> backgroundMap = new HashMap<>();
     private static final Map<String, String> textMap = new HashMap<>();
-    private String TEXTCOLOROUT = DEFAULT;
+    private String TEXTCOLOROUT = textMap.get("bright-red");
     private String BGCOLOROUT = DEFAULT;
-    private String TEXTCOLORIN = DEFAULT;
+    private String TEXTCOLORIN = textMap.get("yellow");
     private String BGCOLORIN = DEFAULT;
     private String TEXT = DEFAULT;
     private String BACKGROUND = DEFAULT;
