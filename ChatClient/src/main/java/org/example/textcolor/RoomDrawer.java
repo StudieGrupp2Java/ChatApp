@@ -21,7 +21,7 @@ public class RoomDrawer {
     public String getFooter() {
         StringBuilder builder = new StringBuilder();
         builder.append(DOUBLE_BOTTOM_LEFT);
-        builder.append(DOUBLE_HORIZ.repeat(width -2));
+        builder.append(DOUBLE_HORIZ.repeat(width - 2));
         builder.append(DOUBLE_BOTTOM_RIGHT);
         return builder.toString();
     }
@@ -64,22 +64,25 @@ public class RoomDrawer {
     }
 
     public String getHeader(String roomName) {
-
-        boolean isEven = roomName.length() % 2 == 0;
         int totalWidth = width - roomName.length() - 2;
 
         int repeat = totalWidth / 2;
 
         StringBuilder header = new StringBuilder();
         header.append(DOUBLE_TOP_LEFT);
-        header.append(DOUBLE_HORIZ.repeat((isEven ? 1 + repeat : repeat)));
+        header.append(DOUBLE_HORIZ.repeat(repeat));
         header.append(roomName);
         header.append(DOUBLE_HORIZ.repeat(repeat));
         header.append(DOUBLE_TOP_RIGHT);
+
+        if (header.length() != width) {
+            header.insert(1, DOUBLE_HORIZ.charAt(0));
+        }
         return header.toString();
     }
 
     public String drawBoxed(String log) {
+        String extra = "";
         // Strip ANSI control codes
         int length = log.replaceAll("\\033\\[[0-9;]*[a-zA-Z]", "").length();
 
@@ -88,8 +91,14 @@ public class RoomDrawer {
         int missing = width - length - 4;
         if (missing > 0) {
             message += " ".repeat(missing);
+        } else {
+            extra = message.substring(width + 3);
+            message = message.substring(0, width + 3);
         }
         message += " " + DOUBLE_VERT;
+        if (!extra.isBlank()) {
+            message += "\n" + drawBoxed(extra);
+        }
         return message;
     }
 }
