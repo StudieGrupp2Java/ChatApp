@@ -17,7 +17,8 @@ public class ServerManager {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-
+    private String mezzage;
+    private String afterName = "";
 
     public ServerManager(ChatClient main) {
         this.main = main;
@@ -102,7 +103,26 @@ public class ServerManager {
             }
         }
 
+
+        private void splitMessage(String message){
+            String[] splitMessage;
+            if (message.contains(": ")){
+                splitMessage = message.split(": ", 2);
+                mezzage = splitMessage[0];
+                afterName = ": " + splitMessage[1];
+            } else {
+                splitMessage = message.split(" ", 4);
+                if (splitMessage.length >= 3){
+                    afterName = splitMessage[3];
+                    mezzage = splitMessage[0] + " " + splitMessage[1] + " " + splitMessage[2] + " ";
+                } else {
+                    mezzage = splitMessage[0] + " " + splitMessage[1];
+                }
+            }
+        }
+
         private void printWithColor(String message) {
+            splitMessage(message);
             if (!main.getInputListener().loggedIn) {
                 if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")) {
                     main.getInputListener().loggedIn = true;
@@ -111,20 +131,16 @@ public class ServerManager {
             if (checkIfMyUsername(message)) {
                 main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLOROUT());
                 main.getTextColor().setBG(main.getTextColor().getBGCOLOROUT());
-
-                message = message.replaceAll("\u001B\\[0m", "\u001B[0m" + main.getTextColor().getTEXTCOLOROUT() + main.getTextColor().getBGCOLOROUT());
             } else {
                 main.getTextColor().setTEXT(main.getTextColor().getTEXTCOLORIN());
                 main.getTextColor().setBG(main.getTextColor().getBGCOLORIN());
-
-                message = message.replaceAll("\u001B\\[0m", "\u001B[0m" + main.getTextColor().getTEXTCOLORIN() + main.getTextColor().getBGCOLORIN());
             }
             if (main.getTextColor().getBACKGROUND() == main.getTextColor().getReset() || main.getTextColor().getBACKGROUND() == main.getTextColor().getDefault())
-                System.out.println(main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
+                System.out.println(main.getTextColor().getTEXT() + mezzage + main.getTextColor().getReset() + main.getTextColor().getTEXT() + afterName + main.getTextColor().getReset());
             else if (main.getTextColor().getTEXT() == main.getTextColor().getReset() || main.getTextColor().getTEXT() == main.getTextColor().getDefault())
-                System.out.println(main.getTextColor().getBACKGROUND() + message + main.getTextColor().getReset());
+                System.out.println(main.getTextColor().getBACKGROUND() + mezzage + main.getTextColor().getReset() + main.getTextColor().getBACKGROUND() + afterName + main.getTextColor().getReset());
             else
-                System.out.println(main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + message + main.getTextColor().getReset());
+                System.out.println(main.getTextColor().getTEXT() + main.getTextColor().getBACKGROUND() + mezzage + main.getTextColor().getReset() + main.getTextColor().getBACKGROUND() + main.getTextColor().getTEXT() + afterName + main.getTextColor().getReset());
         }
     }
 
