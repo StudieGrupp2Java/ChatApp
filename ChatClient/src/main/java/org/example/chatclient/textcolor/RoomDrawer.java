@@ -1,7 +1,9 @@
-package org.example.textcolor;
+package org.example.chatclient.textcolor;
 
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RoomDrawer {
     public static final String DOUBLE_HORIZ = "\u2550";
@@ -11,7 +13,7 @@ public class RoomDrawer {
     public static final String DOUBLE_BOTTOM_LEFT = "\u255A";
     public static final String DOUBLE_BOTTOM_RIGHT = "\u255D";
 
-    private int width = 79;
+    private int width = 61;
 
 
     public void setWidth(int width) {
@@ -85,15 +87,16 @@ public class RoomDrawer {
         String extra = "";
         // Strip ANSI control codes
         int length = log.replaceAll("\\033\\[[0-9;]*[a-zA-Z]", "").length();
+        int lengthDiff = log.length() - length;
 
         String message = DOUBLE_VERT + " " + log;
 
-        int missing = width - length - 4;
+        int missing = width - length - 4; // 4 = 1 character padding + vertical line character on each side
         if (missing > 0) {
             message += " ".repeat(missing);
         } else {
-            extra = message.substring(width + 3);
-            message = message.substring(0, width + 3);
+            extra = message.substring(width + lengthDiff - 6);
+            message = message.substring(0, width + lengthDiff - 6);
         }
         message += " " + DOUBLE_VERT;
         if (!extra.isBlank()) {

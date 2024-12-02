@@ -1,6 +1,7 @@
 package org.example.chatclient.server;
 
 import org.example.chatclient.ChatClient;
+import org.example.chatclient.textcolor.RoomDrawer;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -142,7 +143,7 @@ public class ServerManager {
             System.out.println(printWithColor(serverMessage));
         }
 
-        private void printWithColor(String message) {
+        private String printWithColor(String message) {
             if (!main.getInputListener().loggedIn) {
                 if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")) {
                     main.getInputListener().loggedIn = true;

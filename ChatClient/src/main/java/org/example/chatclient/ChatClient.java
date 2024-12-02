@@ -5,6 +5,7 @@ import org.example.chatclient.commandmanager.CommandManager;
 import org.example.chatclient.filemanager.FileManager;
 import org.example.chatclient.server.LoginInfo;
 import org.example.chatclient.server.ServerManager;
+import org.example.chatclient.textcolor.RoomDrawer;
 import org.example.chatclient.textcolor.TextColor;
 
 public class ChatClient {
@@ -23,7 +24,7 @@ public class ChatClient {
     public ChatClient() {
         System.out.println("Welcome User");
         System.out.println("If the console looks weird, try setting the room width using the /setwidth <number> command.");
-        System.out.println("The default width is 79.");
+        System.out.println("The default width is 61.");
 
         init();
         serverManager.connect(SERVER_ADRESS, SERVER_PORT);
