@@ -166,4 +166,8 @@ public class TextColor {
             System.out.println("Invalid input!");
         }
     }
+
+    public String getColors() {
+        return this.getBACKGROUND() + this.getTEXT();
+    }
 }

@@ -33,7 +33,7 @@ public class ChatClient {
     }
 
     public void init() {
-        this.drawer = new RoomDrawer();
+        this.drawer = new RoomDrawer(this);
         this.serverManager = new ServerManager(this);
         this.textColor = new TextColor();
         this.commandManager = new CommandManager(this);

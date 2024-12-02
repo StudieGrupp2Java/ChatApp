@@ -1,11 +1,13 @@
 package org.example.chatclient.textcolor;
 
 
+import org.example.chatclient.ChatClient;
+
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RoomDrawer {
+    private final ChatClient main;
+
     public static final String DOUBLE_HORIZ = "\u2550";
     public static final String DOUBLE_VERT = "\u2551";
     public static final String DOUBLE_TOP_LEFT = "\u2554";
@@ -15,6 +17,9 @@ public class RoomDrawer {
 
     private int width = 61;
 
+    public RoomDrawer(ChatClient main) {
+        this.main = main;
+    }
 
     public void setWidth(int width) {
         this.width = width;
@@ -89,18 +94,18 @@ public class RoomDrawer {
         int length = log.replaceAll("\\033\\[[0-9;]*[a-zA-Z]", "").length();
         int lengthDiff = log.length() - length;
 
-        String message = DOUBLE_VERT + " " + log;
+        String message = TextColor.RESET + DOUBLE_VERT + " " + log;
 
         int missing = width - length - 4; // 4 = 1 character padding + vertical line character on each side
         if (missing > 0) {
             message += " ".repeat(missing);
         } else {
             extra = message.substring(width + lengthDiff - 6);
-            message = message.substring(0, width + lengthDiff - 6);
+            message = message.substring(0, width + lengthDiff - 2);
         }
-        message += " " + DOUBLE_VERT;
+        message += " " + TextColor.RESET + DOUBLE_VERT;
         if (!extra.isBlank()) {
-            message += "\n" + drawBoxed(extra);
+            message += "\n" + drawBoxed(main.getTextColor().getColors() + extra);
         }
         return message;
     }
