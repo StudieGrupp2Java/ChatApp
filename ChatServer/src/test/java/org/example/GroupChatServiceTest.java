@@ -6,6 +6,7 @@ import org.example.handling.ConnectionHandler;
 import org.example.users.User;
 import org.example.users.UserManager;
 import org.example.users.ChatRole;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,29 +47,39 @@ public class GroupChatServiceTest {
     @InjectMocks
     private ChatRoomManager chatRoomManager;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    private AutoCloseable mocks;
 
-        // Inject mockChatServer into ChatRoomManager so "main" is not null
-        chatRoomManager = new ChatRoomManager(mockChatServer);
+@BeforeEach
+public void setUp() {
+    mocks = MockitoAnnotations.openMocks(this);
 
-        // Configure mockChatServer to return mockUserManager and mockClientManager
-        when(mockChatServer.getUserManager()).thenReturn(mockUserManager);
-        when(mockChatServer.getClientManager()).thenReturn(mockClientManager);
+    // Inject mockChatServer into ChatRoomManager so "main" is not null
+    chatRoomManager = new ChatRoomManager(mockChatServer);
 
-        // Configure mockUserManager to return mockUser
-        when(mockUserManager.getUser(anyInt())).thenReturn(mockUser);
+    // Configure mockChatServer to return mockUserManager and mockClientManager
+    when(mockChatServer.getUserManager()).thenReturn(mockUserManager);
+    when(mockChatServer.getClientManager()).thenReturn(mockClientManager);
 
-        // Configure mockUser to have a valid role
-        when(mockUser.getRole()).thenReturn(ChatRole.USER);  // Use USER as the role
+    // Configure mockUserManager to return mockUser
+    when(mockUserManager.getUser(anyInt())).thenReturn(mockUser);
 
-        // Add mock users to a chat room
-        chatRoomManager.createRoom("DefaultRoom", user1);
-        chatRoomManager.addUserToRoom(user1, "DefaultRoom");
-        chatRoomManager.addUserToRoom(user2, "DefaultRoom");
-        chatRoomManager.addUserToRoom(user3, "DefaultRoom");
+    // Configure mockUser to have a valid role
+    when(mockUser.getRole()).thenReturn(ChatRole.USER);  // Use USER as the role
+
+    // Add mock users to a chat room
+    chatRoomManager.createRoom("DefaultRoom", user1);
+    chatRoomManager.addUserToRoom(user1, "DefaultRoom");
+    chatRoomManager.addUserToRoom(user2, "DefaultRoom");
+    chatRoomManager.addUserToRoom(user3, "DefaultRoom");
+}
+
+@AfterEach
+public void tearDown() throws Exception {
+    if (mocks != null) {
+        mocks.close();
     }
+}
+
 
     @Test
     public void testMessageSendingToAllGroupMembers() {
