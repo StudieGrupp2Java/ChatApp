@@ -5,7 +5,7 @@ import org.example.chatclient.ChatClient;
 public class LeaveCommand extends Command {
 
     public LeaveCommand(ChatClient main) {
-        super("/leave", main);
+        super("/leave", "/leave - leaves the current server", main);
     }
 
     @Override
