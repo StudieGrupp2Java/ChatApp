@@ -3,7 +3,6 @@ package org.example;
 import org.example.chatrooms.ChatRoomManager;
 import org.example.handling.ClientManager;
 import org.example.handling.ConnectionHandler;
-import org.example.ChatServer;
 import org.example.users.User;
 import org.example.users.UserManager;
 import org.example.users.ChatRole;

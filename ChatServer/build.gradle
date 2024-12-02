@@ -11,8 +11,6 @@ repositories {
 
 apply plugin: 'application'
 
-mainClassName = 'org.example.Main'
-
 dependencies {
     // JUnit 5 platform (BOM)
     testImplementation platform('org.junit:junit-bom:5.10.0')
