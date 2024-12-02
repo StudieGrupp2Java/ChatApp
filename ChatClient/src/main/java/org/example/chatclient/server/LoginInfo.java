@@ -1,4 +1,4 @@
-package org.example.logininfo;
+package org.example.chatclient.server;
 
 import java.util.ArrayList;
 import java.util.List;

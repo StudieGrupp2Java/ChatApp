@@ -1,6 +1,6 @@
-package org.example.filemanager;
+package org.example.chatclient.filemanager;
 
-import org.example.logininfo.LoginInfo;
+import org.example.chatclient.server.LoginInfo;
 
 import java.io.*;
 

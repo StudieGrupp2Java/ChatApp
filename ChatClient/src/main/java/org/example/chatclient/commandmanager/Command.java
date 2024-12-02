@@ -1,4 +1,4 @@
-package org.example.commandmanager;
+package org.example.chatclient.commandmanager;
 
 import org.example.chatclient.ChatClient;
 

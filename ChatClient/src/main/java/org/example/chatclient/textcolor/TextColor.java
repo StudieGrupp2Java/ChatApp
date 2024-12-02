@@ -1,4 +1,4 @@
-package org.example.textcolor;
+package org.example.chatclient.textcolor;
 
 import java.util.HashMap;
 import java.util.Map;

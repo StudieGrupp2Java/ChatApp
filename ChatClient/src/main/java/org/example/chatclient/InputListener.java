@@ -1,10 +1,9 @@
-package org.example;
+package org.example.chatclient;
 
-import org.example.chatclient.ChatClient;
-import org.example.emoji.Emoji;
-import org.example.filemanager.FileManager;
-import org.example.logininfo.LoginInfo;
-import org.example.textcolor.TextColor;
+import org.example.chatclient.emoji.Emoji;
+import org.example.chatclient.filemanager.FileManager;
+import org.example.chatclient.server.LoginInfo;
+import org.example.chatclient.textcolor.TextColor;
 
 import java.util.Scanner;
 

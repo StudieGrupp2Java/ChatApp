@@ -1,4 +1,4 @@
-package org.example.emoji;
+package org.example.chatclient.emoji;
 
 import java.util.*;
 
