@@ -13,7 +13,7 @@ public class TextColor {
     private static final Map<String, String> textMap = new HashMap<>();
     private String TEXTCOLOROUT = textMap.get("bright-red");
     private String BGCOLOROUT = DEFAULT;
-    private String TEXTCOLORIN = textMap.get("yellow");
+    private String TEXTCOLORIN = textMap.get("purple");
     private String BGCOLORIN = DEFAULT;
     private String TEXT = DEFAULT;
     private String BACKGROUND = DEFAULT;

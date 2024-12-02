@@ -17,7 +17,8 @@ public class ServerManager {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-
+    private String mezzage;
+    private String afterName = "";
 
     public ServerManager(ChatClient main) {
         this.main = main;
@@ -102,10 +103,9 @@ public class ServerManager {
             }
         }
 
-        private void printWithColor(String message) {
-            String mezzage;
+
+        private void splitMessage(String message){
             String[] splitMessage;
-            String afterName = "";
             if (message.contains(": ")){
                 splitMessage = message.split(": ", 2);
                 mezzage = splitMessage[0];
@@ -118,9 +118,11 @@ public class ServerManager {
                 } else {
                     mezzage = splitMessage[0] + " " + splitMessage[1];
                 }
-
-
             }
+        }
+
+        private void printWithColor(String message) {
+            splitMessage(message);
             if (!main.getInputListener().loggedIn) {
                 if (message.equalsIgnoreCase("Welcome " + main.getInputListener().getUsername() + "!")) {
                     main.getInputListener().loggedIn = true;
