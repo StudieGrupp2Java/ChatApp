@@ -1,30 +1,28 @@
 package org.example.passwordencryption;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.util.Base64;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 
 public class Encryptor {
 
-    public static SecretKey decryptAesKey(byte[] encryptedKey, PrivateKey privateKey) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] decryptedKey = cipher.doFinal(encryptedKey);
-        return new SecretKeySpec(decryptedKey, 0, decryptedKey.length, "AES");
+
+    public static String hashPassword(String pass, byte[] salt) {
+        try {
+            KeySpec spec = new PBEKeySpec(pass.toCharArray(), salt, 65536, 128);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            return new String(hash);
+        } catch (Exception e) {
+            throw new RuntimeException("Critical error: couldn't hash password " + e.getMessage());
+        }
     }
 
-    public static String decryptPassword(String encryptedData, SecretKey key) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
-        return new String(decryptedBytes);
-    }
-    public static SecretKey decrypt(String key, KeyPair keyPairz)throws Exception{
-        byte[] encryptedKey = Base64.getDecoder().decode(key);
-        SecretKey decryptedKey = Encryptor.decryptAesKey(encryptedKey, keyPairz.getPrivate());
-        return decryptedKey;
+    public static byte[] generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return salt;
     }
 }

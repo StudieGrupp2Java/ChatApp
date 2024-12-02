@@ -11,6 +11,7 @@ import org.example.util.TextColor;
 import org.example.util.Util;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.Socket;
 import java.security.KeyPair;
@@ -24,12 +25,6 @@ public class ConnectionHandler extends Thread {
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
-    @Getter
-    @Setter
-    private KeyPair keyPair;
-    @Getter
-    private SecretKey decryptedAES;
-
     private final BufferedReader in;
     private final PrintWriter out;
 
@@ -48,6 +43,8 @@ public class ConnectionHandler extends Thread {
 
 
 
+
+
     @Override
     public void run() {
         try {
@@ -55,8 +52,7 @@ public class ConnectionHandler extends Thread {
             if (in.readLine().equals("false")) {
                 this.sendMessage("Please register with /register <username> <password> or login with /login <username> <password>");
             }
-            String encryptedAES = in.readLine();
-            decryptedAES = Encryptor.decrypt(encryptedAES, keyPair);
+
             while (this.running) {
                 String incomingMessage = in.readLine();
                 if (incomingMessage == null) {

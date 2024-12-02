@@ -8,6 +8,13 @@ import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.Util;
 
+import javax.crypto.SecretKey;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
+
 public class RegisterCommand extends Command {
 
     protected void execute(String[] args, ChatServer main, ConnectionHandler sender) {
@@ -18,12 +25,7 @@ public class RegisterCommand extends Command {
 
         String username = args[0];
         String password = args[1];
-        String decryptedPassword = "";
-        try {
-            decryptedPassword = Encryptor.decryptPassword(password, sender.getDecryptedAES());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
         System.out.println("Registering user: " + username);
 
         boolean exists = main.getUserManager().userExists(username);
@@ -37,10 +39,12 @@ public class RegisterCommand extends Command {
             return;
         }
 
-        final User user = new User(username, decryptedPassword);
+        User user = new User(username, password);
+
 
         main.getUserManager().addUser(user.getIdentifier(), user);
         main.getClientManager().login(sender, user);
+
         sender.sendMessage("Successfully registered.");
 
         sender.sendMessage("Welcome " + Util.formatUserName(user) + "!");

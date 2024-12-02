@@ -3,8 +3,11 @@ package org.example.users;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.handling.ConnectionHandler;
+import org.example.passwordencryption.Encryptor;
 
+import javax.crypto.SecretKey;
 import java.io.Serializable;
+import java.security.KeyPair;
 import java.util.*;
 
 public class User implements Serializable {
@@ -29,6 +32,8 @@ public class User implements Serializable {
     @Setter
     private User recipient;
 
+    private final byte[] salt;
+
     private Status status;
     private long lastSeen;
 
@@ -36,7 +41,8 @@ public class User implements Serializable {
     public User(String name, String password) {
         this.identifier = Math.abs(UUID.randomUUID().hashCode()); // ensure positive identifier
         this.name = name;
-        this.password = password;
+        this.salt = Encryptor.generateSalt();
+        this.password = Encryptor.hashPassword(password, this.salt);
         this.blockedUsers = new ArrayList<>();
         this.currentRoom = "Default";
         this.inDMS = false;
@@ -93,6 +99,11 @@ public class User implements Serializable {
 
     public void setInitalStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean passwordMatches(String decryptedPassword) {
+        System.out.println(password);
+        return password.equals(Encryptor.hashPassword(decryptedPassword, this.salt));
     }
 
     public enum Status {

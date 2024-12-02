@@ -1,10 +1,12 @@
 package org.example;
 
+import lombok.Getter;
 import org.example.chatrooms.ChatRoomManager;
 import org.example.commands.CommandManager;
 import org.example.filemanager.FileManager;
 import org.example.filter.ChatFilter;
 import org.example.handling.ClientManager;
+import org.example.passwordencryption.Encryptor;
 import org.example.users.UserManager;
 import org.example.util.NotificationManager;
 import org.example.util.UpdateTracker;
@@ -18,7 +20,6 @@ public class ChatServer {
     private CommandManager commandManager;
     private UpdateTracker updateTracker;
     private NotificationManager notificationManager;
-
     private ServerInputHandler inputHandler;
 
     public boolean running = true;

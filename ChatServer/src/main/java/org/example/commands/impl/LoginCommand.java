@@ -8,6 +8,8 @@ import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.Util;
 
+import javax.crypto.SecretKey;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class LoginCommand extends Command {
@@ -22,18 +24,18 @@ public class LoginCommand extends Command {
 
         String username = args[0];
         String password = args[1];
-        String decryptedPassword = "";
-        try{
-            decryptedPassword = Encryptor.decryptPassword(password, sender.getDecryptedAES());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
 
         // Authentication logic
         System.out.println("Logging in user: " + username);
 
         final Optional<User> userOptional = main.getUserManager().getUser(username);
-        if (userOptional.isEmpty() || !userOptional.get().getPassword().equals(decryptedPassword)) {
+        if (userOptional.isEmpty()) {
+            sender.sendMessage("Invalid username or password.");
+            return;
+        }
+
+        if (!userOptional.get().passwordMatches(password)) {
             sender.sendMessage("Invalid username or password.");
             return;
         }

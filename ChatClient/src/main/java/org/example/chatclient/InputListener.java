@@ -1,13 +1,10 @@
 package org.example.chatclient;
 
 import org.example.chatclient.emoji.Emoji;
-import org.example.chatclient.encryption.PasswordEncrypter;
 import org.example.chatclient.filemanager.FileManager;
 import org.example.chatclient.server.LoginInfo;
 import org.example.chatclient.textcolor.TextColor;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Scanner;
 
 public class InputListener {
@@ -32,9 +29,6 @@ public class InputListener {
             if (main.getCommandManager().executeCommand(message) && !message.equalsIgnoreCase("/help")) {
                 continue;
             }
-            if (message.contains("/login") || message.contains("register")){
-                message = encryptPassword(message);
-            }
             checkLogin(message);
             if (validateMessage(message)) {
                 continue;
@@ -53,19 +47,8 @@ public class InputListener {
         }
     }
 
-    private String encryptPassword(String message) {
-        String password;
-        try{
-            String[] split = message.split(" ");
-            if (split.length == 3){
-                password = PasswordEncrypter.encryptPassword(split[2]);
-                return message.replace(split[2], password);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return "";
-    }
+
+
 
     private void checkUsername(String message){
         if (!loggedIn){

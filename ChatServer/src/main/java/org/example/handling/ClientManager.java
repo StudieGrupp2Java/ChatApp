@@ -1,5 +1,6 @@
 package org.example.handling;
 
+import lombok.Getter;
 import org.example.ChatServer;
 import org.example.passwordencryption.Encryptor;
 import org.example.users.User;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.*;
 
@@ -18,18 +21,11 @@ import java.util.*;
 public class ClientManager {
     private static final int SERVER_PORT = 2147; //TODO: changeable
     private final ChatServer main;
-    private KeyPair keyPair;
+
     private final HashMap<Integer, ConnectionHandler> connections = new HashMap<>();
 
     public ClientManager(ChatServer chatServer) {
         this.main = chatServer;
-    }
-
-    private void encrypt() throws Exception{
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
-        keyPair = keyPairGenerator.generateKeyPair();
-        
     }
 
 
@@ -38,20 +34,12 @@ public class ClientManager {
         try (ServerSocket socket = new ServerSocket(SERVER_PORT)) {
             System.out.println("Server started on port " + SERVER_PORT);
             System.out.println("Listening...");
-            try{
-                encrypt();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
 
             while (true) {
                 try {
                     ConnectionHandler handler = new ConnectionHandler(main, socket.accept());
                     this.addConnection(handler);
                     handler.start();
-                    handler.setKeyPair(keyPair);
-                    handler.sendMessage(Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
                 } catch (IOException e) {
                     System.err.println("Error handling new connection");
                     e.printStackTrace();
