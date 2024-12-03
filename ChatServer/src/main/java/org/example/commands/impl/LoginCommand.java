@@ -22,11 +22,17 @@ public class LoginCommand extends Command {
         String username = args[0];
         String password = args[1];
 
+
         // Authentication logic
         System.out.println("Logging in user: " + username);
 
         final Optional<User> userOptional = main.getUserManager().getUser(username);
-        if (userOptional.isEmpty() || !userOptional.get().getPassword().equals(password)) {
+        if (userOptional.isEmpty()) {
+            sender.sendMessage("Invalid username or password.");
+            return;
+        }
+
+        if (!userOptional.get().passwordMatches(password)) {
             sender.sendMessage("Invalid username or password.");
             return;
         }

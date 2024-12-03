@@ -1,10 +1,7 @@
 package org.example.handling;
 
 import org.example.ChatServer;
-import org.example.users.ChatRole;
 import org.example.users.User;
-import org.example.util.NotificationManager;
-import org.example.util.TextColor;
 import org.example.util.Util;
 
 import java.io.*;
@@ -18,7 +15,6 @@ public class ConnectionHandler extends Thread {
     private final ChatServer main;
     private final Socket socket;
     private boolean running = true;
-
     private final BufferedReader in;
     private final PrintWriter out;
 
@@ -34,6 +30,10 @@ public class ConnectionHandler extends Thread {
             throw new RuntimeException("Error initializing new connection");
         }
     }
+
+
+
+
 
     @Override
     public void run() {
@@ -84,7 +84,7 @@ public class ConnectionHandler extends Thread {
                     this.sendMessage("Need to join a chat room first! /help for more information");
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Error in reading/writing to connection");
             e.printStackTrace();
         } finally {

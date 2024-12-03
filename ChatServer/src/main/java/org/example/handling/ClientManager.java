@@ -20,11 +20,12 @@ public class ClientManager {
         this.main = chatServer;
     }
 
+
+
     public void listen() {
         try (ServerSocket socket = new ServerSocket(SERVER_PORT)) {
             System.out.println("Server started on port " + SERVER_PORT);
             System.out.println("Listening...");
-
 
             while (true) {
                 try {

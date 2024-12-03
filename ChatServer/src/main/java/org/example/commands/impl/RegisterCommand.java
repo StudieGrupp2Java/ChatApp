@@ -31,10 +31,12 @@ public class RegisterCommand extends Command {
             return;
         }
 
-        final User user = new User(username, password);
+        User user = new User(username, password);
+
 
         main.getUserManager().addUser(user.getIdentifier(), user);
         main.getClientManager().login(sender, user);
+
         sender.sendMessage("Successfully registered.");
 
         sender.sendMessage("Welcome " + Util.formatUserName(user) + "!");

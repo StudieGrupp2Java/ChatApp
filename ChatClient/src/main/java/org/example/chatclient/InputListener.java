@@ -29,7 +29,6 @@ public class InputListener {
             if (main.getCommandManager().executeCommand(message) && !message.equalsIgnoreCase("/help")) {
                 continue;
             }
-
             checkLogin(message);
             if (validateMessage(message)) {
                 continue;
@@ -47,6 +46,9 @@ public class InputListener {
             main.getServerManager().sendMessageToServer(message);
         }
     }
+
+
+
 
     private void checkUsername(String message){
         if (!loggedIn){

@@ -52,6 +52,7 @@ public class ServerManager {
     }
 
 
+
     public void closeConnections() {
         try {
             running = false;
@@ -95,7 +96,7 @@ public class ServerManager {
                         handleMessage(serverMessage);
                     }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
             } finally {
                 System.out.println("Disconnected from server.");
                 closeConnections();
