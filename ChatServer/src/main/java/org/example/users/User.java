@@ -102,7 +102,6 @@ public class User implements Serializable {
     }
 
     public boolean passwordMatches(String decryptedPassword) {
-        System.out.println(password);
         return password.equals(Encryptor.hashPassword(decryptedPassword, this.salt));
     }
 
