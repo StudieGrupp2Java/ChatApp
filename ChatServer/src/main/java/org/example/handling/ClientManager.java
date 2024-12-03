@@ -109,13 +109,13 @@ public class ClientManager {
             if (main.getChatRoomManager().getDmMap().get(room).contains(sender) && main.getChatRoomManager().getDmMap().get(room).contains(recipientConnection)){
                 if (recipient.getCurrentRoom().equals(room)){
                     for (ConnectionHandler handler : main.getChatRoomManager().getDmMap().get(room)){
-                        handler.sendMessage("[DM]" + toSend);
+                        handler.sendMessage(toSend);
                     }
                     main.getNotificationManager().sendNotification(recipientConnection, "dm");
                     main.getChatRoomManager().addDMChatLogs(room, message);
                     return;
                 } else {
-                    sender.sendMessage("[DM]" + toSend);
+                    sender.sendMessage(toSend);
                     recipientConnection.sendMessage(zender.getName() + " sent you a DM. Type /dm " + zender.getName() + " join, to see what they wrote!");
                     main.getNotificationManager().sendNotification(recipientConnection, "dm");
                     main.getChatRoomManager().addDMChatLogs(room, message);

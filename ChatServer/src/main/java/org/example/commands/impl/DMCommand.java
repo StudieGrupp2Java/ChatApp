@@ -5,6 +5,7 @@ import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
 import org.example.users.ChatRole;
 import org.example.users.User;
+import org.example.util.Util;
 
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class DMCommand extends Command {
             if (main.getChatRoomManager().getDmMap().isEmpty()) {
                 main.getChatRoomManager().createDMRoom(recipientConnection, sender, roomName);
                 main.getChatRoomManager().addUserToDMRoom(sender, recipientConnection);
-                main.getClientManager().broadcastDM(me.getName() + ": " + getFullMessage(args), sender, recipientUser);
+                main.getClientManager().broadcastDM(Util.formatUserName(me) + ": " + getFullMessage(args), sender, recipientUser);
                 return;
             }
 
@@ -39,7 +40,7 @@ public class DMCommand extends Command {
             if (!main.getChatRoomManager().getDmMap().containsKey(roomName)) {
                 main.getChatRoomManager().createDMRoom(recipientConnection, sender, roomName);
                 main.getChatRoomManager().addUserToDMRoom(sender, recipientConnection);
-                main.getClientManager().broadcastDM(me.getName() + ": " + getFullMessage(args), sender, recipientUser);
+                main.getClientManager().broadcastDM(Util.formatUserName(me) + ": " + getFullMessage(args), sender, recipientUser);
             }
         }
     }

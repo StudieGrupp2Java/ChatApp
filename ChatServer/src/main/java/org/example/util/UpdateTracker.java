@@ -10,7 +10,7 @@ import static org.example.users.User.Status.AWAY;
 
 public class UpdateTracker {
 
-    private static final long AFK_THRESHOLD = TimeUnit.MINUTES.toMillis(1);
+    private static final long AFK_THRESHOLD = TimeUnit.MINUTES.toMillis(3); // Send afk notif after 3 min inactivity
     private final ChatServer main;
 
     public UpdateTracker(ChatServer main) {

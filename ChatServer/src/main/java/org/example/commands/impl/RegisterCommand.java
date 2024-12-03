@@ -32,18 +32,14 @@ public class RegisterCommand extends Command {
         }
 
         User user = new User(username, password);
-
+        sender.sendMessage("Successfully registered.");
+        sender.sendMessage("Welcome " + Util.formatUserName(user) + "!");
 
         main.getUserManager().addUser(user.getIdentifier(), user);
         main.getClientManager().login(sender, user);
 
-        sender.sendMessage("Successfully registered.");
-
-        sender.sendMessage("Welcome " + Util.formatUserName(user) + "!");
-        main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " logged in for the first time! Say hi!", true, user);
-
         user.setCurrentRoom("Default");
-        main.getChatRoomManager().addUserToRoom(sender, user.getCurrentRoom());
+        main.getClientManager().broadcastMessageInRoom(Util.formatUserName(user) + " logged in for the first time! Say hi!", true, user);
     }
 
     @Override

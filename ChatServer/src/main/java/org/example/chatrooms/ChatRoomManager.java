@@ -64,11 +64,11 @@ public class ChatRoomManager {
         final User recipientUser = main.getUserManager().getUser(recipient.getIdentifier());
         for (String room : dmMap.keySet()) {
             if (dmMap.get(room).contains(recipient) && dmMap.get(room).contains(client)) {
-                client.sendMessage("Joined DM chat");
+                client.sendMessage("Joined room: DM");
                 user.setCurrentRoom(room);
                 user.setInDMS(true);
-                if (recipientUser.getCurrentRoom().equals(user.getCurrentRoom())){
-                    recipient.sendMessage(recipientUser.getName() + " joined the DM Chat! You are now here together");
+                if (recipientUser.getCurrentRoom().equals(user.getCurrentRoom())) {
+                    recipient.sendMessage("[*] " + Util.formatUserName(recipientUser) + " joined the DM Chat! You are now here together");
                 }
                 List<ChatLog> logs = dmLogs.get(room);
                 if (logs != null && !logs.isEmpty()) {
@@ -76,7 +76,7 @@ public class ChatRoomManager {
                             .sorted(Comparator.comparingLong(ChatLog::getTimestamp).reversed())
                             .limit(30)
                             .sorted(Comparator.comparingLong(ChatLog::getTimestamp))
-                            .map(log -> String.format("[%s][%s] %s", "DM", Util.DATE_FORMAT.format(log.getTimestamp()), log.getMessage()))
+                            .map(log -> String.format("[%s] %s", Util.DATE_FORMAT.format(log.getTimestamp()), log.getMessage()))
                             .forEach(client::sendMessage);
                 }
             }
