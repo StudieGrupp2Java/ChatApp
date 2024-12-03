@@ -3,17 +3,9 @@ package org.example.commands.impl;
 import org.example.ChatServer;
 import org.example.commands.Command;
 import org.example.handling.ConnectionHandler;
-import org.example.passwordencryption.Encryptor;
 import org.example.users.ChatRole;
 import org.example.users.User;
 import org.example.util.Util;
-
-import javax.crypto.SecretKey;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Objects;
 
 public class RegisterCommand extends Command {
 

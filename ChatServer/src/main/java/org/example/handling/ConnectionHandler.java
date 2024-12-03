@@ -1,21 +1,11 @@
 package org.example.handling;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.example.ChatServer;
-import org.example.passwordencryption.Encryptor;
-import org.example.users.ChatRole;
 import org.example.users.User;
-import org.example.util.NotificationManager;
-import org.example.util.TextColor;
 import org.example.util.Util;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.Socket;
-import java.security.KeyPair;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;

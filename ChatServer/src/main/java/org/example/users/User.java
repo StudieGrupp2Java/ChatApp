@@ -5,9 +5,7 @@ import lombok.Setter;
 import org.example.handling.ConnectionHandler;
 import org.example.passwordencryption.Encryptor;
 
-import javax.crypto.SecretKey;
 import java.io.Serializable;
-import java.security.KeyPair;
 import java.util.*;
 
 public class User implements Serializable {
