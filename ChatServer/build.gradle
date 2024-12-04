@@ -11,17 +11,26 @@ repositories {
 
 apply plugin: 'application'
 
-mainClassName = 'org.example.Main'
+mainClassName = 'org.example:Main'
 
 dependencies {
+    // JUnit 5 platform (BOM)
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation("org.projectlombok:lombok:1.18.34")
-    annotationProcessor ("org.projectlombok:lombok:1.18.34")
 
-    testCompileOnly ("org.projectlombok:lombok:1.18.34")
-    testAnnotationProcessor ("org.projectlombok:lombok:1.18.34")
+    // Mockito dependencies
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+
+    // Lombok
+    implementation "org.projectlombok:lombok:1.18.34"
+    annotationProcessor "org.projectlombok:lombok:1.18.34"
+
+    // Lombok för testklasser
+    testCompileOnly "org.projectlombok:lombok:1.18.34"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
 }
+
 
 test {
     useJUnitPlatform()
